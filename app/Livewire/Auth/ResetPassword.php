@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Rules\StrongPassword;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -15,16 +16,18 @@ class ResetPassword extends Component
     public $password = '';
     public $password_confirmation = '';
     
-    protected $rules = [
-        'email' => 'required|email',
-        'password' => 'required|min:8|confirmed',
-    ];
+    protected function rules()
+    {
+        return [
+            'email' => 'required|email',
+            'password' => ['required', 'confirmed', new StrongPassword()],
+        ];
+    }
     
     protected $messages = [
         'email.required' => 'L\'email est requis.',
         'email.email' => 'L\'email doit être valide.',
         'password.required' => 'Le mot de passe est requis.',
-        'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
         'password.confirmed' => 'Les mots de passe ne correspondent pas.',
     ];
     

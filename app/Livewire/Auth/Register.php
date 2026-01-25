@@ -4,6 +4,7 @@ namespace App\Livewire\Auth;
 
 use App\Models\User;
 use App\Mail\VerifyEmail;
+use App\Rules\StrongPassword;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -16,11 +17,14 @@ class Register extends Component
     public $password = '';
     public $password_confirmation = '';
     
-    protected $rules = [
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required|min:8|confirmed',
-    ];
+    protected function rules()
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => ['required', 'confirmed', new StrongPassword()],
+        ];
+    }
     
     protected $messages = [
         'name.required' => 'Le nom est requis.',
@@ -28,7 +32,6 @@ class Register extends Component
         'email.email' => 'L\'email doit être valide.',
         'email.unique' => 'Cet email est déjà utilisé.',
         'password.required' => 'Le mot de passe est requis.',
-        'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
         'password.confirmed' => 'Les mots de passe ne correspondent pas.',
     ];
     

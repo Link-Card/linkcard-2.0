@@ -19,16 +19,16 @@ Route::get('/login', Login::class)->name('login');
 Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
 Route::get('/password-reset/{token}', ResetPassword::class)->name('password.reset');
 
-Route::get('/email/verify', VerifyEmailNotice::class)->name('verification.notice');
+Route::get('/email/verify', VerifyEmailNotice::class)->middleware('auth')->name('verification.notice');
 Route::get('/email/verify/{id}/{hash}', VerifyEmail::class)->name('verification.verify');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', Home::class)->name('dashboard');
-    
-    Route::post('/logout', function () {
-        Auth::logout();
-        request()->session()->invalidate();
-        request()->session()->regenerateToken();
-        return redirect('/login');
-    })->name('logout');
 });
+
+Route::post('/logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/login');
+})->middleware('auth')->name('logout');
