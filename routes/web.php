@@ -1,12 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Livewire\Auth\Register;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\ResetPassword;
 use App\Livewire\Auth\VerifyEmailNotice;
 use App\Livewire\Auth\VerifyEmail;
+use App\Livewire\Dashboard\Home;
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,6 +22,13 @@ Route::get('/password-reset/{token}', ResetPassword::class)->name('password.rese
 Route::get('/email/verify', VerifyEmailNotice::class)->name('verification.notice');
 Route::get('/email/verify/{id}/{hash}', VerifyEmail::class)->name('verification.verify');
 
-Route::get('/dashboard', function () {
-    return '<h1>Dashboard - En construction</h1>';
-})->name('dashboard');
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', Home::class)->name('dashboard');
+    
+    Route::post('/logout', function () {
+        Auth::logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+        return redirect('/login');
+    })->name('logout');
+});
