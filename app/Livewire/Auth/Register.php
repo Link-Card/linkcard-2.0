@@ -3,9 +3,10 @@
 namespace App\Livewire\Auth;
 
 use App\Models\User;
+use App\Mail\VerifyEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 
 class Register extends Component
@@ -47,11 +48,14 @@ class Register extends Component
             'subscription_plan' => 'free',
         ]);
         
-        event(new Registered($user));
+        // Envoyer l'email de vérification
+        Mail::to($user->email)->send(new VerifyEmail($user));
         
         Auth::login($user);
         
-        return redirect()->route('dashboard');
+        session()->flash('verification-sent', 'Un email de vérification a été envoyé à votre adresse.');
+        
+        return redirect()->route('verification.notice');
     }
     
     public function render()
