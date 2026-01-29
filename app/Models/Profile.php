@@ -12,59 +12,49 @@ class Profile extends Model
         'full_name',
         'job_title',
         'company',
+        'location',
         'bio',
         'email',
         'phone',
         'website',
-        'photo',
+        'photo_path',
         'template_id',
-        'header_color',
+        'primary_color',
+        'secondary_color',
+        'background_type',
+        'background_value',
+        'is_public',
+        'view_count',
         'qr_code',
+        'meta_title',
+        'meta_description',
     ];
 
-    /**
-     * Relation: Un profil appartient à un utilisateur
-     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Relation: Un profil a un template
-     */
     public function template()
     {
         return $this->belongsTo(Template::class);
     }
 
-    /**
-     * Relation: Un profil a plusieurs sections
-     */
     public function sections()
     {
         return $this->hasMany(Section::class);
     }
 
-    /**
-     * Relation: Un profil a plusieurs liens
-     */
     public function links()
     {
         return $this->hasMany(Link::class);
     }
 
-    /**
-     * Relation: Un profil a plusieurs éléments de galerie
-     */
     public function galleryItems()
     {
         return $this->hasMany(GalleryItem::class);
     }
 
-    /**
-     * Relation: Un profil a plusieurs analytics
-     */
     public function analytics()
     {
         return $this->hasMany(Analytic::class);

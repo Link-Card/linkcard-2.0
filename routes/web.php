@@ -10,6 +10,8 @@ use App\Livewire\Auth\VerifyEmailNotice;
 use App\Livewire\Auth\VerifyEmail;
 use App\Livewire\Dashboard\Home;
 use App\Livewire\Profile\Index;
+use App\Livewire\Profile\Create;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,6 +30,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // Routes Profils
     Route::get('/dashboard/profiles', Index::class)->name('profile.index');
+    Route::get('/dashboard/profiles/create', Create::class)->name('profile.create');
+    Route::get('/dashboard/profiles/{profile}/edit', function() {
+        return 'Édition disponible en Sprint 2.5 (prochaine étape)';
+    })->name('profile.edit');
+    
+    // Routes pricing et additionnels (temporaires)
+    Route::get('/pricing', function() {
+        return 'Page pricing - Sprint 3';
+    })->name('pricing');
+    
+    Route::get('/dashboard/profiles/add-additional', function() {
+        return 'Acheter profils additionnels - Sprint 2.6';
+    })->name('profile.add-additional');
     
     Route::post('/logout', function () {
         Auth::logout();
@@ -37,10 +52,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('logout');
 });
 
-// Route temporaire (sera remplacée en Sprint 2.2)
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard/profiles/create', function() {
-        session()->flash('info', 'La création de profil sera disponible dans Sprint 2.2 (prochaine étape).');
-        return redirect()->route('profile.index');
-    })->name('profile.create');
-});
+// Route publique - Affichage profil (DOIT être en dernier pour éviter conflits)
+Route::get('/{username}', [ProfileController::class, 'show'])->name('profile.public');

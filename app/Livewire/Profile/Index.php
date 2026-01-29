@@ -59,10 +59,7 @@ class Index extends Component
             ->first();
 
         if ($profile) {
-            $profile->sections()->delete();
-            $profile->links()->delete();
-            $profile->galleryItems()->delete();
-            
+            // Supprimer seulement le profil (pas de relations pour l'instant)
             $profile->delete();
 
             session()->flash('success', 'Profil supprimé avec succès.');
