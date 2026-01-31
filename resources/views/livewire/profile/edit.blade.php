@@ -199,7 +199,7 @@
                             <option value="website">Site web</option>
                             <option value="other">Autre</option>
                         </select>
-                        <input type="url" wire:model.blur="newLinkUrl" 
+                        <input type="url" wire:model.live="newLinkUrl" 
                                placeholder="Collez votre lien ici..." 
                                class="flex-1 border rounded px-3 py-2">
                         <button type="button" wire:click="addLink" 
@@ -229,8 +229,18 @@
             <h3 class="text-lg font-bold text-gray-900 mb-4">🖼️ Galerie d'images</h3>
 
             @if(session('gallery-success'))
+            @endif
+            @if(session("gallery-error"))
+                <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded text-sm">
+                    {{ session("gallery-error") }}
+                </div>
                 <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded text-sm">
                     {{ session('gallery-success') }}
+            @endif
+            @if(session("gallery-error"))
+                <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded text-sm">
+                    {{ session("gallery-error") }}
+                </div>
                 </div>
             @endif
 
@@ -286,3 +296,16 @@
         </div>
     </form>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('livewire:initialized', () => {
+    Livewire.on('linkAdded', () => {
+        const urlInput = document.querySelector('input[type="url"]');
+        if (urlInput) {
+            urlInput.value = '';
+        }
+    });
+});
+</script>
+@endpush

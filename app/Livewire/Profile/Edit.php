@@ -28,10 +28,8 @@ class Edit extends Component
     public $currentPhoto;
     public $custom_username;
     public $canEditUsername = false;
-    public $links = [];
     public $newLinkPlatform = 'facebook';
     public $newLinkUrl = '';
-    public $galleryImages = [];
     public $newImages = [];
 
     protected function rules()
@@ -80,9 +78,6 @@ class Edit extends Component
         if (strlen($profile->username) != 8) {
             $this->custom_username = $profile->username;
         }
-
-        $this->links = $profile->links->toArray();
-        $this->galleryImages = $profile->galleryItems->toArray();
     }
 
     public function updatedNewLinkPlatform()
@@ -123,9 +118,8 @@ class Edit extends Component
     public function addLink()
     {
         $user = auth()->user();
-        $currentLinksCount = count($this->links);
+        $currentLinksCount = $this->profile->links()->count();
         
-        // LIMITES CORRIGÉES
         $maxLinks = match($user->plan) {
             'free' => 2,
             'pro' => 5,
@@ -147,15 +141,14 @@ class Edit extends Component
             'profile_id' => $this->profile->id,
             'platform' => $this->newLinkPlatform,
             'url' => $this->newLinkUrl,
-            'order' => count($this->links),
+            'order' => $currentLinksCount,
         ]);
 
-        // Livewire va recharger automatiquement
-        $this->reset(['newLinkPlatform', 'newLinkUrl']);
-        $this->newLinkPlatform = 'facebook';
-        $this->newLinkUrl = '';
-
+        // Vider les champs
+        $this->newLinkPlatform = "facebook";
+        $this->newLinkUrl = "";
         session()->flash('link-success', 'Lien ajouté avec succès.');
+        $this->dispatch('linkAdded');
     }
 
     public function deleteLink($linkId)
@@ -164,8 +157,11 @@ class Edit extends Component
             ->where('profile_id', $this->profile->id)
             ->delete();
 
-        // Livewire va recharger automatiquement
+        $this->reset("newLinkUrl", "newLinkPlatform");
+        $this->newLinkPlatform = "facebook";
+        $this->newLinkUrl = "";
         session()->flash('link-success', 'Lien supprimé.');
+        $this->dispatch('linkAdded');
     }
 
     public function updatedNewImages()
@@ -177,21 +173,24 @@ class Edit extends Component
 
     public function resetImages()
     {
-        $this->reset('newImages');
         $this->newImages = [];
         session()->flash('gallery-success', 'Sélection annulée.');
     }
 
     public function uploadImages()
     {
+        if (empty($this->newImages)) {
+            session()->flash('gallery-error', 'Aucune image sélectionnée.');
+            return;
+        }
+
         $this->validate([
             'newImages.*' => 'image|max:10240',
         ]);
 
         $user = auth()->user();
-        $currentImagesCount = count($this->galleryImages);
+        $currentImagesCount = $this->profile->galleryItems()->count();
         
-        // LIMITES IMAGES
         $maxImages = match($user->plan) {
             'free' => 2,
             'pro' => 5,
@@ -213,18 +212,15 @@ class Edit extends Component
                 'profile_id' => $this->profile->id,
                 'type' => 'image',
                 'path' => $path,
-                'order' => count($this->galleryImages),
+                'order' => $currentImagesCount,
             ]);
         }
 
-        // Livewire va recharger automatiquement
-        $this->reset('newImages');
         $this->newImages = [];
-
         session()->flash('gallery-success', 'Images ajoutées avec succès.');
     }
 
-    public function deleteImage($imageId)
+    public function deleteGalleryItem($imageId)
     {
         $image = GalleryItem::where('id', $imageId)
             ->where('profile_id', $this->profile->id)
@@ -233,7 +229,6 @@ class Edit extends Component
         Storage::disk('public')->delete($image->path);
         $image->delete();
 
-        // Livewire va recharger automatiquement
         session()->flash('gallery-success', 'Image supprimée.');
     }
 
@@ -281,7 +276,6 @@ class Edit extends Component
     {
         $user = auth()->user();
         
-        // LIMITES CORRIGÉES
         $maxLinks = match($user->plan) {
             'free' => 2,
             'pro' => 5,
@@ -296,10 +290,15 @@ class Edit extends Component
             default => 2,
         };
         
-        $canAddMoreLinks = count($this->links) < $maxLinks;
-        $canAddMoreImages = count($this->galleryImages) < $maxImages;
+        $links = $this->profile->fresh()->links;
+        $galleryImages = $this->profile->fresh()->galleryItems;
+
+        $canAddMoreLinks = $links->count() < $maxLinks;
+        $canAddMoreImages = $galleryImages->count() < $maxImages;
 
         return view('livewire.profile.edit', [
+            'links' => $links,
+            'galleryImages' => $galleryImages,
             'maxLinks' => $maxLinks,
             'canAddMoreLinks' => $canAddMoreLinks,
             'maxImages' => $maxImages,
