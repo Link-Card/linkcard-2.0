@@ -1,56 +1,73 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use App\Livewire\Auth\Register;
-use App\Livewire\Auth\Login;
-use App\Livewire\Auth\ForgotPassword;
-use App\Livewire\Auth\ResetPassword;
-use App\Livewire\Auth\VerifyEmailNotice;
-use App\Livewire\Auth\VerifyEmail;
-use App\Livewire\Dashboard\Home;
-use App\Livewire\Profile\Index;
-use App\Livewire\Profile\Create;
 use App\Http\Controllers\ProfileController;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/register', Register::class)->name('register');
-Route::get('/login', Login::class)->name('login');
-Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
-Route::get('/password-reset/{token}', ResetPassword::class)->name('password.reset');
-
-Route::get('/email/verify', VerifyEmailNotice::class)->name('verification.notice');
-Route::get('/email/verify/{id}/{hash}', VerifyEmail::class)->name('verification.verify');
-
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', Home::class)->name('dashboard');
-    
-    // Routes Profils
-    Route::get('/dashboard/profiles', Index::class)->name('profile.index');
-    Route::get('/dashboard/profiles/create', Create::class)->name('profile.create');
-    Route::get('/dashboard/profiles/{profile}/edit', function() {
-        return 'Édition disponible en Sprint 2.5 (prochaine étape)';
-    })->name('profile.edit');
-    
-    // Routes pricing et additionnels (temporaires)
-    Route::get('/pricing', function() {
-        return 'Page pricing - Sprint 3';
-    })->name('pricing');
-    
-    Route::get('/dashboard/profiles/add-additional', function() {
-        return 'Acheter profils additionnels - Sprint 2.6';
-    })->name('profile.add-additional');
-    
-    Route::post('/logout', function () {
-        Auth::logout();
-        request()->session()->invalidate();
-        request()->session()->regenerateToken();
-        return redirect('/login');
-    })->name('logout');
+Route::middleware(['guest'])->group(function () {
+    Route::get('/login', App\Livewire\Auth\Login::class)->name('login');
+    Route::get('/register', App\Livewire\Auth\Register::class)->name('register');
+    Route::get('/forgot-password', App\Livewire\Auth\ForgotPassword::class)->name('password.request');
+    Route::get('/reset-password/{token}', App\Livewire\Auth\ResetPassword::class)->name('password.reset');
 });
 
-// Route publique - Affichage profil (DOIT être en dernier pour éviter conflits)
+Route::middleware(['auth'])->group(function () {
+    Route::post('/logout', function () {
+        auth()->logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+        return redirect('/');
+    })->name('logout');
+
+    Route::get('/email/verify', App\Livewire\Auth\VerifyEmail::class)->name('verification.notice');
+    
+    Route::get('/email/verify/{id}/{hash}', function (Illuminate\Foundation\Auth\EmailVerificationRequest $request) {
+        $request->fulfill();
+        return redirect('/dashboard');
+    })->middleware(['signed'])->name('verification.verify');
+
+    Route::post('/email/verification-notification', function (Illuminate\Http\Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+        return back()->with('message', 'Lien de vérification envoyé!');
+    })->middleware(['throttle:6,1'])->name('verification.send');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', App\Livewire\Dashboard\Home::class)->name('dashboard');
+    
+    Route::get('/dashboard/profiles', App\Livewire\Profile\Index::class)->name('profile.index');
+    Route::get('/dashboard/profiles/create', App\Livewire\Profile\Create::class)->name('profile.create');
+    Route::get('/dashboard/profiles/{profile}/edit', App\Livewire\Profile\Edit::class)->name('profile.edit');
+    Route::post('/dashboard/profiles/add-additional', function() {
+        return 'Achat profils additionnels - En construction';
+    })->name('profile.add-additional');
+});
+
+// QR Code download (génération à la volée)
+Route::middleware('auth')->get('/profile/{profile}/qr-download', function(App\Models\Profile $profile) {
+    // Vérifier que le profil appartient à l'utilisateur
+    if ($profile->user_id !== auth()->id()) {
+        abort(403);
+    }
+
+    // Générer l'URL du profil public
+    $profileUrl = route('profile.public', $profile->username);
+    
+    // Générer le QR code à la volée
+    $qrCode = QrCode::format('png')
+        ->size(500)
+        ->margin(2)
+        ->errorCorrection('H')
+        ->generate($profileUrl);
+    
+    return response($qrCode)
+        ->header('Content-Type', 'image/png')
+        ->header('Content-Disposition', 'attachment; filename="qrcode-' . $profile->username . '.png"');
+})->name('profile.qr.download');
+
+// Profile public
 Route::get('/{username}', [ProfileController::class, 'show'])->name('profile.public');

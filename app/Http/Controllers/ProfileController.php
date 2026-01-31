@@ -11,12 +11,12 @@ class ProfileController extends Controller
     {
         $profile = Profile::where('username', $username)
             ->where('is_public', true)
-            ->with(['user', 'template'])
+            ->with(['links', 'galleryItems']) // Enlevé 'template' qui n'existe pas
             ->firstOrFail();
-        
-        // Incrémenter le compteur de vues
-        $profile->increment('view_count');
-        
+
+        // Incrémenter compteur vues
+        $profile->incrementViewCount();
+
         return view('profiles.show', compact('profile'));
     }
 }

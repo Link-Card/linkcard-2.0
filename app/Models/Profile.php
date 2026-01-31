@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Profile extends Model
 {
@@ -30,33 +32,28 @@ class Profile extends Model
         'meta_description',
     ];
 
-    public function user()
+    protected $casts = [
+        'is_public' => 'boolean',
+        'view_count' => 'integer',
+    ];
+
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function template()
+    public function links(): HasMany
     {
-        return $this->belongsTo(Template::class);
+        return $this->hasMany(Link::class)->orderBy('order');
     }
 
-    public function sections()
+    public function galleryItems(): HasMany
     {
-        return $this->hasMany(Section::class);
+        return $this->hasMany(GalleryItem::class)->orderBy('order');
     }
 
-    public function links()
+    public function incrementViewCount(): void
     {
-        return $this->hasMany(Link::class);
-    }
-
-    public function galleryItems()
-    {
-        return $this->hasMany(GalleryItem::class);
-    }
-
-    public function analytics()
-    {
-        return $this->hasMany(Analytic::class);
+        $this->increment('view_count');
     }
 }
