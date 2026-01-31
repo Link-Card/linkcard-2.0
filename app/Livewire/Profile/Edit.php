@@ -150,7 +150,7 @@ class Edit extends Component
             'order' => count($this->links),
         ]);
 
-        $this->links = $this->profile->fresh()->links->toArray();
+        // Livewire va recharger automatiquement
         $this->reset(['newLinkPlatform', 'newLinkUrl']);
         $this->newLinkPlatform = 'facebook';
         $this->newLinkUrl = '';
@@ -164,7 +164,7 @@ class Edit extends Component
             ->where('profile_id', $this->profile->id)
             ->delete();
 
-        $this->links = $this->profile->fresh()->links->toArray();
+        // Livewire va recharger automatiquement
         session()->flash('link-success', 'Lien supprimé.');
     }
 
@@ -217,7 +217,7 @@ class Edit extends Component
             ]);
         }
 
-        $this->galleryImages = $this->profile->fresh()->galleryItems->toArray();
+        // Livewire va recharger automatiquement
         $this->reset('newImages');
         $this->newImages = [];
 
@@ -233,7 +233,7 @@ class Edit extends Component
         Storage::disk('public')->delete($image->path);
         $image->delete();
 
-        $this->galleryImages = $this->profile->fresh()->galleryItems->toArray();
+        // Livewire va recharger automatiquement
         session()->flash('gallery-success', 'Image supprimée.');
     }
 

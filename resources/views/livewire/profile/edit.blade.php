@@ -241,7 +241,7 @@
                             <img src="{{ asset('storage/' . $image['path']) }}" 
                                  class="w-full h-32 object-contain bg-gray-100 rounded">
                             <button type="button" 
-                                    wire:click="deleteImage({{ $image['id'] }})"
+                                    wire:click="deleteGalleryItem({{ $image['id'] }})"
                                     class="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition">
                                 🗑️
                             </button>
