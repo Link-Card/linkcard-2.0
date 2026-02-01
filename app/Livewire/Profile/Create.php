@@ -50,7 +50,7 @@ class Create extends Component
         // Vérifier limites plan - CORRECTION BUG
         $user = auth()->user();
         $profilesCount = $user->profiles()->count();
-        
+
         // FREE: 1 profil max (pas de additional_profiles_count)
         // PRO/PREMIUM: 1 + additional_profiles_count
         $maxProfiles = 1;
@@ -107,7 +107,7 @@ class Create extends Component
         }
     }
 
-    public function save()
+    public function submit()
     {
         $this->validate();
 
@@ -143,7 +143,7 @@ class Create extends Component
         // Générer QR Code (base64)
         $profileUrl = route('profile.public', $profile->username);
         $qrCode = base64_encode(QrCode::format('png')->size(500)->generate($profileUrl));
-        
+
         $profile->update(['qr_code' => $qrCode]);
 
         session()->flash('success', 'Profil créé avec succès!');
@@ -162,6 +162,7 @@ class Create extends Component
 
     public function render()
     {
-        return view('livewire.profile.create');
+        return view('livewire.profile.create')
+            ->layout('layouts.dashboard');
     }
 }

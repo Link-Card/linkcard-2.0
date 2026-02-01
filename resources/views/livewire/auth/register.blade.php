@@ -6,7 +6,7 @@
             </h2>
             <p class="mt-2 text-center text-sm text-gray-600">
                 Ou
-                <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
+                <a href="{{ route('login') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
                     connectez-vous à votre compte
                 </a>
             </p>
