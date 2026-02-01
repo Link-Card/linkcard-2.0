@@ -41,7 +41,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     Route::get('/dashboard/profiles', App\Livewire\Profile\Index::class)->name('profile.index');
     Route::get('/dashboard/profiles/create', App\Livewire\Profile\Create::class)->name('profile.create');
-    Route::get('/dashboard/profiles/{profile}/edit', App\Livewire\Profile\Edit::class)->name('profile.edit');
+    Route::get('/dashboard/profiles/{profile}/edit', App\Livewire\Profile\EditTabs::class)->name('profile.edit');
     Route::post('/dashboard/profiles/add-additional', function() {
         return 'Achat profils additionnels - En construction';
     })->name('profile.add-additional');
