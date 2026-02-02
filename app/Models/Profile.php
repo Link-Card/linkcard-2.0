@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ImageBand;
+use App\Models\ContentBand;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -56,6 +57,11 @@ class Profile extends Model
     public function incrementViewCount(): void
     {
         $this->increment('view_count');
+    }
+
+    public function contentBands(): HasMany
+    {
+        return $this->hasMany(ContentBand::class)->orderBy('order');
     }
 
     public function imageBands(): HasMany
