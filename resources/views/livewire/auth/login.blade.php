@@ -1,75 +1,88 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
-        <div>
-            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                Connexion à votre compte
-            </h2>
-            <p class="mt-2 text-center text-sm text-gray-600">
-                Ou
-                <a href="{{ route('register') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
-                    créez un nouveau compte
-                </a>
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style="background-color: var(--link-white, #F7F8F4);">
+    <div class="max-w-md w-full">
+        
+        <!-- Logo + Titre -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4" style="background: linear-gradient(135deg, #4A7FBF 0%, #42B574 100%);">
+                <span class="text-white font-semibold text-xl" style="font-family: 'Manrope', sans-serif;">LC</span>
+            </div>
+            <h1 class="text-2xl font-semibold" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">Connexion</h1>
+            <p class="mt-2 text-sm" style="color: #4B5563;">
+                Accédez à votre compte Link-Card
             </p>
         </div>
-        
-        @if (session('status'))
-            <div class="rounded-md bg-green-50 p-4">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm font-medium text-green-800">
-                            {{ session('status') }}
-                        </p>
-                    </div>
+
+        <!-- Card -->
+        <div class="bg-white rounded-xl shadow-sm border p-8" style="border-color: #E5E7EB;">
+            
+            @if (session('status'))
+                <div class="mb-6 p-4 rounded-lg text-sm font-medium" style="background: #F0F9F4; border: 1px solid #7EE081; color: #2C2A27;">
+                    {{ session('status') }}
                 </div>
-            </div>
-        @endif
-        
-        <form wire:submit.prevent="login" class="mt-8 space-y-6">
-            <div class="rounded-md shadow-sm -space-y-px">
+            @endif
+
+            @if ($errors->any())
+                <div class="mb-6 p-4 rounded-lg text-sm" style="background: #FEF2F2; border: 1px solid #FCA5A5; color: #991B1B;">
+                    {{ $errors->first() }}
+                </div>
+            @endif
+            
+            <form wire:submit.prevent="login" class="space-y-5">
+                <!-- Email -->
                 <div>
-                    <label for="email" class="sr-only">Adresse email</label>
+                    <label for="email" class="block text-xs font-medium uppercase tracking-wider mb-2" style="font-family: 'Manrope', sans-serif; color: #4B5563;">Adresse email</label>
                     <input wire:model="email" id="email" name="email" type="email" 
-                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" 
-                        placeholder="Adresse email">
-                    @error('email') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+                        class="w-full px-4 py-3 rounded-lg text-sm transition-all duration-200 outline-none" 
+                        style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; color: #2C2A27;"
+                        onfocus="this.style.borderColor='#42B574'; this.style.boxShadow='0 0 0 3px #F0F9F4'"
+                        onblur="this.style.borderColor='#D1D5DB'; this.style.boxShadow='none'"
+                        placeholder="email@exemple.com">
+                    @error('email') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ $message }}</span> @enderror
                 </div>
                 
+                <!-- Password -->
                 <div>
-                    <label for="password" class="sr-only">Mot de passe</label>
+                    <label for="password" class="block text-xs font-medium uppercase tracking-wider mb-2" style="font-family: 'Manrope', sans-serif; color: #4B5563;">Mot de passe</label>
                     <input wire:model="password" id="password" name="password" type="password" 
-                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" 
-                        placeholder="Mot de passe">
-                    @error('password') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                </div>
-            </div>
-
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <input wire:model="remember" id="remember" name="remember" type="checkbox" 
-                        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                    <label for="remember" class="ml-2 block text-sm text-gray-900">
-                        Se souvenir de moi
-                    </label>
+                        class="w-full px-4 py-3 rounded-lg text-sm transition-all duration-200 outline-none"
+                        style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; color: #2C2A27;"
+                        onfocus="this.style.borderColor='#42B574'; this.style.boxShadow='0 0 0 3px #F0F9F4'"
+                        onblur="this.style.borderColor='#D1D5DB'; this.style.boxShadow='none'"
+                        placeholder="••••••••">
+                    @error('password') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ $message }}</span> @enderror
                 </div>
 
-                <div class="text-sm">
-                    <a href="{{ route('password.request') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
+                <!-- Remember + Forgot -->
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input wire:model="remember" id="remember" name="remember" type="checkbox" 
+                            class="h-4 w-4 rounded" style="accent-color: #42B574;">
+                        <label for="remember" class="ml-2 text-sm" style="font-family: 'Manrope', sans-serif; color: #4B5563;">
+                            Se souvenir de moi
+                        </label>
+                    </div>
+                    <a href="{{ route('password.request') }}" class="text-sm font-medium transition-colors" style="font-family: 'Manrope', sans-serif; color: #42B574;">
                         Mot de passe oublié?
                     </a>
                 </div>
-            </div>
 
-            <div>
+                <!-- Submit -->
                 <button type="submit" 
-                    class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    class="w-full py-3 px-4 text-sm font-medium text-white rounded-lg transition-all duration-200 shadow-sm"
+                    style="font-family: 'Manrope', sans-serif; background: #42B574;"
+                    onmouseover="this.style.background='#3DA367'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(66,181,116,0.3)'"
+                    onmouseout="this.style.background='#42B574'; this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'">
                     Se connecter
                 </button>
-            </div>
-        </form>
+            </form>
+        </div>
+
+        <!-- Register link -->
+        <p class="text-center text-sm mt-6" style="font-family: 'Manrope', sans-serif; color: #4B5563;">
+            Pas encore de compte ?
+            <a href="{{ route('register') }}" class="font-medium" style="color: #42B574;">
+                Créer un compte
+            </a>
+        </p>
     </div>
 </div>

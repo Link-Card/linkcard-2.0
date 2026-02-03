@@ -6,14 +6,8 @@
     <title>{{ $profile->full_name }} - Link-Card</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Manrope', system-ui, -apple-system, sans-serif; }
-    </style>
 </head>
-<body class="min-h-screen" style="background: #F7F8F4;">
+<body class="bg-gray-100 min-h-screen">
     
     <div class="max-w-2xl mx-auto">
         
@@ -34,10 +28,10 @@
                 </div>
                 
                 <!-- Nom + Titre -->
-                <h1 class="text-3xl font-semibold text-center mb-2" style="letter-spacing: -0.02em;">{{ $profile->full_name }}</h1>
+                <h1 class="text-3xl font-bold text-center mb-2">{{ $profile->full_name }}</h1>
                 
                 @if($profile->job_title)
-                    <p class="text-lg text-center text-white/90 font-medium">{{ $profile->job_title }}</p>
+                    <p class="text-lg text-center text-white/90">{{ $profile->job_title }}</p>
                 @endif
                 
                 @if($profile->company)
@@ -54,7 +48,7 @@
                 <div class="mt-6 space-y-2">
                     @if($profile->phone)
                         <a href="tel:{{ $profile->phone }}" 
-                           class="flex items-center justify-center space-x-2 text-white/90 hover:text-white transition">
+                           class="flex items-center justify-center space-x-2 text-white/90 hover:text-white">
                             <span class="text-lg">📞</span>
                             <span class="text-sm">{{ $profile->phone }}</span>
                         </a>
@@ -62,7 +56,7 @@
                     
                     @if($profile->email)
                         <a href="mailto:{{ $profile->email }}" 
-                           class="flex items-center justify-center space-x-2 text-white/90 hover:text-white transition">
+                           class="flex items-center justify-center space-x-2 text-white/90 hover:text-white">
                             <span class="text-lg">✉️</span>
                             <span class="text-sm">{{ $profile->email }}</span>
                         </a>
@@ -70,7 +64,7 @@
                     
                     @if($profile->website)
                         <a href="{{ $profile->website }}" target="_blank"
-                           class="flex items-center justify-center space-x-2 text-white/90 hover:text-white transition">
+                           class="flex items-center justify-center space-x-2 text-white/90 hover:text-white">
                             <span class="text-lg">🌐</span>
                             <span class="text-sm truncate max-w-xs">{{ $profile->website }}</span>
                         </a>
@@ -88,10 +82,7 @@
                     @if($band->type === 'contact_button')
                         <!-- Bouton vCard -->
                         <a href="{{ route('profile.vcard', $profile) }}" 
-                           class="block w-full py-4 px-6 text-white text-center rounded-xl font-semibold shadow-md transition hover:shadow-lg"
-                           style="background: #42B574;"
-                           onmouseover="this.style.background='#3DA367'"
-                           onmouseout="this.style.background='#42B574'">
+                           class="block w-full py-4 px-6 bg-green-600 hover:bg-green-700 text-white text-center rounded-xl font-semibold shadow-md transition">
                             📇 Ajouter aux contacts
                         </a>
                     
@@ -119,7 +110,7 @@
                                         <i class="fas fa-link" style="color: #6B7280;"></i>
                                     @endif
                                 </div>
-                                <span class="font-medium" style="color: #2C2A27;">{{ $band->data['platform'] }}</span>
+                                <span class="font-medium text-gray-900">{{ $band->data['platform'] }}</span>
                             </div>
                         </a>
                     
@@ -140,7 +131,7 @@
                     @elseif($band->type === 'text_block')
                         <!-- Bloc de texte -->
                         <div class="p-6 bg-gray-50 rounded-xl border border-gray-200">
-                            <p class="whitespace-pre-line leading-relaxed" style="color: #4B5563;">{{ $band->data['text'] }}</p>
+                            <p class="text-gray-700 whitespace-pre-line leading-relaxed">{{ $band->data['text'] }}</p>
                         </div>
                     
                     @endif
@@ -152,9 +143,7 @@
             <div class="px-6 pb-8 pt-4 border-t border-gray-200 text-center">
                 <p class="text-sm text-gray-500">
                     Propulsé par 
-                    <a href="https://linkcard.ca" target="_blank" class="font-semibold transition" style="color: #42B574;"
-                       onmouseover="this.style.color='#3DA367'"
-                       onmouseout="this.style.color='#42B574'">
+                    <a href="https://linkcard.ca" target="_blank" class="text-green-600 hover:text-green-700 font-semibold">
                         Link-Card
                     </a>
                 </p>
