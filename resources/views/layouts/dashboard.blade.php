@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Dashboard' }} - Link-Card</title>
 
+    <!-- Favicon Link-Card -->
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+
     <!-- Manrope Font (Brand Book) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,11 +28,7 @@
             <!-- Logo -->
             <div class="p-6 border-b" style="border-color: rgba(255,255,255,0.1);">
                 <div class="flex items-center space-x-3">
-                    <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background: linear-gradient(135deg, #4A7FBF 0%, #42B574 100%);">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-                        </svg>
-                    </div>
+                    <img src="{{ asset('images/logo.png') }}" alt="Link-Card" class="h-9 w-auto">
                     <div>
                         <h1 class="text-lg font-semibold text-white tracking-tight">Link-Card</h1>
                         <p class="text-xs" style="color: rgba(255,255,255,0.5);">Dashboard</p>

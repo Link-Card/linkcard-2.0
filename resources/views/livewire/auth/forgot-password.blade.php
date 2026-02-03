@@ -1,52 +1,61 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
-        <div>
-            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                Mot de passe oublié?
-            </h2>
-            <p class="mt-2 text-center text-sm text-gray-600">
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style="background-color: var(--link-white, #F7F8F4);">
+    <div class="max-w-md w-full">
+        
+        <!-- Logo + Titre -->
+        <div class="text-center mb-8">
+            <img src="{{ asset('images/logo.png') }}" alt="Link-Card" class="h-16 w-auto mx-auto mb-4">
+            <h1 class="text-2xl font-semibold" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">Mot de passe oublié</h1>
+            <p class="mt-2 text-sm" style="color: #4B5563;">
                 Entrez votre email et nous vous enverrons un lien de réinitialisation.
             </p>
         </div>
-        
-        @if($emailSent)
-            <div class="rounded-md bg-green-50 p-4">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm font-medium text-green-800">
-                            Email envoyé! Vérifiez votre boîte de réception.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        @endif
-        
-        <form wire:submit.prevent="sendResetLink" class="mt-8 space-y-6">
-            <div>
-                <label for="email" class="sr-only">Adresse email</label>
-                <input wire:model="email" id="email" name="email" type="email" 
-                    class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" 
-                    placeholder="Adresse email">
-                @error('email') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-            </div>
 
-            <div>
+        <!-- Card -->
+        <div class="bg-white rounded-xl shadow-sm border p-8" style="border-color: #E5E7EB;">
+            
+            @if (session('status'))
+                <div class="mb-6 p-4 rounded-lg text-sm font-medium" style="background: #F0F9F4; border: 1px solid #7EE081; color: #2C2A27;">
+                    {{ session('status') }}
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="mb-6 p-4 rounded-lg text-sm" style="background: #FEF2F2; border: 1px solid #FCA5A5; color: #991B1B;">
+                    {{ $errors->first() }}
+                </div>
+            @endif
+            
+            <form wire:submit.prevent="sendPasswordResetLink" class="space-y-5">
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-xs font-medium uppercase tracking-wider mb-2" style="font-family: 'Manrope', sans-serif; color: #4B5563;">Adresse email</label>
+                    <input wire:model="email" id="email" name="email" type="email" 
+                        class="w-full px-4 py-3 rounded-lg text-sm transition-all duration-200 outline-none" 
+                        style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; color: #2C2A27;"
+                        onfocus="this.style.borderColor='#42B574'; this.style.boxShadow='0 0 0 3px #F0F9F4'"
+                        onblur="this.style.borderColor='#D1D5DB'; this.style.boxShadow='none'"
+                        placeholder="email@exemple.com"
+                        required autofocus>
+                    @error('email') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ $message }}</span> @enderror
+                </div>
+
+                <!-- Submit -->
                 <button type="submit" 
-                    class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    class="w-full py-3 px-4 text-sm font-medium text-white rounded-lg transition-all duration-200 shadow-sm"
+                    style="font-family: 'Manrope', sans-serif; background: #42B574;"
+                    onmouseover="this.style.background='#3DA367'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(66,181,116,0.3)'"
+                    onmouseout="this.style.background='#42B574'; this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'">
                     Envoyer le lien de réinitialisation
                 </button>
-            </div>
-            
-            <div class="text-center">
-                <a href="{{ route('login') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
-                    Retour à la connexion
-                </a>
-            </div>
-        </form>
+            </form>
+        </div>
+
+        <!-- Back to login -->
+        <p class="text-center text-sm mt-6" style="font-family: 'Manrope', sans-serif; color: #4B5563;">
+            <a href="{{ route('login') }}" class="font-medium inline-flex items-center" style="color: #42B574;">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                Retour à la connexion
+            </a>
+        </p>
     </div>
 </div>

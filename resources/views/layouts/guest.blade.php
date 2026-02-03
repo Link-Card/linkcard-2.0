@@ -7,6 +7,9 @@
 
     <title>{{ config('app.name', 'Link-Card') }}</title>
 
+    <!-- Favicon Link-Card -->
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+
     <!-- Manrope Font (Brand Book) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

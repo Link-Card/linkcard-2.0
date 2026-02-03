@@ -3,9 +3,7 @@
         
         <!-- Logo + Titre -->
         <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4" style="background: linear-gradient(135deg, #4A7FBF 0%, #42B574 100%);">
-                <span class="text-white font-semibold text-xl" style="font-family: 'Manrope', sans-serif;">LC</span>
-            </div>
+            <img src="{{ asset('images/logo.png') }}" alt="Link-Card" class="h-16 w-auto mx-auto mb-4">
             <h1 class="text-2xl font-semibold" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">Connexion</h1>
             <p class="mt-2 text-sm" style="color: #4B5563;">
                 Accédez à votre compte Link-Card
