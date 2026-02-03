@@ -69,5 +69,8 @@ Route::middleware('auth')->get('/profile/{profile}/qr-download', function(App\Mo
         ->header('Content-Disposition', 'attachment; filename="qrcode-' . $profile->username . '.png"');
 })->name('profile.qr.download');
 
+// vCard download
+Route::get('/profile/{profile}/vcard', [ProfileController::class, 'downloadVcard'])->name('profile.vcard');
+
 // Profile public
 Route::get('/{username}', [ProfileController::class, 'show'])->name('profile.public');
