@@ -23,7 +23,7 @@ Route::middleware(['auth'])->group(function () {
         return redirect('/login');
     })->name('logout');
 
-    Route::get('/email/verify', App\Livewire\Auth\VerifyEmail::class)->name('verification.notice');
+    Route::get('/email/verify', App\Livewire\Auth\VerifyEmailNotice::class)->name('verification.notice');
     
     Route::get('/email/verify/{id}/{hash}', function (Illuminate\Foundation\Auth\EmailVerificationRequest $request) {
         $request->fulfill();

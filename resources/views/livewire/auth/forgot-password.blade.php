@@ -13,9 +13,9 @@
         <!-- Card -->
         <div class="bg-white rounded-xl shadow-sm border p-8" style="border-color: #E5E7EB;">
             
-            @if (session('status'))
+            @if ($emailSent)
                 <div class="mb-6 p-4 rounded-lg text-sm font-medium" style="background: #F0F9F4; border: 1px solid #7EE081; color: #2C2A27;">
-                    {{ session('status') }}
+                    ✓ Un lien de réinitialisation a été envoyé à votre adresse email.
                 </div>
             @endif
 
@@ -25,7 +25,7 @@
                 </div>
             @endif
             
-            <form wire:submit.prevent="sendPasswordResetLink" class="space-y-5">
+            <form wire:submit.prevent="sendResetLink" class="space-y-5">
                 <!-- Email -->
                 <div>
                     <label for="email" class="block text-xs font-medium uppercase tracking-wider mb-2" style="font-family: 'Manrope', sans-serif; color: #4B5563;">Adresse email</label>
