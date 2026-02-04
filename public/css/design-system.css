@@ -363,3 +363,14 @@ textarea.input {
     outline: none;
     box-shadow: 0 0 0 3px var(--link-green-light);
 }
+
+/* Fix Font Awesome icons - prevent Tailwind/Manrope override */
+i.fas, i.far, i.fab,
+i.fa-solid, i.fa-regular, i.fa-brands {
+    font-family: "Font Awesome 6 Free" !important;
+    font-weight: 900;
+}
+i.fab, i.fa-brands {
+    font-family: "Font Awesome 6 Brands" !important;
+    font-weight: 400;
+}

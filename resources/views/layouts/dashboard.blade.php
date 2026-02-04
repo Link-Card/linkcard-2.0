@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Dashboard' }} - Link-Card</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
 
     <!-- Favicon Link-Card -->
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
@@ -28,10 +29,9 @@
             <!-- Logo -->
             <div class="p-6 border-b" style="border-color: rgba(255,255,255,0.1);">
                 <div class="flex items-center space-x-3">
-                    <img src="{{ asset('images/logo.png') }}" alt="Link-Card" class="h-9 w-auto">
+                    <img src="{{ asset('images/favicon.png') }}" alt="Link-Card" class="h-8 w-8">
                     <div>
                         <h1 class="text-lg font-semibold text-white tracking-tight">Link-Card</h1>
-                        <p class="text-xs" style="color: rgba(255,255,255,0.5);">Dashboard</p>
                     </div>
                 </div>
             </div>
