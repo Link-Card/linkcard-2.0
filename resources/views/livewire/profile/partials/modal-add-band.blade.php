@@ -16,7 +16,7 @@
                         <button wire:click="addContactButton" class="w-full p-4 rounded-xl text-left transition-all duration-200" style="border: 1.5px solid #E5E7EB;" onmouseover="this.style.borderColor='#42B574'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" onmouseout="this.style.borderColor='#E5E7EB'; this.style.boxShadow='none'">
                             <div class="flex items-center space-x-4">
                                 <span class="w-10 h-10 rounded-full flex items-center justify-center" style="background: #F0F9F4;">
-                                    <i class="fas fa-address-book text-lg" style="color: #42B574;"></i>
+                                    <i class="fas fa-address-book fa-lg" style="color: #42B574;"></i>
                                 </span>
                                 <div>
                                     <p class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">Bouton Contact</p>
@@ -31,7 +31,7 @@
                         <button wire:click="selectBandType('social_link')" class="w-full p-4 rounded-xl text-left transition-all duration-200" style="border: 1.5px solid #E5E7EB;" onmouseover="this.style.borderColor='#42B574'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" onmouseout="this.style.borderColor='#E5E7EB'; this.style.boxShadow='none'">
                             <div class="flex items-center space-x-4">
                                 <span class="w-10 h-10 rounded-full flex items-center justify-center" style="background: #EFF6FF;">
-                                    <i class="fas fa-link text-lg" style="color: #3B82F6;"></i>
+                                    <i class="fas fa-link fa-lg" style="color: #3B82F6;"></i>
                                 </span>
                                 <div>
                                     <p class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">Lien social</p>
@@ -46,7 +46,7 @@
                         <button wire:click="selectBandType('image')" class="w-full p-4 rounded-xl text-left transition-all duration-200" style="border: 1.5px solid #E5E7EB;" onmouseover="this.style.borderColor='#42B574'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" onmouseout="this.style.borderColor='#E5E7EB'; this.style.boxShadow='none'">
                             <div class="flex items-center space-x-4">
                                 <span class="w-10 h-10 rounded-full flex items-center justify-center" style="background: #FEF3C7;">
-                                    <i class="fas fa-image text-lg" style="color: #D97706;"></i>
+                                    <i class="fas fa-image fa-lg" style="color: #D97706;"></i>
                                 </span>
                                 <div>
                                     <p class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">Image(s)</p>
@@ -61,7 +61,7 @@
                         <button wire:click="selectBandType('text_block')" class="w-full p-4 rounded-xl text-left transition-all duration-200" style="border: 1.5px solid #E5E7EB;" onmouseover="this.style.borderColor='#42B574'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" onmouseout="this.style.borderColor='#E5E7EB'; this.style.boxShadow='none'">
                             <div class="flex items-center space-x-4">
                                 <span class="w-10 h-10 rounded-full flex items-center justify-center" style="background: #F3F4F6;">
-                                    <i class="fas fa-align-left text-lg" style="color: #6B7280;"></i>
+                                    <i class="fas fa-align-left fa-lg" style="color: #6B7280;"></i>
                                 </span>
                                 <div>
                                     <p class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">Texte</p>
