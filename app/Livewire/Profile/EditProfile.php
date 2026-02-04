@@ -23,11 +23,9 @@ class EditProfile extends Component
     public $secondary_color;
     public $photo;
 
-    // Contact info fields (header section)
+    // Contact info
     public $email;
     public $phone;
-
-    // Hidden fields (vCard only)
     public $website;
 
     // Content bands
@@ -37,6 +35,11 @@ class EditProfile extends Component
     public $showAddBandModal = false;
     public $editingBandId = null;
     public $newBandType = '';
+
+    // Delete confirmation modal
+    public $showDeleteModal = false;
+    public $deletingBandId = null;
+    public $deletingBandName = '';
 
     // Band form fields
     public $newSocialPlatform = '';
@@ -70,8 +73,6 @@ class EditProfile extends Component
 
         $this->contentBands = $this->profile->contentBands()->orderBy('order')->get()->toArray();
     }
-
-    // ========== AUTO-SAVE ==========
 
     public function updated($property, $value)
     {
@@ -118,8 +119,6 @@ class EditProfile extends Component
         }
     }
 
-    // ========== PHOTO ==========
-
     public function savePhoto()
     {
         $this->validate(['photo' => 'image|max:15360']);
@@ -135,18 +134,13 @@ class EditProfile extends Component
         $this->dispatch('auto-saved');
     }
 
-    // ========== SAVE & RETURN ==========
-
     public function saveAndReturn()
     {
-        // Auto-set website to profile URL for vCard
         $profileUrl = route('profile.public', $this->profile->username);
         $this->profile->update(['website' => $profileUrl]);
 
         return redirect()->route('profile.index');
     }
-
-    // ========== HEADER TEXT COLOR ==========
 
     public function getHeaderTextColor()
     {
@@ -159,8 +153,6 @@ class EditProfile extends Component
         return $luminance > 0.6 ? '#2C2A27' : '#FFFFFF';
     }
 
-    // ========== DRAG & DROP ==========
-
     public function reorderBands($orderedIds)
     {
         foreach ($orderedIds as $index => $id) {
@@ -171,8 +163,6 @@ class EditProfile extends Component
         $this->loadData();
     }
 
-    // ========== TOTAL IMAGE COUNT ==========
-
     public function getTotalImageCount()
     {
         $count = 0;
@@ -180,7 +170,7 @@ class EditProfile extends Component
             if ($band['type'] === 'image') {
                 $images = $band['data']['images'] ?? [];
                 if (empty($images) && isset($band['data']['path'])) {
-                    $count += 1; // legacy single image
+                    $count += 1;
                 } else {
                     $count += count($images);
                 }
@@ -188,8 +178,6 @@ class EditProfile extends Component
         }
         return $count;
     }
-
-    // ========== LIMITES PAR PLAN ==========
 
     public function getAvailableBandTypes()
     {
@@ -230,8 +218,6 @@ class EditProfile extends Component
             'image_url_allowed' => $planLimits['image_url'],
         ];
     }
-
-    // ========== GESTION BANDES ==========
 
     public function openAddBandModal($type = null)
     {
@@ -275,7 +261,6 @@ class EditProfile extends Component
             $this->newSocialPlatform = $band->data['platform'] ?? '';
             $this->newSocialUrl = $band->data['url'] ?? '';
         } elseif ($band->type === 'image') {
-            // Support both legacy and new format
             if (isset($band->data['images'])) {
                 $this->currentImagePaths = array_column($band->data['images'], 'path');
             } elseif (isset($band->data['path'])) {
@@ -296,7 +281,69 @@ class EditProfile extends Component
         $this->reset(['newBandType', 'newSocialPlatform', 'newSocialUrl', 'newImages', 'newImageLink', 'newTextContent', 'currentImagePaths']);
     }
 
-    // ========== ADD CONTACT BUTTON ==========
+    // ========== DELETE CONFIRMATION ==========
+
+    public function confirmDelete($bandId)
+    {
+        $band = ContentBand::find($bandId);
+        if (!$band || $band->profile_id !== $this->profile->id) {
+            return;
+        }
+
+        $this->deletingBandId = $bandId;
+
+        // Déterminer le nom à afficher
+        if ($band->type === 'contact_button') {
+            $this->deletingBandName = 'Ajouter aux contacts';
+        } elseif ($band->type === 'social_link') {
+            $this->deletingBandName = $band->data['platform'] ?? 'Lien social';
+        } elseif ($band->type === 'image') {
+            $imgCount = isset($band->data['images']) ? count($band->data['images']) : 1;
+            $this->deletingBandName = $imgCount > 1 ? "Images ($imgCount)" : 'Image';
+        } elseif ($band->type === 'text_block') {
+            $this->deletingBandName = 'Bloc texte';
+        } else {
+            $this->deletingBandName = 'Bande';
+        }
+
+        $this->showDeleteModal = true;
+    }
+
+    public function cancelDelete()
+    {
+        $this->showDeleteModal = false;
+        $this->deletingBandId = null;
+        $this->deletingBandName = '';
+    }
+
+    public function deleteBand($bandId = null)
+    {
+        $id = $bandId ?? $this->deletingBandId;
+        if (!$id) return;
+
+        $band = ContentBand::findOrFail($id);
+
+        if ($band->profile_id !== $this->profile->id) {
+            abort(403);
+        }
+
+        if ($band->type === 'image') {
+            $images = $band->data['images'] ?? [];
+            if (empty($images) && isset($band->data['path'])) {
+                Storage::disk('public')->delete($band->data['path']);
+            } else {
+                foreach ($images as $img) {
+                    if (isset($img['path'])) {
+                        Storage::disk('public')->delete($img['path']);
+                    }
+                }
+            }
+        }
+
+        $band->delete();
+        $this->cancelDelete();
+        $this->loadData();
+    }
 
     public function addContactButton()
     {
@@ -310,8 +357,6 @@ class EditProfile extends Component
         $this->closeAddBandModal();
         $this->loadData();
     }
-
-    // ========== ADD SOCIAL LINK ==========
 
     public function addSocialLink()
     {
@@ -345,28 +390,24 @@ class EditProfile extends Component
         $this->loadData();
     }
 
-    // ========== ADD IMAGE ==========
-
     public function addImage()
     {
         $available = $this->getAvailableBandTypes();
 
         $this->validate([
             'newImages' => $this->editingBandId ? 'nullable' : 'required|array|min:1|max:2',
-            'newImages.*' => 'image|max:15360',
+            'newImages.*' => 'image|max:51200',
         ]);
 
         if ($this->editingBandId) {
             $band = ContentBand::findOrFail($this->editingBandId);
             $images = $band->data['images'] ?? [];
 
-            // Legacy format conversion
             if (empty($images) && isset($band->data['path'])) {
                 $images = [['path' => $band->data['path'], 'link' => $band->data['link'] ?? '']];
             }
 
             if (!empty($this->newImages)) {
-                // Delete old images
                 foreach ($images as $img) {
                     if (isset($img['path'])) {
                         Storage::disk('public')->delete($img['path']);
@@ -404,8 +445,6 @@ class EditProfile extends Component
         $this->loadData();
     }
 
-    // ========== ADD TEXT ==========
-
     public function addTextBlock()
     {
         $this->validate([
@@ -430,35 +469,6 @@ class EditProfile extends Component
         $this->closeAddBandModal();
         $this->loadData();
     }
-
-    // ========== DELETE ==========
-
-    public function deleteBand($bandId)
-    {
-        $band = ContentBand::findOrFail($bandId);
-
-        if ($band->profile_id !== $this->profile->id) {
-            abort(403);
-        }
-
-        if ($band->type === 'image') {
-            $images = $band->data['images'] ?? [];
-            if (empty($images) && isset($band->data['path'])) {
-                Storage::disk('public')->delete($band->data['path']);
-            } else {
-                foreach ($images as $img) {
-                    if (isset($img['path'])) {
-                        Storage::disk('public')->delete($img['path']);
-                    }
-                }
-            }
-        }
-
-        $band->delete();
-        $this->loadData();
-    }
-
-    // ========== RENDER ==========
 
     public function render()
     {

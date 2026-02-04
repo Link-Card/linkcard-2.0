@@ -68,7 +68,7 @@
                                 <svg class="w-4 h-4" fill="#3B82F6" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
                             </button>
                         @endif
-                        <button wire:click="deleteBand({{ $band['id'] }})" wire:confirm="Supprimer cette bande ?" class="p-1.5 rounded transition-colors" style="background: transparent;" onmouseover="this.style.background='#FEF2F2'" onmouseout="this.style.background='transparent'" title="Supprimer">
+                        <button wire:click="confirmDelete({{ $band['id'] }})" class="p-1.5 rounded transition-colors" style="background: transparent;" onmouseover="this.style.background='#FEF2F2'" onmouseout="this.style.background='transparent'" title="Supprimer">
                             <svg class="w-4 h-4" fill="#EF4444" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
                         </button>
                     </div>

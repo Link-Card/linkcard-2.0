@@ -28,6 +28,7 @@
     </div>
 
     @include('livewire.profile.partials.modal-add-band')
+    @include('livewire.profile.partials.modal-delete')
     @include('livewire.profile.partials.sortable-script')
 
 </div>
