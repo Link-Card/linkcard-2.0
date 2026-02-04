@@ -20,13 +20,15 @@ class EditProfile extends Component
     public $company;
     public $location;
     public $primary_color;
+    public $secondary_color;
     public $photo;
 
-    // Contact info fields
+    // Contact info fields (header section)
     public $email;
     public $phone;
+
+    // Hidden fields (vCard only)
     public $website;
-    public $bio;
 
     // Content bands
     public $contentBands = [];
@@ -39,9 +41,9 @@ class EditProfile extends Component
     // Band form fields
     public $newSocialPlatform = '';
     public $newSocialUrl = '';
-    public $newImage;
+    public $newImages = [];
     public $newImageLink = '';
-    public $currentImagePath = '';
+    public $currentImagePaths = [];
     public $newTextContent = '';
 
     public function mount(Profile $profile)
@@ -61,40 +63,35 @@ class EditProfile extends Component
         $this->company = $this->profile->company;
         $this->location = $this->profile->location;
         $this->primary_color = $this->profile->primary_color ?? '#2D7A4F';
+        $this->secondary_color = $this->profile->secondary_color ?? '#1a5c3a';
         $this->email = $this->profile->email;
         $this->phone = $this->profile->phone;
         $this->website = $this->profile->website;
-        $this->bio = $this->profile->bio;
 
         $this->contentBands = $this->profile->contentBands()->orderBy('order')->get()->toArray();
     }
 
     // ========== AUTO-SAVE ==========
 
-    private function getAutoSaveRules()
+    public function updated($property, $value)
     {
-        return [
+        $autoSaveFields = [
+            'full_name', 'job_title', 'company', 'location',
+            'email', 'phone', 'primary_color', 'secondary_color',
+        ];
+
+        $rules = [
             'full_name' => 'required|string|max:100',
             'job_title' => 'nullable|string|max:100',
             'company' => 'nullable|string|max:100',
             'location' => 'nullable|string|max:100',
             'email' => 'nullable|email|max:100',
             'phone' => 'nullable|string|max:20',
-            'website' => 'nullable|url|max:255',
-            'bio' => 'nullable|string|max:500',
             'primary_color' => 'required|string',
-        ];
-    }
-
-    public function updated($property, $value)
-    {
-        $autoSaveFields = [
-            'full_name', 'job_title', 'company', 'location',
-            'email', 'phone', 'website', 'bio', 'primary_color',
+            'secondary_color' => 'required|string',
         ];
 
         if (in_array($property, $autoSaveFields)) {
-            $rules = $this->getAutoSaveRules();
             if (isset($rules[$property])) {
                 $this->validateOnly($property, [$property => $rules[$property]]);
                 $this->profile->update([$property => $this->$property]);
@@ -104,13 +101,6 @@ class EditProfile extends Component
 
         if ($property === 'photo' && $this->photo) {
             $this->savePhoto();
-        }
-    }
-
-    public function updatedWebsite($value)
-    {
-        if ($value && !preg_match('~^(?:f|ht)tps?://~i', $value)) {
-            $this->website = 'https://' . $value;
         }
     }
 
@@ -132,7 +122,7 @@ class EditProfile extends Component
 
     public function savePhoto()
     {
-        $this->validate(['photo' => 'image|max:10240']);
+        $this->validate(['photo' => 'image|max:15360']);
 
         if ($this->profile->photo_path) {
             Storage::disk('public')->delete($this->profile->photo_path);
@@ -149,28 +139,24 @@ class EditProfile extends Component
 
     public function saveAndReturn()
     {
+        // Auto-set website to profile URL for vCard
+        $profileUrl = route('profile.public', $this->profile->username);
+        $this->profile->update(['website' => $profileUrl]);
+
         return redirect()->route('profile.index');
     }
 
-    // ========== TOGGLE CONTACT BUTTON ==========
+    // ========== HEADER TEXT COLOR ==========
 
-    public function toggleContactButton()
+    public function getHeaderTextColor()
     {
-        $contactBand = $this->profile->contentBands()->where('type', 'contact_button')->first();
-
-        if ($contactBand) {
-            $contactBand->delete();
-        } else {
-            $maxOrder = $this->profile->contentBands()->max('order') ?? -1;
-            ContentBand::create([
-                'profile_id' => $this->profile->id,
-                'type' => 'contact_button',
-                'order' => $maxOrder + 1,
-                'data' => ['text' => 'Ajouter aux contacts'],
-            ]);
-        }
-
-        $this->loadData();
+        $hex = ltrim($this->primary_color ?? '#2D7A4F', '#');
+        if (strlen($hex) !== 6) return '#FFFFFF';
+        $r = hexdec(substr($hex, 0, 2));
+        $g = hexdec(substr($hex, 2, 2));
+        $b = hexdec(substr($hex, 4, 2));
+        $luminance = (0.299 * $r + 0.587 * $g + 0.114 * $b) / 255;
+        return $luminance > 0.6 ? '#2C2A27' : '#FFFFFF';
     }
 
     // ========== DRAG & DROP ==========
@@ -185,6 +171,24 @@ class EditProfile extends Component
         $this->loadData();
     }
 
+    // ========== TOTAL IMAGE COUNT ==========
+
+    public function getTotalImageCount()
+    {
+        $count = 0;
+        foreach ($this->contentBands as $band) {
+            if ($band['type'] === 'image') {
+                $images = $band['data']['images'] ?? [];
+                if (empty($images) && isset($band['data']['path'])) {
+                    $count += 1; // legacy single image
+                } else {
+                    $count += count($images);
+                }
+            }
+        }
+        return $count;
+    }
+
     // ========== LIMITES PAR PLAN ==========
 
     public function getAvailableBandTypes()
@@ -194,51 +198,34 @@ class EditProfile extends Component
 
         $contactCount = collect($this->contentBands)->where('type', 'contact_button')->count();
         $socialCount = collect($this->contentBands)->where('type', 'social_link')->count();
-        $imageCount = collect($this->contentBands)->where('type', 'image')->count();
+        $totalImages = $this->getTotalImageCount();
         $textCount = collect($this->contentBands)->where('type', 'text_block')->count();
 
         $limits = [
-            'free' => [
-                'contact' => ['max' => 1, 'current' => $contactCount],
-                'social' => ['max' => 2, 'current' => $socialCount],
-                'image' => ['max' => 2, 'current' => $imageCount],
-                'text' => ['max' => 1, 'current' => $textCount],
-                'image_url' => false,
-            ],
-            'pro' => [
-                'contact' => ['max' => 1, 'current' => $contactCount],
-                'social' => ['max' => 5, 'current' => $socialCount],
-                'image' => ['max' => 5, 'current' => $imageCount],
-                'text' => ['max' => 2, 'current' => $textCount],
-                'image_url' => true,
-            ],
-            'premium' => [
-                'contact' => ['max' => 1, 'current' => $contactCount],
-                'social' => ['max' => 10, 'current' => $socialCount],
-                'image' => ['max' => 10, 'current' => $imageCount],
-                'text' => ['max' => 5, 'current' => $textCount],
-                'image_url' => true,
-            ],
+            'free' => ['contact' => 1, 'social' => 2, 'image' => 2, 'text' => 1, 'image_url' => false],
+            'pro' => ['contact' => 1, 'social' => 5, 'image' => 5, 'text' => 2, 'image_url' => true],
+            'premium' => ['contact' => 1, 'social' => 10, 'image' => 10, 'text' => 5, 'image_url' => true],
         ];
 
         $planLimits = $limits[$plan] ?? $limits['free'];
 
         return [
             'contact_button' => [
-                'available' => $planLimits['contact']['current'] < $planLimits['contact']['max'],
-                'remaining' => $planLimits['contact']['max'] - $planLimits['contact']['current'],
+                'available' => $contactCount < $planLimits['contact'],
+                'remaining' => $planLimits['contact'] - $contactCount,
             ],
             'social_link' => [
-                'available' => $planLimits['social']['current'] < $planLimits['social']['max'],
-                'remaining' => $planLimits['social']['max'] - $planLimits['social']['current'],
+                'available' => $socialCount < $planLimits['social'],
+                'remaining' => $planLimits['social'] - $socialCount,
             ],
             'image' => [
-                'available' => $planLimits['image']['current'] < $planLimits['image']['max'],
-                'remaining' => $planLimits['image']['max'] - $planLimits['image']['current'],
+                'available' => $totalImages < $planLimits['image'],
+                'remaining' => $planLimits['image'] - $totalImages,
+                'max_per_band' => min(2, $planLimits['image'] - $totalImages),
             ],
             'text_block' => [
-                'available' => $planLimits['text']['current'] < $planLimits['text']['max'],
-                'remaining' => $planLimits['text']['max'] - $planLimits['text']['current'],
+                'available' => $textCount < $planLimits['text'],
+                'remaining' => $planLimits['text'] - $textCount,
             ],
             'image_url_allowed' => $planLimits['image_url'],
         ];
@@ -249,7 +236,7 @@ class EditProfile extends Component
     public function openAddBandModal($type = null)
     {
         $this->editingBandId = null;
-        $this->reset(['newBandType', 'newSocialPlatform', 'newSocialUrl', 'newImage', 'newImageLink', 'newTextContent', 'currentImagePath']);
+        $this->reset(['newBandType', 'newSocialPlatform', 'newSocialUrl', 'newImages', 'newImageLink', 'newTextContent', 'currentImagePaths']);
 
         if ($type) {
             $available = $this->getAvailableBandTypes();
@@ -288,8 +275,13 @@ class EditProfile extends Component
             $this->newSocialPlatform = $band->data['platform'] ?? '';
             $this->newSocialUrl = $band->data['url'] ?? '';
         } elseif ($band->type === 'image') {
-            $this->currentImagePath = $band->data['path'] ?? '';
-            $this->newImageLink = $band->data['link'] ?? '';
+            // Support both legacy and new format
+            if (isset($band->data['images'])) {
+                $this->currentImagePaths = array_column($band->data['images'], 'path');
+            } elseif (isset($band->data['path'])) {
+                $this->currentImagePaths = [$band->data['path']];
+            }
+            $this->newImageLink = $band->data['link'] ?? ($band->data['images'][0]['link'] ?? '');
         } elseif ($band->type === 'text_block') {
             $this->newTextContent = $band->data['text'] ?? '';
         }
@@ -301,8 +293,25 @@ class EditProfile extends Component
     {
         $this->showAddBandModal = false;
         $this->editingBandId = null;
-        $this->reset(['newBandType', 'newSocialPlatform', 'newSocialUrl', 'newImage', 'newImageLink', 'newTextContent', 'currentImagePath']);
+        $this->reset(['newBandType', 'newSocialPlatform', 'newSocialUrl', 'newImages', 'newImageLink', 'newTextContent', 'currentImagePaths']);
     }
+
+    // ========== ADD CONTACT BUTTON ==========
+
+    public function addContactButton()
+    {
+        $maxOrder = $this->profile->contentBands()->max('order') ?? -1;
+        ContentBand::create([
+            'profile_id' => $this->profile->id,
+            'type' => 'contact_button',
+            'order' => $maxOrder + 1,
+            'data' => ['text' => 'Ajouter aux contacts'],
+        ]);
+        $this->closeAddBandModal();
+        $this->loadData();
+    }
+
+    // ========== ADD SOCIAL LINK ==========
 
     public function addSocialLink()
     {
@@ -336,55 +345,66 @@ class EditProfile extends Component
         $this->loadData();
     }
 
+    // ========== ADD IMAGE ==========
+
     public function addImage()
     {
         $available = $this->getAvailableBandTypes();
 
         $this->validate([
-            'newImage' => $this->editingBandId ? 'nullable|image|max:10240' : 'required|image|max:10240',
-            'newImageLink' => $available['image_url_allowed'] ? 'nullable|url' : 'nullable',
+            'newImages' => $this->editingBandId ? 'nullable' : 'required|array|min:1|max:2',
+            'newImages.*' => 'image|max:15360',
         ]);
-
-        if (!$available['image_url_allowed'] && $this->newImageLink) {
-            session()->flash('error', 'Les liens sur images ne sont pas disponibles avec votre plan.');
-            return;
-        }
 
         if ($this->editingBandId) {
             $band = ContentBand::findOrFail($this->editingBandId);
+            $images = $band->data['images'] ?? [];
 
-            $data = [
-                'link' => $available['image_url_allowed'] ? $this->newImageLink : null,
-            ];
-
-            if ($this->newImage) {
-                if (isset($band->data['path'])) {
-                    Storage::disk('public')->delete($band->data['path']);
-                }
-                $data['path'] = $this->newImage->store('band-images', 'public');
-            } else {
-                $data['path'] = $band->data['path'];
+            // Legacy format conversion
+            if (empty($images) && isset($band->data['path'])) {
+                $images = [['path' => $band->data['path'], 'link' => $band->data['link'] ?? '']];
             }
 
-            $band->update(['data' => $data]);
-        } else {
-            $path = $this->newImage->store('band-images', 'public');
-            $maxOrder = $this->profile->contentBands()->max('order') ?? -1;
+            if (!empty($this->newImages)) {
+                // Delete old images
+                foreach ($images as $img) {
+                    if (isset($img['path'])) {
+                        Storage::disk('public')->delete($img['path']);
+                    }
+                }
+                $images = [];
+                foreach ($this->newImages as $file) {
+                    $images[] = [
+                        'path' => $file->store('band-images', 'public'),
+                        'link' => $available['image_url_allowed'] ? $this->newImageLink : '',
+                    ];
+                }
+            }
 
+            $band->update(['data' => ['images' => $images]]);
+        } else {
+            $images = [];
+            foreach ($this->newImages as $file) {
+                $images[] = [
+                    'path' => $file->store('band-images', 'public'),
+                    'link' => $available['image_url_allowed'] ? $this->newImageLink : '',
+                ];
+            }
+
+            $maxOrder = $this->profile->contentBands()->max('order') ?? -1;
             ContentBand::create([
                 'profile_id' => $this->profile->id,
                 'type' => 'image',
                 'order' => $maxOrder + 1,
-                'data' => [
-                    'path' => $path,
-                    'link' => $available['image_url_allowed'] ? $this->newImageLink : null,
-                ],
+                'data' => ['images' => $images],
             ]);
         }
 
         $this->closeAddBandModal();
         $this->loadData();
     }
+
+    // ========== ADD TEXT ==========
 
     public function addTextBlock()
     {
@@ -399,7 +419,6 @@ class EditProfile extends Component
             ]);
         } else {
             $maxOrder = $this->profile->contentBands()->max('order') ?? -1;
-
             ContentBand::create([
                 'profile_id' => $this->profile->id,
                 'type' => 'text_block',
@@ -412,6 +431,8 @@ class EditProfile extends Component
         $this->loadData();
     }
 
+    // ========== DELETE ==========
+
     public function deleteBand($bandId)
     {
         $band = ContentBand::findOrFail($bandId);
@@ -420,37 +441,33 @@ class EditProfile extends Component
             abort(403);
         }
 
-        if ($band->type === 'image' && isset($band->data['path'])) {
-            Storage::disk('public')->delete($band->data['path']);
+        if ($band->type === 'image') {
+            $images = $band->data['images'] ?? [];
+            if (empty($images) && isset($band->data['path'])) {
+                Storage::disk('public')->delete($band->data['path']);
+            } else {
+                foreach ($images as $img) {
+                    if (isset($img['path'])) {
+                        Storage::disk('public')->delete($img['path']);
+                    }
+                }
+            }
         }
 
         $band->delete();
         $this->loadData();
     }
 
-    public function getHeaderTextColor()
-    {
-        $hex = ltrim($this->primary_color ?? '#2D7A4F', '#');
-        if (strlen($hex) !== 6) return '#FFFFFF';
-        $r = hexdec(substr($hex, 0, 2));
-        $g = hexdec(substr($hex, 2, 2));
-        $b = hexdec(substr($hex, 4, 2));
-        $luminance = (0.299 * $r + 0.587 * $g + 0.114 * $b) / 255;
-        return $luminance > 0.6 ? '#2C2A27' : '#FFFFFF';
-    }
+    // ========== RENDER ==========
+
     public function render()
     {
         $availableTypes = $this->getAvailableBandTypes();
-        $hasContactButton = collect($this->contentBands)->where('type', 'contact_button')->count() > 0;
         $headerTextColor = $this->getHeaderTextColor();
-
-        $editableBands = collect($this->contentBands)->where('type', '!=', 'contact_button')->values()->toArray();
 
         return view('livewire.profile.edit-profile', [
             'availableTypes' => $availableTypes,
-            'hasContactButton' => $hasContactButton,
             'headerTextColor' => $headerTextColor,
-            'editableBands' => $editableBands,
         ])->layout('layouts.dashboard');
     }
 }
