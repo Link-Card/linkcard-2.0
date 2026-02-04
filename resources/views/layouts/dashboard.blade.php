@@ -29,9 +29,8 @@
             <!-- Logo -->
             <div class="p-6 border-b" style="border-color: rgba(255,255,255,0.1);">
                 <div class="flex items-center space-x-3">
-                    <img src="{{ asset('images/favicon.png') }}" alt="Link-Card" class="h-8 w-8">
+                    <img src="{{ asset('images/logo-blanc.png') }}" alt="Link-Card" class="h-9 w-auto"><span class="text-white font-semibold text-lg ml-3">Link-Card</span>
                     <div>
-                        <h1 class="text-lg font-semibold text-white tracking-tight">Link-Card</h1>
                     </div>
                 </div>
             </div>

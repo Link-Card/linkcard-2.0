@@ -3,7 +3,7 @@
         
         <!-- Logo + Titre -->
         <div class="text-center mb-8">
-            <img src="{{ asset('images/logo.png') }}" alt="Link-Card" class="h-16 w-auto mx-auto mb-4">
+            <img src="{{ asset('images/logo-noir.png') }}" alt="Link-Card" class="h-24 w-auto mx-auto mb-6">
             <h1 class="text-2xl font-semibold" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">Mot de passe oublié</h1>
             <p class="mt-2 text-sm" style="color: #4B5563;">
                 Entrez votre email et nous vous enverrons un lien de réinitialisation.

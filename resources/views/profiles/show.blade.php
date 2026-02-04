@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <title>{{ $profile->full_name }} - Link-Card</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -147,20 +148,18 @@
                     
                 @endforeach
             </div>
-            
             <!-- Footer -->
             <div class="px-6 pb-8 pt-4 border-t border-gray-200 text-center">
-                <p class="text-sm text-gray-500">
-                    Propulsé par 
-                    <a href="https://linkcard.ca" target="_blank" class="font-semibold transition" style="color: #42B574;"
-                       onmouseover="this.style.color='#3DA367'"
-                       onmouseout="this.style.color='#42B574'">
-                        Link-Card
+                <div class="flex items-center justify-center space-x-2">
+                    <span class="text-sm text-gray-400">Propulsé par</span>
+                    <a href="https://linkcard.ca" target="_blank">
+                        <span class="text-sm font-semibold text-gray-500 hover:text-green-600 transition">Link-Card</span>
                     </a>
-                </p>
+                </div>
                 <p class="text-xs text-gray-400 mt-2">
                     {{ $profile->view_count }} vues
                 </p>
+            </div>
             </div>
         </div>
     </div>
