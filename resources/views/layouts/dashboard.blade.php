@@ -6,37 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Dashboard' }} - Link-Card</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
-
-    <!-- Favicon Link-Card -->
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
-
-    <!-- Manrope Font (Brand Book) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
-
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Design System -->
     <link rel="stylesheet" href="{{ asset('css/design-system.css') }}">
-
     @livewireStyles
 </head>
 <body style="font-family: 'Manrope', system-ui, sans-serif; background-color: #F7F8F4;">
     <div class="flex h-screen">
-        <!-- Sidebar - Gris premium Brand Book -->
         <aside class="w-64 flex flex-col" style="background-color: #2C2A27;">
-
-            <!-- Logo -->
             <div class="p-6 border-b" style="border-color: rgba(255,255,255,0.1);">
                 <div class="flex items-center space-x-3">
-                    <img src="{{ asset('images/logo-blanc.png') }}" alt="Link-Card" class="h-9 w-auto"><span class="text-white font-semibold text-lg ml-3">Link-Card</span>
-                    <div>
-                    </div>
+                    <img src="{{ asset('images/logo-blanc.png') }}" alt="Link-Card" class="h-9 w-auto">
+                    <span class="text-white font-semibold text-lg">Link-Card</span>
                 </div>
             </div>
 
-            <!-- Navigation -->
             <nav class="flex-1 px-3 py-5 space-y-1">
                 <a href="{{ route('dashboard') }}"
                    class="sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
@@ -54,8 +41,8 @@
                     Mes Profils
                 </a>
 
-                <a href="#"
-                   class="sidebar-link">
+                <a href="{{ route('subscription.plans') }}"
+                   class="sidebar-link {{ request()->routeIs('subscription.*') ? 'active' : '' }}">
                     <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
                     </svg>
@@ -63,7 +50,6 @@
                 </a>
             </nav>
 
-            <!-- User section -->
             <div class="p-4 border-t" style="border-color: rgba(255,255,255,0.1);">
                 <div class="flex items-center px-3 py-2.5 rounded-lg" style="background: rgba(255,255,255,0.05);">
                     <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold text-white" style="background-color: #42B574;">
@@ -76,16 +62,14 @@
                 </div>
 
                 <div class="mt-2 space-y-0.5">
-                    <a href="#"
-                       class="block px-3 py-2 text-sm rounded-lg transition" style="color: rgba(255,255,255,0.6);"
+                    <a href="#" class="block px-3 py-2 text-sm rounded-lg transition" style="color: rgba(255,255,255,0.6);"
                        onmouseover="this.style.background='rgba(255,255,255,0.08)'"
                        onmouseout="this.style.background='transparent'">
                         Paramètres
                     </a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit"
-                                class="w-full text-left px-3 py-2 text-sm rounded-lg transition" style="color: rgba(255,255,255,0.6);"
+                        <button type="submit" class="w-full text-left px-3 py-2 text-sm rounded-lg transition" style="color: rgba(255,255,255,0.6);"
                                 onmouseover="this.style.background='rgba(255,255,255,0.08)'"
                                 onmouseout="this.style.background='transparent'">
                             Déconnexion
@@ -95,7 +79,6 @@
             </div>
         </aside>
 
-        <!-- Main Content -->
         <main class="flex-1 overflow-y-auto">
             {{ $slot }}
         </main>

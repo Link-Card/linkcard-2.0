@@ -2,11 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WebhookController;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Stripe Webhook (SANS middleware CSRF)
+Route::post('/webhook/stripe', [WebhookController::class, 'handleWebhook'])->name('stripe.webhook');
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/login', App\Livewire\Auth\Login::class)->name('login');
@@ -24,7 +28,6 @@ Route::middleware(['auth'])->group(function () {
     })->name('logout');
 
     Route::get('/email/verify', App\Livewire\Auth\VerifyEmailNotice::class)->name('verification.notice');
-    
     Route::get('/email/verify/{id}/{hash}', function (Illuminate\Foundation\Auth\EmailVerificationRequest $request) {
         $request->fulfill();
         return redirect('/dashboard');
@@ -38,32 +41,29 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', App\Livewire\Dashboard\Home::class)->name('dashboard');
-    
     Route::get('/dashboard/profiles', App\Livewire\Profile\Index::class)->name('profile.index');
     Route::get('/dashboard/profiles/create', App\Livewire\Profile\Create::class)->name('profile.create');
     Route::get('/dashboard/profiles/{profile}/edit', App\Livewire\Profile\EditProfile::class)->name('profile.edit');
+    Route::get('/dashboard/subscription', App\Livewire\Subscription\Plans::class)->name('subscription.plans');
+    Route::get('/dashboard/subscription/success', App\Livewire\Subscription\Success::class)->name('subscription.success');
+
     Route::post('/dashboard/profiles/add-additional', function() {
         return 'Achat profils additionnels - En construction';
     })->name('profile.add-additional');
 });
 
-// QR Code download (génération à la volée)
+// QR Code download
 Route::middleware('auth')->get('/profile/{profile}/qr-download', function(App\Models\Profile $profile) {
-    // Vérifier que le profil appartient à l'utilisateur
     if ($profile->user_id !== auth()->id()) {
         abort(403);
     }
-
-    // Générer l'URL du profil public
     $profileUrl = route('profile.public', $profile->username);
-    
-    // Générer le QR code à la volée
     $qrCode = QrCode::format('png')
         ->size(500)
         ->margin(2)
         ->errorCorrection('H')
         ->generate($profileUrl);
-    
+
     return response($qrCode)
         ->header('Content-Type', 'image/png')
         ->header('Content-Disposition', 'attachment; filename="qrcode-' . $profile->username . '.png"');
@@ -72,5 +72,5 @@ Route::middleware('auth')->get('/profile/{profile}/qr-download', function(App\Mo
 // vCard download
 Route::get('/profile/{profile}/vcard', [ProfileController::class, 'downloadVcard'])->name('profile.vcard');
 
-// Profile public
+// Profile public (DOIT RESTER EN DERNIER)
 Route::get('/{username}', [ProfileController::class, 'show'])->name('profile.public');
