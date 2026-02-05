@@ -15,8 +15,9 @@
                 </div>
             @endif
 
-            <button wire:click="saveAndReturn" class="w-full py-3.5 rounded-xl font-medium text-sm text-white transition-all duration-200" style="font-family: 'Manrope', sans-serif; background: #42B574;" onmouseover="this.style.background='#3DA367'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(66,181,116,0.3)'" onmouseout="this.style.background='#42B574'; this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-                <i class="fas fa-save mr-2"></i>Sauvegarder et retour
+            <button wire:click="saveAndReturn" class="w-full py-3.5 rounded-xl font-medium text-sm text-white transition-all duration-200 flex items-center justify-center space-x-2" style="font-family: 'Manrope', sans-serif; background: #42B574;" onmouseover="this.style.background='#3DA367'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(66,181,116,0.3)'" onmouseout="this.style.background='#42B574'; this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                <span>Sauvegarder et retour</span>
             </button>
         </div>
 
@@ -28,7 +29,9 @@
     </div>
 
     @include('livewire.profile.partials.modal-add-band')
-    @include('livewire.profile.partials.modal-delete')
     @include('livewire.profile.partials.sortable-script')
+    
+    <!-- Delete Modal (composant réutilisable) -->
+    <x-delete-modal :show="$showDeleteModal" :name="$deletingItemName" :type="$deletingItemType" />
 
 </div>

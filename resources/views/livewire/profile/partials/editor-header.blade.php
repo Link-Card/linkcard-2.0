@@ -1,4 +1,4 @@
-<div x-data="{ open: false }"
+<div x-data="{ open: false }" x-cloak
      class="bg-white rounded-xl overflow-hidden"
      style="border: 1px solid #E5E7EB; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
     <button @click="open = !open"
