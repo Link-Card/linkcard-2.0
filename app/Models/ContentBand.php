@@ -12,12 +12,15 @@ class ContentBand extends Model
         'type',
         'order',
         'data',
-        'settings'
+        'settings',
+        'is_hidden',
+        'hidden_reason',
     ];
 
     protected $casts = [
         'data' => 'array',
-        'settings' => 'array'
+        'settings' => 'array',
+        'is_hidden' => 'boolean',
     ];
 
     public function profile(): BelongsTo
@@ -25,7 +28,6 @@ class ContentBand extends Model
         return $this->belongsTo(Profile::class);
     }
 
-    // Helper methods pour chaque type
     public function isSocialLink(): bool
     {
         return $this->type === 'social_link';

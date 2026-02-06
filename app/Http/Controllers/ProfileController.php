@@ -12,70 +12,60 @@ class ProfileController extends Controller
     {
         $profile = Profile::where('username', $username)
             ->with(['contentBands' => function($query) {
-                $query->orderBy('order');
+                $query->where('is_hidden', false)->orderBy('order');
             }])
             ->firstOrFail();
-        
+
         // Incrémenter compteur vues
         $profile->increment('view_count');
-        
+
         return view('profiles.show', compact('profile'));
     }
-    
+
     public function downloadVcard(Profile $profile)
     {
         $vcard = "BEGIN:VCARD\n";
         $vcard .= "VERSION:3.0\n";
-        
-        // NOM COMPLET (pas le username)
         $vcard .= "FN:" . $profile->full_name . "\n";
         $vcard .= "N:" . $profile->full_name . ";;;;\n";
-        
-        // Titre et entreprise
+
         if($profile->job_title) {
             $vcard .= "TITLE:" . $profile->job_title . "\n";
         }
-        
+
         if($profile->company) {
             $vcard .= "ORG:" . $profile->company . "\n";
         }
-        
-        // Contacts
+
         if($profile->email) {
             $vcard .= "EMAIL:" . $profile->email . "\n";
         }
-        
+
         if($profile->phone) {
             $vcard .= "TEL:" . $profile->phone . "\n";
         }
-        
-        // Website personnel
+
         if($profile->website) {
             $vcard .= "URL:" . $profile->website . "\n";
         }
-        
-        // URL du profil Link-Card (cliquable)
+
         $profileUrl = url('/' . $profile->username);
         $vcard .= "URL;TYPE=WORK:" . $profileUrl . "\n";
-        
-        // Photo en base64
+
         if($profile->photo_path) {
             $photoPath = storage_path('app/public/' . $profile->photo_path);
             if(file_exists($photoPath)) {
                 $photoData = base64_encode(file_get_contents($photoPath));
                 $photoType = pathinfo($photoPath, PATHINFO_EXTENSION);
-                
-                // Déterminer le type MIME
                 $mimeType = 'JPEG';
                 if($photoType === 'png') $mimeType = 'PNG';
                 if($photoType === 'gif') $mimeType = 'GIF';
-                
                 $vcard .= "PHOTO;ENCODING=b;TYPE=" . $mimeType . ":" . $photoData . "\n";
             }
         }
-        
+
         $vcard .= "END:VCARD";
-        
+
         return response($vcard)
             ->header('Content-Type', 'text/vcard; charset=utf-8')
             ->header('Content-Disposition', 'attachment; filename="' . $profile->full_name . '.vcf"');

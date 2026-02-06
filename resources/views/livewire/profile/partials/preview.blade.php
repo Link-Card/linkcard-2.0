@@ -41,7 +41,9 @@
             <!-- CONTENT BANDS -->
             <div class="bg-white">
                 <div class="px-5 py-6 space-y-3">
-                    @foreach($contentBands as $band)
+                    @php $visibleBands = collect($contentBands)->filter(fn($b) => !($b['is_hidden'] ?? false)); @endphp
+                    
+                    @foreach($visibleBands as $band)
 
                         @if($band['type'] === 'contact_button')
                             <div class="flex items-center justify-center space-x-2 w-full py-3.5 px-5 text-white text-center rounded-xl font-semibold text-sm shadow-md"
@@ -89,7 +91,7 @@
 
                     @endforeach
 
-                    @if(count($contentBands) === 0)
+                    @if($visibleBands->count() === 0)
                         <div class="py-8 text-center">
                             <p class="text-sm" style="color: #D1D5DB;">Votre contenu apparaîtra ici</p>
                         </div>

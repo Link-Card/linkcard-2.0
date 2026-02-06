@@ -3,34 +3,25 @@
 namespace App\Livewire\Subscription;
 
 use Livewire\Component;
-use Laravel\Cashier\Cashier;
 
 class Success extends Component
 {
+    public $planName = '';
+
     public function mount()
     {
-        $sessionId = request()->get('session_id');
+        // Le webhook a déjà mis à jour le plan
+        // On attend juste un peu pour s'assurer que le webhook est traité
+        sleep(2);
         
-        if ($sessionId) {
-            $session = Cashier::stripe()->checkout->sessions->retrieve($sessionId);
-            
-            if ($session && $session->payment_status === 'paid') {
-                $user = auth()->user();
-                
-                // Déterminer le plan basé sur le price_id
-                $priceId = $session->line_items->data[0]->price->id ?? null;
-                
-                $plan = match($priceId) {
-                    config('services.stripe.price_pro_monthly'),
-                    config('services.stripe.price_pro_yearly') => 'pro',
-                    config('services.stripe.price_premium_monthly'),
-                    config('services.stripe.price_premium_yearly') => 'premium',
-                    default => 'free'
-                };
-                
-                $user->update(['plan' => $plan]);
-            }
-        }
+        $user = auth()->user();
+        $user->refresh();
+        
+        $this->planName = match($user->plan) {
+            'pro' => 'Pro',
+            'premium' => 'Premium',
+            default => 'Gratuit'
+        };
     }
 
     public function render()

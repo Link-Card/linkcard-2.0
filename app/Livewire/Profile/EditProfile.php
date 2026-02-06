@@ -8,6 +8,7 @@ use App\Models\Profile;
 use App\Models\ContentBand;
 use Illuminate\Support\Facades\Storage;
 use App\Livewire\Traits\WithDeleteConfirmation;
+use App\Services\PlanLimitsService;
 
 class EditProfile extends Component
 {
@@ -121,11 +122,12 @@ class EditProfile extends Component
         $this->loadData();
     }
 
-    public function getTotalImageCount()
+    public function getTotalImageCount($visibleOnly = true)
     {
         $count = 0;
         foreach ($this->contentBands as $band) {
             if ($band['type'] === 'image') {
+                if ($visibleOnly && ($band['is_hidden'] ?? false)) continue;
                 $images = $band['data']['images'] ?? [];
                 $count += empty($images) && isset($band['data']['path']) ? 1 : count($images);
             }
@@ -136,25 +138,32 @@ class EditProfile extends Component
     public function getAvailableBandTypes()
     {
         $plan = auth()->user()->plan ?? 'free';
-        $contactCount = collect($this->contentBands)->where('type', 'contact_button')->count();
-        $socialCount = collect($this->contentBands)->where('type', 'social_link')->count();
-        $totalImages = $this->getTotalImageCount();
-        $textCount = collect($this->contentBands)->where('type', 'text_block')->count();
-
-        $limits = [
-            'free' => ['contact' => 1, 'social' => 2, 'image' => 2, 'text' => 1, 'image_url' => false],
-            'pro' => ['contact' => 1, 'social' => 5, 'image' => 5, 'text' => 2, 'image_url' => true],
-            'premium' => ['contact' => 1, 'social' => 10, 'image' => 10, 'text' => 5, 'image_url' => true],
-        ];
-        $l = $limits[$plan] ?? $limits['free'];
+        $limits = PlanLimitsService::getLimits($plan);
+        
+        $visibleBands = collect($this->contentBands)->filter(fn($b) => !($b['is_hidden'] ?? false));
+        
+        $contactCount = $visibleBands->where('type', 'contact_button')->count();
+        $socialCount = $visibleBands->where('type', 'social_link')->count();
+        $totalImages = $this->getTotalImageCount(true);
+        $textCount = $visibleBands->where('type', 'text_block')->count();
 
         return [
-            'contact_button' => ['available' => $contactCount < $l['contact'], 'remaining' => $l['contact'] - $contactCount],
-            'social_link' => ['available' => $socialCount < $l['social'], 'remaining' => $l['social'] - $socialCount],
-            'image' => ['available' => $totalImages < $l['image'], 'remaining' => $l['image'] - $totalImages, 'max_per_band' => min(2, $l['image'] - $totalImages)],
-            'text_block' => ['available' => $textCount < $l['text'], 'remaining' => $l['text'] - $textCount],
-            'image_url_allowed' => $l['image_url'],
+            'contact_button' => ['available' => $contactCount < 1, 'remaining' => 1 - $contactCount],
+            'social_link' => ['available' => $socialCount < $limits['social_links'], 'remaining' => $limits['social_links'] - $socialCount],
+            'image' => ['available' => $totalImages < $limits['images'], 'remaining' => $limits['images'] - $totalImages, 'max_per_band' => min(2, $limits['images'] - $totalImages)],
+            'text_block' => ['available' => $textCount < $limits['text_blocks'], 'remaining' => $limits['text_blocks'] - $textCount],
+            'image_url_allowed' => $plan !== 'free',
         ];
+    }
+
+    public function getHiddenBandsCount()
+    {
+        return collect($this->contentBands)->filter(fn($b) => $b['is_hidden'] ?? false)->count();
+    }
+
+    public function getRequiredPlan()
+    {
+        return PlanLimitsService::getRequiredPlanForAll($this->profile);
     }
 
     // ========== BAND MODALS ==========
@@ -166,7 +175,7 @@ class EditProfile extends Component
         if ($type) {
             $available = $this->getAvailableBandTypes();
             if (isset($available[$type]) && !$available[$type]['available']) {
-                session()->flash('error', 'Limite atteinte pour ce type de bande.');
+                session()->flash('error', 'Limite atteinte pour ce type de bande. Passez à un forfait supérieur pour en ajouter plus.');
                 return;
             }
             $this->newBandType = $type;
@@ -178,7 +187,7 @@ class EditProfile extends Component
     {
         $available = $this->getAvailableBandTypes();
         if (isset($available[$type]) && !$available[$type]['available']) {
-            session()->flash('error', 'Limite atteinte pour ce type de bande.');
+            session()->flash('error', 'Limite atteinte pour ce type de bande. Passez à un forfait supérieur pour en ajouter plus.');
             return;
         }
         $this->newBandType = $type;
@@ -188,6 +197,11 @@ class EditProfile extends Component
     {
         $band = ContentBand::findOrFail($bandId);
         if ($band->profile_id !== $this->profile->id) abort(403);
+        
+        if ($band->is_hidden) {
+            session()->flash('error', 'Cette bande est masquée. Passez à un forfait supérieur pour la débloquer ou supprimez-la.');
+            return;
+        }
 
         $this->editingBandId = $bandId;
         $this->newBandType = $band->type;
@@ -337,6 +351,9 @@ class EditProfile extends Component
         return view('livewire.profile.edit-profile', [
             'availableTypes' => $this->getAvailableBandTypes(),
             'headerTextColor' => $this->getHeaderTextColor(),
+            'hiddenCount' => $this->getHiddenBandsCount(),
+            'userPlan' => auth()->user()->plan ?? 'free',
+            'requiredPlan' => $this->getRequiredPlan(),
         ])->layout('layouts.dashboard');
     }
 }

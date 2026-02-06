@@ -7,11 +7,20 @@ use Livewire\Component;
 class Plans extends Component
 {
     public string $billingCycle = 'monthly';
+    public bool $showSuccessMessage = false;
+
+    public function mount()
+    {
+        // Détecter si on revient du portail Stripe
+        if (request()->has('portal_return')) {
+            $this->showSuccessMessage = true;
+        }
+    }
 
     public function subscribe(string $plan)
     {
         $user = auth()->user();
-        
+
         $priceId = $this->billingCycle === 'monthly'
             ? config("services.stripe.price_{$plan}_monthly")
             : config("services.stripe.price_{$plan}_yearly");
@@ -21,6 +30,12 @@ class Plans extends Component
             return;
         }
 
+        // Si déjà abonné, rediriger vers le portail pour changer de plan
+        if ($user->subscribed('default')) {
+            return $this->redirectToPortal();
+        }
+
+        // Nouveau client, créer checkout
         $checkout = $user->newSubscription('default', $priceId)
             ->checkout([
                 'success_url' => route('subscription.success') . '?session_id={CHECKOUT_SESSION_ID}',
@@ -32,14 +47,21 @@ class Plans extends Component
 
     public function redirectToPortal()
     {
-        $url = auth()->user()->billingPortalUrl(route('subscription.plans'));
+        // Ajouter ?portal_return=1 pour détecter le retour
+        $returnUrl = route('subscription.plans') . '?portal_return=1';
+        $url = auth()->user()->billingPortalUrl($returnUrl);
         return $this->redirect($url, navigate: false);
     }
 
     public function render()
     {
         $user = auth()->user();
-
+        
+        $subscription = $user->subscription('default');
+        $isSubscribed = $user->subscribed('default');
+        $onGracePeriod = $subscription?->onGracePeriod() ?? false;
+        $endsAt = $subscription?->ends_at;
+        
         $plans = [
             'free' => [
                 'name' => 'Free',
@@ -84,6 +106,9 @@ class Plans extends Component
         return view('livewire.subscription.plans', [
             'plans' => $plans,
             'currentPlan' => $user->plan ?? 'free',
+            'isSubscribed' => $isSubscribed,
+            'onGracePeriod' => $onGracePeriod,
+            'endsAt' => $endsAt,
         ])->layout('layouts.dashboard');
     }
 }
