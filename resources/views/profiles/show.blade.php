@@ -99,7 +99,7 @@
         $primaryColor = $profile->primary_color ?? '#42B574';
         $secondaryColor = $profile->secondary_color ?? '#2D7A4F';
         $profileUrl = url()->current();
-        $userPlan = $profile->user->plan ?? 'free';
+        $userPlan = auth()->check() ? (auth()->user()->plan ?? 'free') : 'free';
         $canShowQR = in_array($userPlan, ['pro', 'premium']);
         
         // Calculer si le texte doit être clair ou foncé
