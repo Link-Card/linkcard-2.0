@@ -40,4 +40,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Card::class);
     }
+
+    public function cardOrders()
+    {
+        return $this->hasMany(CardOrder::class);
+    }
 }
