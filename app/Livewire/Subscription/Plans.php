@@ -63,16 +63,17 @@ class Plans extends Component
         $endsAt = $subscription?->ends_at;
         
         $plans = [
-            'free' => [
-                'name' => 'Free',
-                'price_monthly' => 0,
-                'price_yearly' => 0,
+            'premium' => [
+                'name' => 'Premium',
+                'price_monthly' => 8,
+                'price_yearly' => 80,
                 'features' => [
-                    '1 profil',
-                    'Code 8 caractères aléatoire',
-                    '2 liens sociaux',
-                    '2 images (sans liens)',
-                    '1 bloc texte',
+                    '1 profil (+8$/mois par extra)',
+                    'Username personnalisé obligatoire',
+                    '10 liens sociaux',
+                    '10 images avec liens',
+                    '5 blocs texte',
+                    'QR Code popup',
                 ],
             ],
             'pro' => [
@@ -88,17 +89,16 @@ class Plans extends Component
                     'QR Code popup',
                 ],
             ],
-            'premium' => [
-                'name' => 'Premium',
-                'price_monthly' => 8,
-                'price_yearly' => 80,
+            'free' => [
+                'name' => 'Gratuit',
+                'price_monthly' => 0,
+                'price_yearly' => 0,
                 'features' => [
-                    '1 profil (+8$/mois par extra)',
-                    'Username personnalisé obligatoire',
-                    '10 liens sociaux',
-                    '10 images avec liens',
-                    '5 blocs texte',
-                    'QR Code popup',
+                    '1 profil',
+                    'Code 8 caractères aléatoire',
+                    '2 liens sociaux',
+                    '2 images (sans liens)',
+                    '1 bloc texte',
                 ],
             ],
         ];

@@ -9,9 +9,9 @@
     @include('livewire.admin.partials.stats')
 
     <!-- Tabs -->
-    <div class="flex space-x-1 mb-6 p-1 rounded-lg" style="background-color: #F3F4F6;">
+    <div class="flex space-x-1 mb-6 p-1 rounded-lg overflow-x-auto" style="background-color: #F3F4F6;">
         <button wire:click="setTab('orders')"
-                class="flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all"
+                class="flex-1 py-2 px-3 sm:px-4 text-xs sm:text-sm font-medium rounded-md transition-all whitespace-nowrap"
                 style="{{ $activeTab === 'orders' ? 'background-color: #FFFFFF; color: #2C2A27; box-shadow: 0 1px 3px rgba(0,0,0,0.1);' : 'color: #4B5563;' }}">
             Commandes
             @if($stats['pendingOrders'] > 0)
@@ -19,14 +19,14 @@
             @endif
         </button>
         <button wire:click="setTab('archived')"
-                class="flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all"
+                class="flex-1 py-2 px-3 sm:px-4 text-xs sm:text-sm font-medium rounded-md transition-all whitespace-nowrap"
                 style="{{ $activeTab === 'archived' ? 'background-color: #FFFFFF; color: #2C2A27; box-shadow: 0 1px 3px rgba(0,0,0,0.1);' : 'color: #4B5563;' }}">
             Archives ({{ $archivedOrders->count() }})
         </button>
         <button wire:click="setTab('users')"
-                class="flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all"
+                class="flex-1 py-2 px-3 sm:px-4 text-xs sm:text-sm font-medium rounded-md transition-all whitespace-nowrap"
                 style="{{ $activeTab === 'users' ? 'background-color: #FFFFFF; color: #2C2A27; box-shadow: 0 1px 3px rgba(0,0,0,0.1);' : 'color: #4B5563;' }}">
-            Utilisateurs ({{ $stats['totalUsers'] }})
+            Users ({{ $stats['totalUsers'] }})
         </button>
     </div>
 

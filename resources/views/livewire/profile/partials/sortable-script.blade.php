@@ -9,6 +9,9 @@
                 handle: '.drag-handle',
                 animation: 150,
                 ghostClass: 'opacity-40',
+                delay: 200,
+                delayOnTouchOnly: true,
+                touchStartThreshold: 5,
                 onEnd: function () {
                     const items = el.querySelectorAll('[data-band-id]');
                     const orderedIds = Array.from(items).map(item => parseInt(item.dataset.bandId));
