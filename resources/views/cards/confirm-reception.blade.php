@@ -103,8 +103,9 @@
                         <p class="text-sm mb-4" style="color: #4B5563;">
                             Cette carte appartient à un autre compte. Connectez-vous avec le bon compte pour la confirmer.
                         </p>
-                        <form method="POST" action="{{ route('logout') }}">
+                        <form method="POST" action="{{ route('logout') }}" id="switchAccountForm">
                             @csrf
+                            <input type="hidden" name="redirect_to_card" value="{{ $card->card_code }}">
                             <button type="submit"
                                     class="inline-block px-6 py-3 rounded-lg font-medium text-center border-2"
                                     style="border-color: #D1D5DB; color: #2C2A27;">
@@ -120,11 +121,6 @@
                        class="block w-full py-3 rounded-lg text-white font-medium text-center"
                        style="background-color: #42B574;">
                         Se connecter pour confirmer
-                    </a>
-                    <a href="{{ route('register') }}"
-                       class="block w-full py-3 rounded-lg font-medium text-center border-2"
-                       style="border-color: #D1D5DB; color: #2C2A27;">
-                        Créer un compte
                     </a>
                 </div>
             @endauth

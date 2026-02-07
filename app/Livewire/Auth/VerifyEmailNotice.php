@@ -10,6 +10,14 @@ class VerifyEmailNotice extends Component
 {
     public $resent = false;
     
+    public function checkVerification()
+    {
+        $user = auth()->user();
+        if ($user && $user->fresh()->hasVerifiedEmail()) {
+            return redirect()->intended('/dashboard');
+        }
+    }
+    
     public function resendVerificationEmail()
     {
         $user = auth()->user();

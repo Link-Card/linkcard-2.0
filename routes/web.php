@@ -21,9 +21,17 @@ Route::middleware(['guest'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::post('/logout', function () {
+        $cardCode = request('redirect_to_card');
         auth()->logout();
         request()->session()->invalidate();
         request()->session()->regenerateToken();
+        
+        // If logging out from card confirmation, redirect back to confirm page
+        if ($cardCode) {
+            session(['pending_card_confirm' => $cardCode]);
+            return redirect()->route('card.confirm.show', $cardCode);
+        }
+        
         return redirect('/login');
     })->name('logout');
 
