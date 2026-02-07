@@ -9,7 +9,12 @@
             @endphp
             <div class="flex justify-between items-center py-3" style="border-bottom: 1px solid #E5E7EB;">
                 <div>
-                    <p class="text-sm font-medium" style="color: #2C2A27;">{{ $profile ? ($profile->full_name ?? $profile->username) : 'Profil' }}</p>
+                    <p class="text-sm font-medium" style="color: #2C2A27;">
+                        {{ $profile ? ($profile->full_name ?? $profile->username) : 'Profil' }}
+                        @if(($item['order_type'] ?? 'new') === 'replacement')
+                            <span class="text-xs px-2 py-0.5 rounded-full ml-1" style="background-color: #FEF3C7; color: #92400E;">🔄 Remplacement</span>
+                        @endif
+                    </p>
                     <p class="text-xs" style="color: #4B5563;">{{ $item['quantity'] }} carte(s) · {{ $item['design_type'] === 'custom' ? 'Personnalisé' : 'Standard' }}</p>
                 </div>
                 <p class="text-sm font-medium" style="color: #2C2A27;">{{ number_format(($this->unitPrice * $item['quantity']) / 100, 2) }}$</p>

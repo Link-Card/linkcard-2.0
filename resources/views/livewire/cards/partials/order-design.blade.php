@@ -7,74 +7,112 @@
             <div class="border rounded-xl p-4" style="border-color: #E5E7EB;">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-sm font-medium" style="color: #2C2A27;">Carte {{ $index + 1 }}</span>
-                    @if(count($items) > 1)
-                        <button wire:click="removeItem({{ $index }})" class="text-xs px-2 py-1 rounded" style="color: #EF4444;" title="Retirer">✕</button>
-                    @endif
+                    <div class="flex items-center space-x-2">
+                        {{-- Order type toggle --}}
+                        <div class="flex rounded-lg overflow-hidden border" style="border-color: #D1D5DB;">
+                            <button type="button" wire:click="$set('items.{{ $index }}.order_type', 'new')"
+                                    class="px-3 py-1 text-xs font-medium transition-all"
+                                    style="{{ ($item['order_type'] ?? 'new') === 'new' ? 'background-color: #42B574; color: white;' : 'color: #4B5563;' }}">
+                                Nouvelle
+                            </button>
+                            <button type="button" wire:click="$set('items.{{ $index }}.order_type', 'replacement')"
+                                    class="px-3 py-1 text-xs font-medium transition-all"
+                                    style="{{ ($item['order_type'] ?? 'new') === 'replacement' ? 'background-color: #F59E0B; color: white;' : 'color: #4B5563;' }}"
+                                    @if($existingCards->count() === 0) disabled title="Vous n'avez pas encore de carte" @endif>
+                                Remplacement
+                            </button>
+                        </div>
+                        @if(count($items) > 1)
+                            <button wire:click="removeItem({{ $index }})" class="text-xs px-2 py-1 rounded transition-colors" style="color: #EF4444;">✕</button>
+                        @endif
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <!-- Profile selector -->
-                    <div>
-                        <label class="block text-xs font-medium mb-1" style="color: #4B5563;">Profil lié</label>
-                        <select wire:model.live="items.{{ $index }}.profile_id" class="w-full text-sm rounded-lg border px-3 py-2" style="border-color: #D1D5DB; color: #2C2A27;">
-                            @foreach($profiles as $profile)
-                                <option value="{{ $profile->id }}">{{ $profile->full_name ?? $profile->username }}</option>
+                @if(($item['order_type'] ?? 'new') === 'replacement')
+                    {{-- Replacement mode --}}
+                    <div class="p-3 rounded-lg mb-3" style="background-color: #FEF3C7; border: 1px solid #F59E0B;">
+                        <p class="text-xs font-medium mb-2" style="color: #92400E;">🔄 Carte de remplacement — même URL, même code imprimé</p>
+                        <select wire:model.live="items.{{ $index }}.replace_card_id" class="w-full text-sm rounded-lg border px-3 py-2" style="border-color: #D1D5DB; color: #2C2A27;">
+                            <option value="">-- Sélectionner la carte à remplacer --</option>
+                            @foreach($existingCards as $card)
+                                <option value="{{ $card->id }}">{{ $card->card_code }} → {{ $card->profile ? ($card->profile->full_name ?? $card->profile->username) : 'Non lié' }}</option>
                             @endforeach
                         </select>
                     </div>
 
-                    <!-- Design type -->
-                    <div>
-                        <label class="block text-xs font-medium mb-1" style="color: #4B5563;">Design</label>
-                        <select wire:model.live="items.{{ $index }}.design_type" class="w-full text-sm rounded-lg border px-3 py-2" style="border-color: #D1D5DB; color: #2C2A27;">
-                            <option value="standard">Standard</option>
-                            <option value="custom">Personnalisé (logo)</option>
-                        </select>
-                    </div>
-
-                    <!-- Quantity -->
-                    <div>
-                        <label class="block text-xs font-medium mb-1" style="color: #4B5563;">Quantité</label>
-                        <div class="flex items-center space-x-2">
-                            <button wire:click="decrementItem({{ $index }})" type="button"
-                                    class="w-8 h-8 rounded-lg border flex items-center justify-center text-sm"
-                                    style="border-color: #D1D5DB; color: #4B5563;">−</button>
-                            <span class="w-8 text-center text-sm font-medium" style="color: #2C2A27;">{{ $item['quantity'] }}</span>
-                            <button wire:click="incrementItem({{ $index }})" type="button"
-                                    class="w-8 h-8 rounded-lg border flex items-center justify-center text-sm"
-                                    style="border-color: #D1D5DB; color: #4B5563;">+</button>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium mb-1" style="color: #4B5563;">Design</label>
+                            <select wire:model.live="items.{{ $index }}.design_type" class="w-full text-sm rounded-lg border px-3 py-2" style="border-color: #D1D5DB;">
+                                <option value="standard">Standard</option>
+                                <option value="custom">Personnalisé (logo)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium mb-1" style="color: #4B5563;">Quantité</label>
+                            <div class="flex items-center">
+                                <span class="text-sm px-3 py-2 rounded-lg" style="background-color: #F3F4F6; color: #4B5563;">1 (remplacement)</span>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @else
+                    {{-- New card mode --}}
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-xs font-medium mb-1" style="color: #4B5563;">Profil lié</label>
+                            <select wire:model.live="items.{{ $index }}.profile_id" class="w-full text-sm rounded-lg border px-3 py-2" style="border-color: #D1D5DB; color: #2C2A27;">
+                                @foreach($profiles as $profile)
+                                    <option value="{{ $profile->id }}">{{ $profile->full_name ?? $profile->username }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium mb-1" style="color: #4B5563;">Design</label>
+                            <select wire:model.live="items.{{ $index }}.design_type" class="w-full text-sm rounded-lg border px-3 py-2" style="border-color: #D1D5DB;">
+                                <option value="standard">Standard</option>
+                                <option value="custom">Personnalisé (logo)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium mb-1" style="color: #4B5563;">Quantité</label>
+                            <div class="flex items-center space-x-2">
+                                <button wire:click="decrementItem({{ $index }})" type="button"
+                                        class="w-8 h-8 rounded-lg border flex items-center justify-center text-sm"
+                                        style="border-color: #D1D5DB; color: #4B5563;">−</button>
+                                <span class="w-8 text-center text-sm font-medium" style="color: #2C2A27;">{{ $item['quantity'] }}</span>
+                                <button wire:click="incrementItem({{ $index }})" type="button"
+                                        class="w-8 h-8 rounded-lg border flex items-center justify-center text-sm"
+                                        style="border-color: #D1D5DB; color: #4B5563;">+</button>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
         @endforeach
     </div>
 
-    <!-- Add item button -->
+    <!-- Add item -->
     @if($profiles->count() > 0)
         <button wire:click="addItem" class="w-full py-3 rounded-xl border-2 border-dashed text-sm font-medium transition-colors" style="border-color: #D1D5DB; color: #4B5563;" onmouseover="this.style.borderColor='#42B574'; this.style.color='#42B574'" onmouseout="this.style.borderColor='#D1D5DB'; this.style.color='#4B5563'">
-            + Ajouter un autre profil
+            + Ajouter une carte
         </button>
     @endif
 
-    <!-- Logo upload if any custom -->
+    <!-- Logo upload for custom -->
     @if(collect($items)->contains('design_type', 'custom'))
         <div class="mt-4 p-4 rounded-xl" style="background-color: #F7F8F4; border: 1px solid #E5E7EB;">
             <label class="block text-sm font-medium mb-2" style="color: #2C2A27;">Logo pour les cartes personnalisées</label>
 
             <div class="flex items-start space-x-4">
-                <!-- Upload -->
                 <div class="flex-1">
                     <input type="file" wire:model="logoFile" accept=".png" class="w-full text-sm" style="color: #4B5563;">
                     @error('logoFile')
                         <p class="text-sm mt-1" style="color: #EF4444;">{{ $message }}</p>
                     @enderror
-                    <p class="text-xs mt-2" style="color: #9CA3AF;">
-                        Format PNG uniquement. Fond transparent recommandé. Max 15 Mo.
-                    </p>
+                    <p class="text-xs mt-2" style="color: #9CA3AF;">Format PNG uniquement. Fond transparent recommandé. Max 15 Mo.</p>
                 </div>
 
-                <!-- Card preview -->
+                <!-- Card preview (vertical) -->
                 <div class="flex-shrink-0">
                     <div class="w-24 h-40 rounded-xl flex items-center justify-center relative overflow-hidden" style="background-color: #FFFFFF; border: 2px solid #E5E7EB;">
                         @if($logoFile)
@@ -88,7 +126,7 @@
                             </div>
                         @endif
                         <div class="absolute bottom-1 left-0 right-0 text-center">
-                            <p class="text-xs font-medium" style="color: #9CA3AF; font-size: 6px;">LINK-CARD</p>
+                            <p style="color: #9CA3AF; font-size: 5px; font-weight: 600;">LINK-CARD</p>
                         </div>
                     </div>
                     <p class="text-xs text-center mt-1" style="color: #9CA3AF;">Carte verticale</p>
@@ -97,8 +135,8 @@
         </div>
     @endif
 
-    <!-- Price display -->
-    <div class="p-4 rounded-lg mt-4 mb-6" style="background-color: #F0F9F4;">
+    <!-- Price -->
+    <div class="p-4 rounded-xl mt-4 mb-6" style="background-color: #F0F9F4;">
         <div class="flex justify-between items-center">
             <span class="text-sm" style="color: #4B5563;">{{ $this->totalQuantity }} carte(s) × {{ $this->displayUnitPrice }}$</span>
             <div>
@@ -118,9 +156,9 @@
         @endif
     </div>
 
-    <!-- Next button -->
+    <!-- Next -->
     <div class="flex justify-end">
-        <button wire:click="nextStep" class="px-6 py-3 rounded-lg text-white font-medium transition-colors" style="background-color: #42B574;" onmouseover="this.style.backgroundColor='#3DA367'" onmouseout="this.style.backgroundColor='#42B574'">
+        <button wire:click="nextStep" class="px-6 py-3 rounded-xl text-white font-medium transition-colors" style="background-color: #42B574;" onmouseover="this.style.backgroundColor='#3DA367'" onmouseout="this.style.backgroundColor='#42B574'">
             Continuer
             <svg class="w-4 h-4 inline ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>

@@ -18,6 +18,11 @@
                 <span class="ml-1 px-1.5 py-0.5 text-xs rounded-full text-white" style="background-color: #F59E0B;">{{ $stats['pendingOrders'] }}</span>
             @endif
         </button>
+        <button wire:click="setTab('archived')"
+                class="flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all"
+                style="{{ $activeTab === 'archived' ? 'background-color: #FFFFFF; color: #2C2A27; box-shadow: 0 1px 3px rgba(0,0,0,0.1);' : 'color: #4B5563;' }}">
+            Archives ({{ $archivedOrders->count() }})
+        </button>
         <button wire:click="setTab('users')"
                 class="flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all"
                 style="{{ $activeTab === 'users' ? 'background-color: #FFFFFF; color: #2C2A27; box-shadow: 0 1px 3px rgba(0,0,0,0.1);' : 'color: #4B5563;' }}">
@@ -28,6 +33,8 @@
     <!-- Tab content -->
     @if($activeTab === 'orders')
         @include('livewire.admin.partials.orders-list')
+    @elseif($activeTab === 'archived')
+        @include('livewire.admin.partials.archives-list')
     @elseif($activeTab === 'users')
         @include('livewire.admin.partials.users-list')
     @endif

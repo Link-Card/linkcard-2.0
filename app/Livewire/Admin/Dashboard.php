@@ -20,6 +20,7 @@ class Dashboard extends Component
     // Delete modal
     public ?int $deletingOrderId = null;
     public string $deleteReason = '';
+    public string $deleteNote = '';
 
     public function setTab($tab)
     {
@@ -45,13 +46,10 @@ class Dashboard extends Component
     public function updateOrderStatus($orderId)
     {
         $order = CardOrder::findOrFail($orderId);
-
         $updates = ['status' => $this->newStatus];
-
         if ($this->trackingNumber) {
             $updates['tracking_number'] = $this->trackingNumber;
         }
-
         $order->update($updates);
 
         if ($this->newStatus === 'shipped') {
@@ -66,7 +64,15 @@ class Dashboard extends Component
     {
         $order = CardOrder::findOrFail($orderId);
         $order->update(['status' => 'archived']);
-        session()->flash('success', 'Commande #' . $orderId . ' archivée. Le revenu est conservé.');
+        $this->cancelEdit();
+        session()->flash('success', 'Commande #' . $orderId . ' archivée.');
+    }
+
+    public function unarchiveOrder($orderId)
+    {
+        $order = CardOrder::findOrFail($orderId);
+        $order->update(['status' => 'delivered']);
+        session()->flash('success', 'Commande #' . $orderId . ' restaurée.');
     }
 
     public function confirmDelete($orderId)
@@ -74,41 +80,48 @@ class Dashboard extends Component
         $this->deletingOrderId = $orderId;
         $this->editingOrderId = null;
         $this->deleteReason = '';
+        $this->deleteNote = '';
     }
 
     public function cancelDelete()
     {
         $this->deletingOrderId = null;
         $this->deleteReason = '';
+        $this->deleteNote = '';
     }
 
     public function deleteOrder()
     {
-        if (!$this->deletingOrderId) return;
+        if (!$this->deletingOrderId || !$this->deleteReason) return;
 
         $order = CardOrder::findOrFail($this->deletingOrderId);
 
-        // Log the deletion reason
         \Illuminate\Support\Facades\Log::info('Order deleted', [
             'order_id' => $order->id,
             'user_id' => $order->user_id,
+            'user_email' => $order->user->email ?? 'unknown',
             'amount_cents' => $order->amount_cents,
             'reason' => $this->deleteReason,
+            'note' => $this->deleteNote,
             'deleted_by' => auth()->id(),
+            'deleted_at' => now()->toISOString(),
         ]);
 
-        // Delete associated cards
         Card::where('order_id', $order->id)->delete();
-
         $orderId = $order->id;
         $order->delete();
 
         $this->cancelDelete();
-        session()->flash('success', 'Commande #' . $orderId . ' supprimée. Revenus ajustés.');
+        session()->flash('success', 'Commande #' . $orderId . ' supprimée.');
     }
 
     public function render()
     {
+        // Auto-archive: shipped > 1 month ago
+        CardOrder::where('status', 'delivered')
+            ->where('updated_at', '<', now()->subMonth())
+            ->update(['status' => 'archived']);
+
         $proMonthly = User::where('plan', 'pro')->count() * 500;
         $premiumMonthly = User::where('plan', 'premium')->count() * 800;
 

@@ -16,7 +16,7 @@ class Order extends Component
     public $logoFile = null;
     public bool $noProfiles = false;
 
-    // Shipping address
+    // Shipping
     public string $shippingName = '';
     public string $shippingStreet = '';
     public string $shippingCity = '';
@@ -41,7 +41,7 @@ class Order extends Component
         $user = auth()->user();
         $this->shippingName = $user->name ?? '';
 
-        // Clean up old pending (unpaid) orders from cancelled checkouts
+        // Cleanup old pending orders
         CardOrder::where('user_id', $user->id)
             ->where('status', 'pending')
             ->where('created_at', '<', now()->subHour())
@@ -57,6 +57,8 @@ class Order extends Component
             'profile_id' => $profiles->first()->id,
             'quantity' => 1,
             'design_type' => 'standard',
+            'order_type' => 'new',
+            'replace_card_id' => null,
         ]];
     }
 
@@ -69,6 +71,8 @@ class Order extends Component
             'profile_id' => $profiles->first()->id,
             'quantity' => 1,
             'design_type' => 'standard',
+            'order_type' => 'new',
+            'replace_card_id' => null,
         ];
     }
 
@@ -82,6 +86,8 @@ class Order extends Component
     public function incrementItem($index)
     {
         if (isset($this->items[$index]) && $this->items[$index]['quantity'] < 10) {
+            // Replacements are always qty 1
+            if (($this->items[$index]['order_type'] ?? 'new') === 'replacement') return;
             $this->items[$index]['quantity']++;
         }
     }
@@ -93,6 +99,15 @@ class Order extends Component
         }
     }
 
+    public function updatedItems($value, $key)
+    {
+        // When switching to replacement, force qty to 1
+        if (str_contains($key, 'order_type') && $value === 'replacement') {
+            $index = (int) explode('.', $key)[0];
+            $this->items[$index]['quantity'] = 1;
+        }
+    }
+
     public function nextStep()
     {
         if ($this->step === 1) {
@@ -100,15 +115,20 @@ class Order extends Component
                 session()->flash('error', 'Ajoutez au moins une carte.');
                 return;
             }
+            // Validate replacements have card selected
+            foreach ($this->items as $item) {
+                if (($item['order_type'] ?? 'new') === 'replacement' && empty($item['replace_card_id'])) {
+                    session()->flash('error', 'Sélectionnez la carte à remplacer.');
+                    return;
+                }
+            }
             $hasCustom = collect($this->items)->contains('design_type', 'custom');
             if ($hasCustom && !$this->logoFile) {
                 $this->addError('logoFile', 'Le logo est requis pour le design personnalisé.');
                 return;
             }
             if ($hasCustom && $this->logoFile) {
-                $this->validate([
-                    'logoFile' => 'mimes:png|max:15360',
-                ]);
+                $this->validate(['logoFile' => 'mimes:png|max:15360']);
             }
             $this->step = 2;
         } elseif ($this->step === 2) {
@@ -170,10 +190,20 @@ class Order extends Component
         }
 
         $profiles = $user->profiles->keyBy('id');
+        $existingCards = $user->cards->keyBy('id');
         $orderItems = [];
+
         foreach ($this->items as $item) {
             $profile = $profiles->get($item['profile_id']);
-            $code = Card::generateUniqueCode();
+            $isReplacement = ($item['order_type'] ?? 'new') === 'replacement';
+
+            if ($isReplacement && !empty($item['replace_card_id'])) {
+                $existingCard = $existingCards->get($item['replace_card_id']);
+                $code = $existingCard ? $existingCard->card_code : Card::generateUniqueCode();
+            } else {
+                $code = Card::generateUniqueCode();
+            }
+
             $orderItems[] = [
                 'profile_id' => $item['profile_id'],
                 'profile_name' => $profile ? ($profile->full_name ?? $profile->username) : 'Inconnu',
@@ -181,6 +211,8 @@ class Order extends Component
                 'quantity' => $item['quantity'],
                 'design_type' => $item['design_type'],
                 'card_code' => $code,
+                'order_type' => $item['order_type'] ?? 'new',
+                'is_replacement' => $isReplacement,
             ];
         }
 
@@ -230,7 +262,6 @@ class Order extends Component
             ]);
 
             $order->update(['stripe_session_id' => $session->id]);
-
             return $this->redirect($session->url, navigate: false);
 
         } catch (\Exception $e) {
@@ -242,8 +273,10 @@ class Order extends Component
 
     public function render()
     {
+        $user = auth()->user();
         return view('livewire.cards.order', [
-            'profiles' => auth()->user()->profiles,
+            'profiles' => $user->profiles,
+            'existingCards' => $user->cards()->with('profile')->get(),
         ])->layout('layouts.dashboard');
     }
 }
