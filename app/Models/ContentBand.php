@@ -12,7 +12,9 @@ class ContentBand extends Model
         'type',
         'order',
         'data',
-        'settings'
+        'settings',
+        'is_hidden',
+        'hidden_reason',
     ];
 
     protected $casts = [
