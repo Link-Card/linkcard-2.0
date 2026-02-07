@@ -19,6 +19,7 @@ class User extends Authenticatable
         'role',
         'verification_code',
         'verification_code_expires_at',
+        'welcome_email_sent_at',
     ];
 
     protected $hidden = [
@@ -31,6 +32,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'verification_code_expires_at' => 'datetime',
+            'welcome_email_sent_at' => 'datetime',
             'password' => 'hashed',
         ];
     }

@@ -4,7 +4,6 @@ namespace App\Livewire\Auth;
 
 use App\Models\User;
 use App\Mail\VerifyEmail;
-use App\Mail\Welcome;
 use App\Rules\StrongPassword;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -55,12 +54,7 @@ class Register extends Component
         // Envoyer l'email de vérification
         Mail::to($user->email)->send(new VerifyEmail($user));
         
-        // Envoyer l'email de bienvenue
-        try {
-            Mail::to($user->email)->send(new Welcome($user));
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Welcome email failed', ['error' => $e->getMessage()]);
-        }
+        // Email de bienvenue envoyé 24h après via commande planifiée
         
         Auth::login($user);
         

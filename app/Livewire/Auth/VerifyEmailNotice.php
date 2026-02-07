@@ -26,6 +26,9 @@ class VerifyEmailNotice extends Component
             return;
         }
         
+        // Petit délai pour le feedback visuel
+        usleep(1500000); // 1.5 secondes
+        
         if (!$user->verification_code) {
             $this->codeError = 'Aucun code en attente. Renvoyez un nouveau code.';
             return;
