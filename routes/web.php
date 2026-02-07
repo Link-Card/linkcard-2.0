@@ -50,6 +50,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/dashboard/profiles/add-additional', function() {
         return 'Achat profils additionnels - En construction';
     })->name('profile.add-additional');
+
+    // Cartes NFC (dashboard)
+    Route::get('/dashboard/cards', App\Livewire\Cards\Index::class)->name('cards.index');
+    Route::get('/dashboard/cards/order', function() {
+        return 'Commande carte NFC - En construction (Phase 3)';
+    })->name('cards.order');
 });
 
 // QR Code download
@@ -71,6 +77,13 @@ Route::middleware('auth')->get('/profile/{profile}/qr-download', function(App\Mo
 
 // vCard download
 Route::get('/profile/{profile}/vcard', [ProfileController::class, 'downloadVcard'])->name('profile.vcard');
+
+// NFC Card routes
+use App\Http\Controllers\CardController;
+
+Route::get('/c/{cardCode}', [CardController::class, 'redirect'])->name('card.redirect');
+Route::get('/c/{cardCode}/activate', [CardController::class, 'showActivation'])->name('card.activate.show');
+Route::post('/c/{cardCode}/activate', [CardController::class, 'activate'])->middleware('auth')->name('card.activate');
 
 // Profile public (DOIT RESTER EN DERNIER)
 Route::get('/{username}', [ProfileController::class, 'show'])->name('profile.public');
