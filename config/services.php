@@ -39,4 +39,11 @@ return [
         ],
     ],
 
+    'stripe' => [
+        'price_pro_monthly' => env('STRIPE_PRICE_PRO_MONTHLY'),
+        'price_pro_yearly' => env('STRIPE_PRICE_PRO_YEARLY'),
+        'price_premium_monthly' => env('STRIPE_PRICE_PREMIUM_MONTHLY'),
+        'price_premium_yearly' => env('STRIPE_PRICE_PREMIUM_YEARLY'),
+    ],
+
 ];
