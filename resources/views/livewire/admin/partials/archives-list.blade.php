@@ -23,7 +23,7 @@
                 <tbody>
                     @foreach($archivedOrders as $order)
                         <tr class="border-t" style="border-color: #E5E7EB;">
-                            <td class="px-4 py-3 text-sm font-mono" style="color: #9CA3AF;">#{{ $order->id }}</td>
+                            <td class="px-4 py-3 text-sm font-mono" style="color: #9CA3AF;">{{ $order->order_number ?? '#'.$order->id }}</td>
                             <td class="px-4 py-3">
                                 <p class="text-sm" style="color: #4B5563;">{{ $order->user->name ?? 'Supprimé' }}</p>
                                 <p class="text-xs" style="color: #9CA3AF;">{{ $order->user->email ?? '-' }}</p>

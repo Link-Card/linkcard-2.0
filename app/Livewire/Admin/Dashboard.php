@@ -76,7 +76,7 @@ class Dashboard extends Component
         }
 
         $this->cancelEdit();
-        session()->flash('success', 'Commande #' . $orderId . ' mise à jour.');
+        session()->flash('success', 'Commande ' . ($order->order_number ?? '#'.$orderId) . ' mise à jour.');
     }
 
     public function archiveOrder($orderId)
@@ -84,14 +84,14 @@ class Dashboard extends Component
         $order = CardOrder::findOrFail($orderId);
         $order->update(['status' => 'archived']);
         $this->cancelEdit();
-        session()->flash('success', 'Commande #' . $orderId . ' archivée.');
+        session()->flash('success', 'Commande ' . ($order->order_number ?? '#'.$orderId) . ' archivée.');
     }
 
     public function unarchiveOrder($orderId)
     {
         $order = CardOrder::findOrFail($orderId);
         $order->update(['status' => 'delivered']);
-        session()->flash('success', 'Commande #' . $orderId . ' restaurée.');
+        session()->flash('success', 'Commande ' . ($order->order_number ?? '#'.$orderId) . ' restaurée.');
     }
 
     public function confirmDelete($orderId)
@@ -127,11 +127,11 @@ class Dashboard extends Component
         ]);
 
         Card::where('order_id', $order->id)->delete();
-        $orderId = $order->id;
+        $orderNumber = $order->order_number ?? '#'.$order->id;
         $order->delete();
 
         $this->cancelDelete();
-        session()->flash('success', 'Commande #' . $orderId . ' supprimée.');
+        session()->flash('success', 'Commande ' . $orderNumber . ' supprimée.');
     }
 
     public function render()

@@ -20,7 +20,7 @@ class OrderConfirmed extends Mailable
 
     public function build()
     {
-        return $this->subject('Commande #' . $this->order->id . ' confirmée — Link-Card')
+        return $this->subject('Commande ' . $this->order->order_number . ' confirmée — Link-Card')
                     ->view('emails.order-confirmed');
     }
 }

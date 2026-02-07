@@ -8,6 +8,7 @@ class CardOrder extends Model
 {
     protected $fillable = [
         'user_id',
+        'order_number',
         'quantity',
         'design_type',
         'logo_path',
@@ -25,6 +26,29 @@ class CardOrder extends Model
         'shipping_address' => 'array',
         'items' => 'array',
     ];
+
+    private static string $charset = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+    protected static function booted(): void
+    {
+        static::creating(function (CardOrder $order) {
+            if (empty($order->order_number)) {
+                $order->order_number = static::generateOrderNumber();
+            }
+        });
+    }
+
+    public static function generateOrderNumber(): string
+    {
+        do {
+            $code = 'LC-';
+            for ($i = 0; $i < 4; $i++) {
+                $code .= static::$charset[random_int(0, strlen(static::$charset) - 1)];
+            }
+        } while (static::where('order_number', $code)->exists());
+
+        return $code;
+    }
 
     public function user()
     {

@@ -12,7 +12,7 @@
     {{-- Résumé commande --}}
     <div class="info-box">
         <p class="info-label">Commande</p>
-        <p class="info-value">#{{ $order->id }}</p>
+        <p class="info-value">{{ $order->order_number }}</p>
 
         <p class="info-label">Quantité</p>
         <p class="info-value">{{ $order->quantity }} carte(s) NFC</p>

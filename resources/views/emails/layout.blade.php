@@ -22,7 +22,7 @@
             padding: 32px 0 24px;
         }
         .email-header img {
-            height: 40px;
+            height: 28px;
             width: auto;
         }
         .email-body {

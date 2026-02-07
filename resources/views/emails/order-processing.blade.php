@@ -2,7 +2,7 @@
 
 @section('content')
     <h1 class="email-title">Votre carte est en préparation</h1>
-    <p class="email-subtitle">Commande #{{ $order->id }}</p>
+    <p class="email-subtitle">Commande {{ $order->order_number }}</p>
 
     <p class="email-text">
         Bonjour {{ $order->user->name }},

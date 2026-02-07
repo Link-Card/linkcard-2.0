@@ -19,7 +19,7 @@
                 <div class="space-y-2 text-sm">
                     <div class="flex justify-between">
                         <span style="color: #4B5563;">Commande</span>
-                        <span class="font-medium" style="color: #2C2A27;">#{{ $order->id }}</span>
+                        <span class="font-medium" style="color: #2C2A27;">{{ $order->order_number ?? '#'.$order->id }}</span>
                     </div>
                     <div class="flex justify-between">
                         <span style="color: #4B5563;">Total</span>

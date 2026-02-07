@@ -88,6 +88,8 @@ use App\Http\Controllers\CardController;
 Route::get('/c/{cardCode}', [CardController::class, 'redirect'])->name('card.redirect');
 Route::get('/c/{cardCode}/activate', [CardController::class, 'showActivation'])->name('card.activate.show');
 Route::post('/c/{cardCode}/activate', [CardController::class, 'activate'])->middleware('auth')->name('card.activate');
+Route::get('/c/{cardCode}/confirm', [CardController::class, 'showConfirmation'])->name('card.confirm.show');
+Route::post('/c/{cardCode}/confirm', [CardController::class, 'confirmReception'])->name('card.confirm');
 
 // Profile public (DOIT RESTER EN DERNIER)
 Route::get('/{username}', [ProfileController::class, 'show'])->name('profile.public');
