@@ -397,8 +397,8 @@
                         <svg class="w-5 h-5" fill="#2C2A27" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
                     </div>
                     <div class="text-left flex-1">
-                        <p class="font-semibold text-sm" style="color: #2C2A27;">Télécharger la vCard</p>
-                        <p class="text-xs" style="color: #9CA3AF;">Enregistrer dans vos contacts</p>
+                        <p class="font-semibold text-sm" style="color: #2C2A27;">Télécharger le contact</p>
+                        <p class="text-xs" style="color: #9CA3AF;">Enregistrer dans votre téléphone</p>
                     </div>
                 </a>
                 
