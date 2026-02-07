@@ -12,9 +12,9 @@ class Order extends Component
 {
     use WithFileUploads;
 
-    // Cart items: [['profile_id' => X, 'quantity' => Y, 'design_type' => 'standard|custom'], ...]
     public array $items = [];
     public $logoFile = null;
+    public bool $noProfiles = false;
 
     // Shipping address
     public string $shippingName = '';
@@ -24,8 +24,7 @@ class Order extends Component
     public string $shippingPostalCode = '';
     public string $shippingPhone = '';
 
-    // UI state
-    public int $step = 1; // 1=panier, 2=adresse, 3=résumé
+    public int $step = 1;
 
     protected $messages = [
         'shippingName.required' => 'Le nom est requis.',
@@ -33,7 +32,7 @@ class Order extends Component
         'shippingCity.required' => 'La ville est requise.',
         'shippingPostalCode.required' => 'Le code postal est requis.',
         'shippingPhone.required' => 'Le téléphone est requis.',
-        'logoFile.image' => 'Le fichier doit être une image.',
+        'logoFile.mimes' => 'Le logo doit être au format PNG (fond transparent recommandé).',
         'logoFile.max' => 'Le logo ne doit pas dépasser 15 Mo.',
     ];
 
@@ -42,15 +41,23 @@ class Order extends Component
         $user = auth()->user();
         $this->shippingName = $user->name ?? '';
 
-        // Start with one item if user has profiles
+        // Clean up old pending (unpaid) orders from cancelled checkouts
+        CardOrder::where('user_id', $user->id)
+            ->where('status', 'pending')
+            ->where('created_at', '<', now()->subHour())
+            ->delete();
+
         $profiles = $user->profiles;
-        if ($profiles->count() > 0) {
-            $this->items = [[
-                'profile_id' => $profiles->first()->id,
-                'quantity' => 1,
-                'design_type' => 'standard',
-            ]];
+        if ($profiles->count() === 0) {
+            $this->noProfiles = true;
+            return;
         }
+
+        $this->items = [[
+            'profile_id' => $profiles->first()->id,
+            'quantity' => 1,
+            'design_type' => 'standard',
+        ]];
     }
 
     public function addItem()
@@ -93,11 +100,15 @@ class Order extends Component
                 session()->flash('error', 'Ajoutez au moins une carte.');
                 return;
             }
-            // Check if any custom needs logo
             $hasCustom = collect($this->items)->contains('design_type', 'custom');
             if ($hasCustom && !$this->logoFile) {
                 $this->addError('logoFile', 'Le logo est requis pour le design personnalisé.');
                 return;
+            }
+            if ($hasCustom && $this->logoFile) {
+                $this->validate([
+                    'logoFile' => 'mimes:png|max:15360',
+                ]);
             }
             $this->step = 2;
         } elseif ($this->step === 2) {
@@ -115,9 +126,7 @@ class Order extends Component
 
     public function previousStep()
     {
-        if ($this->step > 1) {
-            $this->step--;
-        }
+        if ($this->step > 1) $this->step--;
     }
 
     public function getTotalQuantityProperty(): int
@@ -154,14 +163,12 @@ class Order extends Component
     {
         $user = auth()->user();
 
-        // Save logo if any custom item
         $logoPath = null;
         $hasCustom = collect($this->items)->contains('design_type', 'custom');
         if ($hasCustom && $this->logoFile) {
             $logoPath = $this->logoFile->store('card-logos', 'public');
         }
 
-        // Build items with profile names for admin display
         $profiles = $user->profiles->keyBy('id');
         $orderItems = [];
         foreach ($this->items as $item) {
@@ -170,13 +177,13 @@ class Order extends Component
             $orderItems[] = [
                 'profile_id' => $item['profile_id'],
                 'profile_name' => $profile ? ($profile->full_name ?? $profile->username) : 'Inconnu',
+                'profile_url' => $profile ? url('/' . $profile->username) : '',
                 'quantity' => $item['quantity'],
                 'design_type' => $item['design_type'],
                 'card_code' => $code,
             ];
         }
 
-        // Create order
         $order = CardOrder::create([
             'user_id' => $user->id,
             'quantity' => $this->totalQuantity,
@@ -196,7 +203,6 @@ class Order extends Component
             'amount_cents' => $this->totalPrice,
         ]);
 
-        // Create Stripe Checkout
         try {
             $stripe = new \Stripe\StripeClient(config('cashier.secret'));
 

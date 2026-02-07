@@ -12,10 +12,14 @@ class Dashboard extends Component
 {
     public string $activeTab = 'orders';
 
-    // Phase 4B: action fields
+    // Order editing
     public ?int $editingOrderId = null;
     public string $newStatus = '';
     public string $trackingNumber = '';
+
+    // Delete modal
+    public ?int $deletingOrderId = null;
+    public string $deleteReason = '';
 
     public function setTab($tab)
     {
@@ -25,6 +29,7 @@ class Dashboard extends Component
     public function startEdit($orderId)
     {
         $this->editingOrderId = $orderId;
+        $this->deletingOrderId = null;
         $order = CardOrder::findOrFail($orderId);
         $this->newStatus = $order->status;
         $this->trackingNumber = $order->tracking_number ?? '';
@@ -49,7 +54,6 @@ class Dashboard extends Component
 
         $order->update($updates);
 
-        // If shipped: record shipped_at on cards
         if ($this->newStatus === 'shipped') {
             Card::where('order_id', $order->id)->update(['shipped_at' => now()]);
         }
@@ -58,31 +62,62 @@ class Dashboard extends Component
         session()->flash('success', 'Commande #' . $orderId . ' mise à jour.');
     }
 
-    public function deleteOrder($orderId)
+    public function archiveOrder($orderId)
     {
         $order = CardOrder::findOrFail($orderId);
+        $order->update(['status' => 'archived']);
+        session()->flash('success', 'Commande #' . $orderId . ' archivée. Le revenu est conservé.');
+    }
 
-        if ($order->status !== 'pending') {
-            session()->flash('error', 'Seules les commandes en attente peuvent être supprimées.');
-            return;
-        }
+    public function confirmDelete($orderId)
+    {
+        $this->deletingOrderId = $orderId;
+        $this->editingOrderId = null;
+        $this->deleteReason = '';
+    }
 
+    public function cancelDelete()
+    {
+        $this->deletingOrderId = null;
+        $this->deleteReason = '';
+    }
+
+    public function deleteOrder()
+    {
+        if (!$this->deletingOrderId) return;
+
+        $order = CardOrder::findOrFail($this->deletingOrderId);
+
+        // Log the deletion reason
+        \Illuminate\Support\Facades\Log::info('Order deleted', [
+            'order_id' => $order->id,
+            'user_id' => $order->user_id,
+            'amount_cents' => $order->amount_cents,
+            'reason' => $this->deleteReason,
+            'deleted_by' => auth()->id(),
+        ]);
+
+        // Delete associated cards
+        Card::where('order_id', $order->id)->delete();
+
+        $orderId = $order->id;
         $order->delete();
-        session()->flash('success', 'Commande #' . $orderId . ' supprimée.');
+
+        $this->cancelDelete();
+        session()->flash('success', 'Commande #' . $orderId . ' supprimée. Revenus ajustés.');
     }
 
     public function render()
     {
-        // Monthly recurring revenue
         $proMonthly = User::where('plan', 'pro')->count() * 500;
         $premiumMonthly = User::where('plan', 'premium')->count() * 800;
 
         $stats = [
             'totalUsers' => User::count(),
             'totalProfiles' => Profile::count(),
-            'totalOrders' => CardOrder::count(),
+            'totalOrders' => CardOrder::whereNotIn('status', ['pending', 'archived'])->count(),
             'totalCards' => Card::count(),
-            'totalRevenue' => CardOrder::where('status', '!=', 'pending')->sum('amount_cents'),
+            'totalRevenue' => CardOrder::whereNotIn('status', ['pending'])->sum('amount_cents'),
             'monthlyRecurring' => $proMonthly + $premiumMonthly,
             'pendingOrders' => CardOrder::where('status', 'paid')->count(),
             'activeCards' => Card::where('is_active', true)->count(),
@@ -92,6 +127,12 @@ class Dashboard extends Component
         ];
 
         $orders = CardOrder::with('user')
+            ->whereNotIn('status', ['pending', 'archived'])
+            ->orderByDesc('created_at')
+            ->get();
+
+        $archivedOrders = CardOrder::with('user')
+            ->where('status', 'archived')
             ->orderByDesc('created_at')
             ->get();
 
@@ -102,6 +143,7 @@ class Dashboard extends Component
         return view('livewire.admin.dashboard', [
             'stats' => $stats,
             'orders' => $orders,
+            'archivedOrders' => $archivedOrders,
             'users' => $users,
         ])->layout('layouts.dashboard');
     }

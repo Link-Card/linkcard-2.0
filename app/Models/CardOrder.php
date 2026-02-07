@@ -44,6 +44,7 @@ class CardOrder extends Model
             'processing' => 'En traitement',
             'shipped' => 'Expédiée',
             'delivered' => 'Livrée',
+            'archived' => 'Archivée',
             default => $this->status,
         };
     }
@@ -56,6 +57,7 @@ class CardOrder extends Model
             'processing' => '#4A7FBF',
             'shipped' => '#42B574',
             'delivered' => '#42B574',
+            'archived' => '#9CA3AF',
             default => '#9CA3AF',
         };
     }

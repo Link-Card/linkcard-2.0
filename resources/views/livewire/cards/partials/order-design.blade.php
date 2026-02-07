@@ -59,18 +59,41 @@
 
     <!-- Logo upload if any custom -->
     @if(collect($items)->contains('design_type', 'custom'))
-        <div class="mt-4 p-4 rounded-lg" style="background-color: #F7F8F4;">
+        <div class="mt-4 p-4 rounded-xl" style="background-color: #F7F8F4; border: 1px solid #E5E7EB;">
             <label class="block text-sm font-medium mb-2" style="color: #2C2A27;">Logo pour les cartes personnalisées</label>
-            <input type="file" wire:model="logoFile" accept="image/*" class="w-full text-sm" style="color: #4B5563;">
-            @error('logoFile')
-                <p class="text-sm mt-1" style="color: #EF4444;">{{ $message }}</p>
-            @enderror
-            @if($logoFile)
-                <div class="mt-3">
-                    <img src="{{ $logoFile->temporaryUrl() }}" class="h-16 rounded-lg">
+
+            <div class="flex items-start space-x-4">
+                <!-- Upload -->
+                <div class="flex-1">
+                    <input type="file" wire:model="logoFile" accept=".png" class="w-full text-sm" style="color: #4B5563;">
+                    @error('logoFile')
+                        <p class="text-sm mt-1" style="color: #EF4444;">{{ $message }}</p>
+                    @enderror
+                    <p class="text-xs mt-2" style="color: #9CA3AF;">
+                        Format PNG uniquement. Fond transparent recommandé. Max 15 Mo.
+                    </p>
                 </div>
-            @endif
-            <p class="text-xs mt-2" style="color: #9CA3AF;">PNG, JPG. Max 15 Mo. Fond transparent recommandé.</p>
+
+                <!-- Card preview -->
+                <div class="flex-shrink-0">
+                    <div class="w-24 h-40 rounded-xl flex items-center justify-center relative overflow-hidden" style="background-color: #FFFFFF; border: 2px solid #E5E7EB;">
+                        @if($logoFile)
+                            <img src="{{ $logoFile->temporaryUrl() }}" class="w-16 h-16 object-contain">
+                        @else
+                            <div class="text-center">
+                                <svg class="w-8 h-8 mx-auto mb-1" style="color: #D1D5DB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                <p class="text-xs" style="color: #9CA3AF;">Aperçu</p>
+                            </div>
+                        @endif
+                        <div class="absolute bottom-1 left-0 right-0 text-center">
+                            <p class="text-xs font-medium" style="color: #9CA3AF; font-size: 6px;">LINK-CARD</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-center mt-1" style="color: #9CA3AF;">Carte verticale</p>
+                </div>
+            </div>
         </div>
     @endif
 
