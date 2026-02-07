@@ -48,6 +48,11 @@
                                                 style="background-color: #F3F4F6; color: #4B5563; border: 1.5px solid #9CA3AF;">
                                             Archiver
                                         </button>
+                                        <button wire:click="confirmDelete({{ $order->id }})"
+                                                class="px-4 py-2 text-xs rounded-xl font-medium transition-all"
+                                                style="background-color: #FEF2F2; color: #EF4444; border: 1.5px solid #EF4444;">
+                                            Supprimer
+                                        </button>
                                     @else
                                         <button wire:click="startEdit({{ $order->id }})"
                                                 class="px-4 py-2 text-xs rounded-xl font-medium transition-all"
