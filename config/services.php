@@ -34,4 +34,8 @@ return [
         'price_premium_monthly' => env('STRIPE_PRICE_PREMIUM_MONTHLY'),
         'price_premium_yearly' => env('STRIPE_PRICE_PREMIUM_YEARLY'),
     ],
+
+    'referral' => [
+        'enabled' => env('REFERRAL_ENABLED', true),
+    ],
 ];

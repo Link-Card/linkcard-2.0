@@ -20,6 +20,12 @@ class User extends Authenticatable
         'verification_code',
         'verification_code_expires_at',
         'welcome_email_sent_at',
+        'referral_code',
+        'referred_by',
+        'premium_bonus_months',
+        'premium_bonus_used',
+        'notify_connection_request',
+        'notify_connection_accepted',
     ];
 
     protected $hidden = [
@@ -51,6 +57,60 @@ class User extends Authenticatable
     {
         return $this->hasMany(CardOrder::class);
     }
+
+    // --- Connexions ---
+
+    public function sentConnections()
+    {
+        return $this->hasMany(Connection::class, 'sender_id');
+    }
+
+    public function receivedConnections()
+    {
+        return $this->hasMany(Connection::class, 'receiver_id');
+    }
+
+    /**
+     * Toutes les connexions acceptées (envoyées + reçues).
+     */
+    public function acceptedConnections()
+    {
+        return Connection::where('status', 'accepted')
+            ->where(function ($q) {
+                $q->where('sender_id', $this->id)
+                  ->orWhere('receiver_id', $this->id);
+            });
+    }
+
+    /**
+     * Demandes de connexion reçues en attente.
+     */
+    public function pendingReceivedConnections()
+    {
+        return $this->receivedConnections()->where('status', 'pending');
+    }
+
+    /**
+     * Nombre de demandes en attente (pour badge sidebar).
+     */
+    public function getPendingConnectionsCountAttribute(): int
+    {
+        return $this->pendingReceivedConnections()->count();
+    }
+
+    // --- Referrals ---
+
+    public function referrals()
+    {
+        return $this->hasMany(Referral::class, 'referrer_id');
+    }
+
+    public function referredBy()
+    {
+        return $this->belongsTo(User::class, 'referred_by');
+    }
+
+    // --- Auth helpers ---
 
     public function isAdmin(): bool
     {
