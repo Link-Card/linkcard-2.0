@@ -64,6 +64,11 @@ class Profile extends Model
         return $this->hasMany(ContentBand::class)->orderBy('order');
     }
 
+    public function cards(): HasMany
+    {
+        return $this->hasMany(\App\Models\Card::class);
+    }
+
     public function imageBands(): HasMany
     {
         return $this->hasMany(ImageBand::class)->orderBy('order');

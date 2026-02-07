@@ -52,4 +52,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Profile::class);
     }
+
+    public function cards()
+    {
+        return $this->hasMany(Card::class);
+    }
 }
