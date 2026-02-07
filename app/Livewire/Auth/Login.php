@@ -47,6 +47,12 @@ class Login extends Component
             // Réinitialiser le compteur en cas de succès
             RateLimiter::clear($key);
             session()->regenerate();
+            
+            // Redirection carte en attente de confirmation
+            if ($cardCode = session()->pull('pending_card_confirm')) {
+                return redirect()->route('card.confirm.show', $cardCode);
+            }
+            
             return redirect()->intended('dashboard');
         }
         

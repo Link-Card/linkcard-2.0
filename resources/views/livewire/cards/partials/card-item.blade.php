@@ -38,7 +38,7 @@
             </select>
 
             <!-- Toggle active -->
-            <button wire:click="toggleActive({{ $card->id }})" class="p-2 rounded-lg transition-colors" style="color: {{ $card->is_active ? '#42B574' : '#9CA3AF' }};" title="{{ $card->is_active ? 'Désactiver' : 'Activer' }}">
+            <button wire:click="toggleActive({{ $card->id }})" wire:loading.attr="disabled" wire:target="toggleActive({{ $card->id }})" class="p-2 rounded-lg transition-colors disabled:opacity-40" style="color: {{ $card->is_active ? '#42B574' : '#9CA3AF' }};" title="{{ $card->is_active ? 'Désactiver' : 'Activer' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     @if($card->is_active)
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>

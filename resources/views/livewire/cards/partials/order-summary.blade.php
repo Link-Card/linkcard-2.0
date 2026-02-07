@@ -51,9 +51,12 @@
             </svg>
             Retour
         </button>
-        <button wire:click="checkout" wire:loading.attr="disabled" class="px-8 py-3 rounded-lg text-white font-medium transition-colors disabled:opacity-50" style="background-color: #42B574;" onmouseover="this.style.backgroundColor='#3DA367'" onmouseout="this.style.backgroundColor='#42B574'">
+        <button wire:click="checkout" wire:loading.attr="disabled" class="px-8 py-3 rounded-lg text-white font-medium transition-colors disabled:opacity-60" style="background-color: #42B574;" onmouseover="this.style.backgroundColor='#3DA367'" onmouseout="this.style.backgroundColor='#42B574'">
             <span wire:loading.remove wire:target="checkout">Payer {{ $this->displayTotalPrice }}$</span>
-            <span wire:loading wire:target="checkout">Redirection vers Stripe...</span>
+            <span wire:loading wire:target="checkout" class="flex items-center">
+                <svg class="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                Redirection vers Stripe...
+            </span>
         </button>
     </div>
 </div>

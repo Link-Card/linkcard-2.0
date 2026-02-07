@@ -80,14 +80,18 @@
             @auth
                 @if(auth()->id() === $card->user_id)
                     {{-- Owner logged in → confirm button --}}
-                    <form method="POST" action="{{ route('card.confirm', $card->card_code) }}">
+                    <form method="POST" action="{{ route('card.confirm', $card->card_code) }}" onsubmit="this.querySelector('button').disabled=true; this.querySelector('.btn-text').style.display='none'; this.querySelector('.btn-loading').style.display='flex';">
                         @csrf
                         <button type="submit"
-                                class="w-full py-3 rounded-lg text-white font-medium transition-colors"
+                                class="w-full py-3 rounded-lg text-white font-medium transition-colors disabled:opacity-60"
                                 style="background-color: #42B574;"
                                 onmouseover="this.style.backgroundColor='#3DA367'"
                                 onmouseout="this.style.backgroundColor='#42B574'">
-                            Confirmer la réception
+                            <span class="btn-text">Confirmer la réception</span>
+                            <span class="btn-loading items-center justify-center" style="display: none;">
+                                <svg class="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                                Activation en cours...
+                            </span>
                         </button>
                     </form>
                     <p class="text-center text-xs mt-3" style="color: #9CA3AF;">
@@ -112,7 +116,7 @@
             @else
                 {{-- Not logged in --}}
                 <div class="space-y-3">
-                    <a href="{{ route('login', ['redirect' => url()->current()]) }}"
+                    <a href="{{ route('login') }}"
                        class="block w-full py-3 rounded-lg text-white font-medium text-center"
                        style="background-color: #42B574;">
                         Se connecter pour confirmer

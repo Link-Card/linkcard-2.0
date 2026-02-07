@@ -162,8 +162,12 @@
                                                 <button wire:click="cancelEdit" class="flex-1 px-5 py-3 text-sm rounded-xl font-medium transition-colors" style="color: #4B5563; border: 1.5px solid #D1D5DB;">
                                                     Annuler
                                                 </button>
-                                                <button wire:click="updateOrderStatus({{ $order->id }})" class="flex-1 px-5 py-3 text-sm rounded-xl text-white font-medium transition-colors" style="background-color: #42B574;">
-                                                    Sauvegarder
+                                                <button wire:click="updateOrderStatus({{ $order->id }})" wire:loading.attr="disabled" class="flex-1 px-5 py-3 text-sm rounded-xl text-white font-medium transition-colors disabled:opacity-60" style="background-color: #42B574;">
+                                                    <span wire:loading.remove wire:target="updateOrderStatus({{ $order->id }})">Sauvegarder</span>
+                                                    <span wire:loading wire:target="updateOrderStatus({{ $order->id }})" class="flex items-center justify-center">
+                                                        <svg class="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                                                        Envoi...
+                                                    </span>
                                                 </button>
                                             </div>
                                         </div>

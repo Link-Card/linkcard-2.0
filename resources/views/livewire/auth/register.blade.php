@@ -70,11 +70,16 @@
 
                 <!-- Submit -->
                 <button type="submit" 
-                    class="w-full py-3 px-4 text-sm font-medium text-white rounded-lg transition-all duration-200 shadow-sm"
+                    wire:loading.attr="disabled"
+                    class="w-full py-3 px-4 text-sm font-medium text-white rounded-lg transition-all duration-200 shadow-sm disabled:opacity-60"
                     style="font-family: 'Manrope', sans-serif; background: #42B574;"
                     onmouseover="this.style.background='#3DA367'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(66,181,116,0.3)'"
                     onmouseout="this.style.background='#42B574'; this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.05)'">
-                    S'inscrire
+                    <span wire:loading.remove>S'inscrire</span>
+                    <span wire:loading class="flex items-center justify-center">
+                        <svg class="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                        Création du compte...
+                    </span>
                 </button>
             </form>
         </div>

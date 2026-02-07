@@ -65,6 +65,11 @@ class CardController extends Controller
             return redirect()->route('card.redirect', $card->card_code);
         }
 
+        // Store in session for post-login redirect
+        if (!auth()->check()) {
+            session(['pending_card_confirm' => $card->card_code]);
+        }
+
         return view('cards.confirm-reception', ['card' => $card]);
     }
 
