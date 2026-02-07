@@ -11,8 +11,10 @@
             </p>
         </div>
 
-        <!-- Actions Rapides (EN PREMIER sur mobile) -->
-        <div class="grid grid-cols-2 gap-3 mb-6">
+        <div class="flex flex-col">
+
+        <!-- Actions Rapides (EN PREMIER sur mobile, EN SECOND sur desktop) -->
+        <div class="grid grid-cols-2 gap-3 mb-6 order-first lg:order-last">
             @php
                 $profileCount = Auth::user()->profiles->count();
                 $firstProfile = Auth::user()->profiles->first();
@@ -75,8 +77,8 @@
             </a>
         </div>
 
-        <!-- Stats Cards (compact, 2 per row mobile) -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <!-- Stats Cards (EN SECOND sur mobile, EN PREMIER sur desktop) -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 order-last lg:order-first mb-6 lg:mb-6">
             <div class="bg-white rounded-xl border p-4" style="border-color: #E5E7EB; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                 <p class="text-xs mb-1" style="color: #4B5563;">Plan</p>
                 <p class="text-lg font-semibold" style="color: #2C2A27;">
@@ -96,5 +98,7 @@
                 <p class="text-lg font-semibold" style="color: #2C2A27;">{{ Auth::user()->profiles->sum('view_count') }}</p>
             </div>
         </div>
+
+        </div> {{-- end flex col wrapper --}}
     </div>
 </div>
