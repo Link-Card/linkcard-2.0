@@ -36,10 +36,16 @@ Route::middleware(['auth'])->group(function () {
     })->name('logout');
 
     Route::get('/email/verify', App\Livewire\Auth\VerifyEmailNotice::class)->name('verification.notice');
-    Route::get('/email/verify/{id}/{hash}', function (Illuminate\Foundation\Auth\EmailVerificationRequest $request) {
-        $request->fulfill();
+    
+    // Fallback: old link verification (kept for compatibility)
+    Route::get('/email/verify/{id}/{hash}', function ($id, $hash) {
+        $user = App\Models\User::findOrFail($id);
+        if (sha1($user->email) === $hash && !$user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
+            $user->update(['verification_code' => null, 'verification_code_expires_at' => null]);
+        }
         return redirect('/dashboard');
-    })->middleware(['signed'])->name('verification.verify');
+    })->name('verification.verify');
 
     Route::post('/email/verification-notification', function (Illuminate\Http\Request $request) {
         $request->user()->sendEmailVerificationNotification();
