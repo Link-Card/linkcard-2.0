@@ -141,7 +141,7 @@
     <div class="email-wrapper">
         {{-- Header --}}
         <div class="email-header">
-            <img src="{{ asset('images/logo-noir.png') }}" alt="Link-Card">
+            <img src="{{ asset('images/logo-noir.png') }}" alt="Link-Card" width="120" height="auto" style="height: auto; width: 120px; max-width: 120px; display: inline-block;">
         </div>
 
         {{-- Body --}}

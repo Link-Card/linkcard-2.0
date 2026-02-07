@@ -144,6 +144,8 @@
                                             <p class="text-sm font-semibold mb-3" style="color: #2C2A27;">⚙️ Gestion</p>
                                             <div class="p-4 rounded-xl bg-white shadow-sm">
                                                 <label class="block text-xs font-medium mb-1" style="color: #4B5563;">Statut</label>
+                                                {{-- TODO POST-BETA: Verrouiller le flow des statuts pour empêcher de revenir en arrière
+                                                     (ex: delivered → processing interdit). Garder flexible pendant les tests. --}}
                                                 <select wire:model="newStatus" class="w-full text-sm rounded-xl border px-3 py-2.5 mb-4" style="border-color: #D1D5DB;">
                                                     <option value="paid">Payée</option>
                                                     <option value="processing">En traitement</option>
