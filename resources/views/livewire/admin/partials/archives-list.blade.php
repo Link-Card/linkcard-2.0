@@ -8,7 +8,90 @@
     @include('livewire.admin.partials.delete-modal')
 
     @if($archivedOrders->count() > 0)
-        <div class="overflow-x-auto">
+        {{-- Mobile: Cards --}}
+        <div class="md:hidden divide-y" style="border-color: #E5E7EB;">
+            @foreach($archivedOrders as $order)
+                <div class="p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-mono" style="color: #9CA3AF;">{{ $order->order_number ?? '#'.$order->id }}</span>
+                        <span class="text-xs" style="color: #9CA3AF;">{{ $order->created_at->format('d/m/Y') }}</span>
+                    </div>
+                    <p class="text-sm font-medium" style="color: #4B5563;">{{ $order->user->name ?? 'Supprimé' }}</p>
+                    <p class="text-xs mb-2" style="color: #9CA3AF;">{{ $order->user->email ?? '-' }}</p>
+                    <div class="flex items-center space-x-4 text-xs mb-3" style="color: #4B5563;">
+                        <span>{{ $order->quantity }} carte(s)</span>
+                        <span>{{ $order->amount_dollars }}$</span>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button wire:click="startEdit({{ $order->id }})" class="px-3 py-1.5 text-xs rounded-xl font-medium" style="background-color: #F3F4F6; color: #4B5563; border: 1.5px solid #9CA3AF;">Détails</button>
+                        <button wire:click="unarchiveOrder({{ $order->id }})" class="px-3 py-1.5 text-xs rounded-xl font-medium" style="background-color: #EFF6FF; color: #4A7FBF; border: 1.5px solid #4A7FBF;">Restaurer</button>
+                        <button wire:click="confirmDelete({{ $order->id }})" class="px-3 py-1.5 text-xs rounded-xl font-medium" style="background-color: #FEF2F2; color: #EF4444; border: 1.5px solid #EF4444;">Supprimer</button>
+                    </div>
+
+                    {{-- Expanded detail mobile --}}
+                    @if($editingOrderId === $order->id)
+                        <div class="mt-4 pt-4 space-y-3" style="border-top: 1px solid #E5E7EB;">
+                            @if($order->items)
+                                @foreach($order->items as $item)
+                                    <div class="p-3 rounded-xl shadow-sm" style="background-color: #F7F8F4;">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-sm font-semibold" style="color: #2C2A27;">{{ $item['profile_name'] ?? 'Profil' }}</span>
+                                            <span class="text-xs px-2 py-0.5 rounded-full font-medium" style="background-color: #F3F4F6; color: #4B5563;">
+                                                {{ $item['quantity'] }}x · {{ ($item['design_type'] ?? 'standard') === 'custom' ? 'Custom' : 'Std' }}
+                                            </span>
+                                        </div>
+                                        <div class="flex items-center space-x-2 mt-1">
+                                            <span class="text-xs" style="color: #9CA3AF;">Code:</span>
+                                            <code class="text-sm font-bold font-mono px-2 py-0.5 rounded" style="color: #2C2A27; background-color: #F3F4F6;">{{ $item['card_code'] ?? '' }}</code>
+                                        </div>
+                                        <div class="flex items-center space-x-2 mt-1">
+                                            <span class="text-xs" style="color: #9CA3AF;">NFC →</span>
+                                            <code class="text-xs font-mono break-all" style="color: #4A7FBF;">https://app.linkcard.ca/c/{{ $item['card_code'] ?? '' }}</code>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endif
+
+                            @if($order->logo_path)
+                                <div class="p-3 rounded-xl shadow-sm" style="background-color: #F7F8F4;">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <p class="text-sm font-medium" style="color: #2C2A27;">🎨 Logo</p>
+                                        <a href="{{ asset('storage/' . $order->logo_path) }}" download="logo-commande-{{ $order->id }}.png"
+                                           class="px-3 py-1.5 text-xs rounded-xl font-medium"
+                                           style="background-color: #F0F9F4; color: #42B574; border: 1.5px solid #42B574;">⬇</a>
+                                    </div>
+                                    <div class="rounded-xl overflow-hidden inline-block p-2" style="background: repeating-conic-gradient(#f3f4f6 0% 25%, #fff 0% 50%) 50% / 14px 14px;">
+                                        <img src="{{ asset('storage/' . $order->logo_path) }}" class="h-20 object-contain">
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if($order->shipping_address)
+                                <div class="p-3 rounded-xl shadow-sm" style="background-color: #F7F8F4;">
+                                    <p class="text-sm font-medium mb-1" style="color: #2C2A27;">📦 Adresse</p>
+                                    <p class="text-sm font-medium" style="color: #2C2A27;">{{ $order->shipping_address['name'] ?? '' }}</p>
+                                    <p class="text-xs" style="color: #4B5563;">{{ $order->shipping_address['street'] ?? '' }}</p>
+                                    <p class="text-xs" style="color: #4B5563;">{{ $order->shipping_address['city'] ?? '' }}, {{ $order->shipping_address['province'] ?? '' }} {{ $order->shipping_address['postal_code'] ?? '' }}</p>
+                                    <p class="text-xs mt-1" style="color: #4B5563;">📞 {{ $order->shipping_address['phone'] ?? '' }}</p>
+                                </div>
+                            @endif
+
+                            @if($order->tracking_number)
+                                <div class="p-3 rounded-xl shadow-sm" style="background-color: #F7F8F4;">
+                                    <p class="text-sm font-medium mb-1" style="color: #2C2A27;">🚚 Suivi</p>
+                                    <code class="text-sm font-mono" style="color: #4B5563;">{{ $order->tracking_number }}</code>
+                                </div>
+                            @endif
+
+                            <button wire:click="cancelEdit" class="w-full px-4 py-2.5 text-sm rounded-xl font-medium" style="color: #4B5563; border: 1.5px solid #D1D5DB;">Fermer</button>
+                        </div>
+                    @endif
+                </div>
+            @endforeach
+        </div>
+
+        {{-- Desktop: Table --}}
+        <div class="hidden md:block overflow-x-auto">
             <table class="w-full">
                 <thead>
                     <tr style="background-color: #F7F8F4;">

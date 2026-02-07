@@ -104,7 +104,58 @@
         @endif
     @endif
 
-    <div class="overflow-x-auto">
+    {{-- Mobile: Cards --}}
+    <div class="md:hidden divide-y" style="border-color: #E5E7EB;">
+        @foreach($users as $user)
+            <div class="p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold text-white" style="background-color: #42B574;">
+                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium" style="color: #2C2A27;">{{ $user->name }}</p>
+                            <p class="text-xs" style="color: #9CA3AF;">{{ $user->email }}</p>
+                        </div>
+                    </div>
+                    @if($user->role !== 'super_admin' && $user->role !== 'admin')
+                        <button wire:click="confirmDeleteUser({{ $user->id }})" class="p-2 rounded-lg" style="color: #EF4444;">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                        </button>
+                    @endif
+                </div>
+                <div class="flex flex-wrap items-center gap-2 mt-2">
+                    @php
+                        $planColors = [
+                            'free' => ['bg' => '#F3F4F6', 'text' => '#4B5563'],
+                            'pro' => ['bg' => '#EFF6FF', 'text' => '#4A7FBF'],
+                            'premium' => ['bg' => '#F0F9F4', 'text' => '#42B574'],
+                        ];
+                        $c = $planColors[$user->plan] ?? $planColors['free'];
+                    @endphp
+                    <span class="px-2 py-0.5 text-xs rounded-full font-medium" style="background-color: {{ $c['bg'] }}; color: {{ $c['text'] }};">
+                        {{ strtoupper($user->plan ?? 'free') }}
+                    </span>
+                    @if($user->role === 'super_admin')
+                        <span class="px-2 py-0.5 text-xs rounded-full font-medium text-white" style="background-color: #EF4444;">Super Admin</span>
+                    @elseif($user->role === 'admin')
+                        <span class="px-2 py-0.5 text-xs rounded-full font-medium text-white" style="background-color: #F59E0B;">Admin</span>
+                    @endif
+                    <span class="text-xs" style="color: #9CA3AF;">{{ $user->created_at->format('d/m/Y') }}</span>
+                </div>
+                <div class="flex items-center space-x-4 mt-2 text-xs" style="color: #4B5563;">
+                    <span>{{ $user->profiles_count }} profil(s)</span>
+                    <span>{{ $user->cards_count }} carte(s)</span>
+                    <span>{{ $user->card_orders_count }} cmd</span>
+                </div>
+            </div>
+        @endforeach
+    </div>
+
+    {{-- Desktop: Table --}}
+    <div class="hidden md:block overflow-x-auto">
         <table class="w-full">
             <thead>
                 <tr style="background-color: #F7F8F4;">
