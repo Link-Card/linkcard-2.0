@@ -20,10 +20,15 @@ class Dashboard extends Component
     public string $newStatus = '';
     public string $trackingNumber = '';
 
-    // Delete modal
+    // Delete modal (orders)
     public ?int $deletingOrderId = null;
     public string $deleteReason = '';
     public string $deleteNote = '';
+
+    // Delete modal (users)
+    public ?int $deletingUserId = null;
+    public string $deleteUserReason = '';
+    public string $deleteUserNote = '';
 
     public function setTab($tab)
     {
@@ -132,6 +137,97 @@ class Dashboard extends Component
 
         $this->cancelDelete();
         session()->flash('success', 'Commande ' . $orderNumber . ' supprimée.');
+    }
+
+    // === User deletion ===
+
+    public function confirmDeleteUser($userId)
+    {
+        $this->deletingUserId = $userId;
+        $this->deleteUserReason = '';
+        $this->deleteUserNote = '';
+    }
+
+    public function cancelDeleteUser()
+    {
+        $this->deletingUserId = null;
+        $this->deleteUserReason = '';
+        $this->deleteUserNote = '';
+    }
+
+    public function deleteUser()
+    {
+        if (!$this->deletingUserId || !$this->deleteUserReason) return;
+
+        $user = User::findOrFail($this->deletingUserId);
+
+        // Protect admin accounts
+        if ($user->role === 'super_admin' || $user->role === 'admin') {
+            session()->flash('error', 'Impossible de supprimer un compte administrateur.');
+            $this->cancelDeleteUser();
+            return;
+        }
+
+        \Illuminate\Support\Facades\Log::info('User deleted by admin', [
+            'user_id' => $user->id,
+            'user_name' => $user->name,
+            'user_email' => $user->email,
+            'user_plan' => $user->plan,
+            'profiles_count' => $user->profiles()->count(),
+            'cards_count' => $user->cards()->count(),
+            'orders_count' => $user->cardOrders()->count(),
+            'reason' => $this->deleteUserReason,
+            'note' => $this->deleteUserNote,
+            'deleted_by' => auth()->id(),
+            'deleted_at' => now()->toISOString(),
+        ]);
+
+        // Delete related data
+        foreach ($user->profiles as $profile) {
+            // Delete profile images from storage
+            if ($profile->photo_path) {
+                \Illuminate\Support\Facades\Storage::delete($profile->photo_path);
+            }
+            foreach ($profile->contentBands as $band) {
+                if ($band->type === 'image' && isset($band->data['images'])) {
+                    foreach ($band->data['images'] as $image) {
+                        if (isset($image['path'])) {
+                            \Illuminate\Support\Facades\Storage::delete($image['path']);
+                        }
+                    }
+                }
+            }
+            $profile->contentBands()->delete();
+            $profile->delete();
+        }
+
+        // Cancel Stripe subscription if active
+        try {
+            if ($user->subscribed('default')) {
+                $user->subscription('default')->cancelNow();
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning('Failed to cancel Stripe subscription on user delete', [
+                'user_id' => $user->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        // Delete order logos from storage
+        foreach ($user->cardOrders as $order) {
+            if ($order->logo_path) {
+                \Illuminate\Support\Facades\Storage::delete($order->logo_path);
+            }
+        }
+
+        $user->cards()->delete();
+        $user->cardOrders()->delete();
+
+        $userName = $user->name;
+        $user->delete();
+
+        $this->cancelDeleteUser();
+        session()->flash('success', 'Utilisateur "' . $userName . '" supprimé.');
     }
 
     public function render()
