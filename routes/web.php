@@ -2,11 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WebhookController;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Stripe Webhook (SANS middleware CSRF)
+Route::post('/webhook/stripe', [WebhookController::class, 'handleWebhook'])->name('stripe.webhook');
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/login', App\Livewire\Auth\Login::class)->name('login');
@@ -51,6 +55,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard/cards/order', function() {
         return 'Commande carte NFC - En construction (Phase 3)';
     })->name('cards.order');
+
+    // Abonnement
+    Route::get('/dashboard/subscription', App\Livewire\Subscription\Plans::class)->name('subscription.plans');
+    Route::get('/dashboard/subscription/success', App\Livewire\Subscription\Success::class)->name('subscription.success');
 });
 
 // QR Code download (génération à la volée)
