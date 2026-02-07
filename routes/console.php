@@ -10,3 +10,6 @@ Artisan::command('inspire', function () {
 
 // Envoyer emails de bienvenue toutes les heures (24h après inscription)
 Schedule::command('emails:send-welcome')->hourly();
+
+// Archiver commandes livrées depuis +30 jours (1x par jour)
+Schedule::command('orders:archive-delivered')->daily();

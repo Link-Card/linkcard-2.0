@@ -39,23 +39,34 @@
                             <td class="px-4 py-3 text-xs" style="color: #9CA3AF;">{{ $order->created_at->format('d/m/Y') }}</td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center justify-end space-x-2">
-                                    <button wire:click="startEdit({{ $order->id }})"
-                                            class="px-4 py-2 text-xs rounded-xl font-medium transition-all"
-                                            style="background-color: #F0F9F4; color: #42B574; border: 1.5px solid #42B574;">
-                                        Gérer
-                                    </button>
-                                    @if(in_array($order->status, ['delivered', 'shipped']))
+                                    @if($order->status === 'delivered')
+                                        <span class="px-4 py-2 text-xs rounded-xl font-medium" style="background-color: #F0F9F4; color: #42B574;">
+                                            ✓ Terminée
+                                        </span>
                                         <button wire:click="archiveOrder({{ $order->id }})"
                                                 class="px-4 py-2 text-xs rounded-xl font-medium transition-all"
                                                 style="background-color: #F3F4F6; color: #4B5563; border: 1.5px solid #9CA3AF;">
                                             Archiver
                                         </button>
+                                    @else
+                                        <button wire:click="startEdit({{ $order->id }})"
+                                                class="px-4 py-2 text-xs rounded-xl font-medium transition-all"
+                                                style="background-color: #F0F9F4; color: #42B574; border: 1.5px solid #42B574;">
+                                            Gérer
+                                        </button>
+                                        @if($order->status === 'shipped')
+                                            <button wire:click="archiveOrder({{ $order->id }})"
+                                                    class="px-4 py-2 text-xs rounded-xl font-medium transition-all"
+                                                    style="background-color: #F3F4F6; color: #4B5563; border: 1.5px solid #9CA3AF;">
+                                                Archiver
+                                            </button>
+                                        @endif
+                                        <button wire:click="confirmDelete({{ $order->id }})"
+                                                class="px-4 py-2 text-xs rounded-xl font-medium transition-all"
+                                                style="background-color: #FEF2F2; color: #EF4444; border: 1.5px solid #EF4444;">
+                                            Supprimer
+                                        </button>
                                     @endif
-                                    <button wire:click="confirmDelete({{ $order->id }})"
-                                            class="px-4 py-2 text-xs rounded-xl font-medium transition-all"
-                                            style="background-color: #FEF2F2; color: #EF4444; border: 1.5px solid #EF4444;">
-                                        Supprimer
-                                    </button>
                                 </div>
                             </td>
                         </tr>

@@ -100,10 +100,10 @@ class CardController extends Controller
         $card->update(['activated_at' => now()]);
         $card->recordScan();
 
-        // Mark related order as delivered
+        // Mark related order as delivered (confirmation = commande terminée)
         if ($card->order_id) {
             $order = CardOrder::find($card->order_id);
-            if ($order && $order->status === 'shipped') {
+            if ($order && $order->status !== 'delivered' && $order->status !== 'archived') {
                 $order->update(['status' => 'delivered']);
             }
         }

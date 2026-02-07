@@ -56,6 +56,14 @@ class Dashboard extends Component
     public function updateOrderStatus($orderId)
     {
         $order = CardOrder::findOrFail($orderId);
+
+        // Commande livrée = terminée, pas de retour possible
+        if ($order->status === 'delivered') {
+            session()->flash('error', 'Cette commande est terminée (livrée). Aucune modification possible.');
+            $this->cancelEdit();
+            return;
+        }
+
         $updates = ['status' => $this->newStatus];
         if ($this->trackingNumber) {
             $updates['tracking_number'] = $this->trackingNumber;
