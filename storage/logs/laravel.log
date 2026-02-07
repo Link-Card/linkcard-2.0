@@ -1,0 +1,26 @@
+[2026-02-07 03:47:34] local.INFO: Card order checkout created {"order_id":1,"session_id":"cs_test_a1epMirv54BYAmRCW9UhvcLOauOTGoWCYukPn33VNnzsMyDWkiG5KYqc23","amount":14997} 
+[2026-02-07 03:47:45] local.INFO: Card order paid {"order_id":1,"payment_intent":"pi_3Sy2UlJ8RoOvVTJ71fdxvf7C"} 
+[2026-02-07 04:03:00] local.INFO: Card order checkout created {"order_id":2,"session_id":"cs_test_a1z5qBC7n8BW2yOcxsVzWJOdzHzc31KmLmf4GjWzL6VC3idDm8RuyeeLT4","amount":4499} 
+[2026-02-07 05:03:01] local.INFO: Card order paid + cards created {"order_id":4} 
+[2026-02-07 05:23:23] local.INFO: Card order paid + cards created {"order_id":6} 
+[2026-02-07 05:41:44] local.INFO: Order deleted {"order_id":6,"user_id":7,"user_email":"link.card002@gmail.com","amount_cents":3749,"reason":"test","note":"","deleted_by":3,"deleted_at":"2026-02-07T05:41:44.164586Z"} 
+[2026-02-07 13:46:32] local.INFO: Card order paid + cards created {"order_id":7} 
+[2026-02-07 15:52:29] local.INFO: Card order paid + cards created {"order_id":8} 
+[2026-02-07 16:13:11] local.INFO: Order deleted {"order_id":8,"user_id":3,"user_email":"mathieu.corbeil@outlook.fr","amount_cents":8998,"reason":"test","note":"","deleted_by":3,"deleted_at":"2026-02-07T16:13:11.805583Z"} 
+[2026-02-07 16:14:09] local.INFO: Card order paid + cards created {"order_id":9} 
+[2026-02-07 16:20:21] local.INFO: Order deleted {"order_id":4,"user_id":7,"user_email":"link.card002@gmail.com","amount_cents":3749,"reason":"test","note":"","deleted_by":3,"deleted_at":"2026-02-07T16:20:21.212518Z"} 
+[2026-02-07 18:07:14] local.INFO: User deleted by admin {"user_id":7,"user_name":"Mathieu test02","user_email":"link.card002@gmail.com","user_plan":"premium","profiles_count":1,"cards_count":1,"orders_count":2,"reason":"test_account","note":"","deleted_by":3,"deleted_at":"2026-02-07T18:07:14.659357Z"} 
+[2026-02-07 18:07:15] local.INFO: === WEBHOOK START: subscription.deleted ===  
+[2026-02-07 18:07:15] local.INFO: === WEBHOOK END: subscription.deleted ===  
+[2026-02-07 18:15:26] local.INFO: Card order paid + cards created {"order_id":10} 
+[2026-02-07 18:27:21] local.INFO: Order deleted {"order_id":10,"user_id":8,"user_email":"link.card002@gmail.com","amount_cents":4999,"reason":"test","note":"","deleted_by":3,"deleted_at":"2026-02-07T18:27:21.956997Z"} 
+[2026-02-07 18:27:42] local.INFO: User deleted by admin {"user_id":8,"user_name":"Link-Card","user_email":"link.card002@gmail.com","user_plan":"free","profiles_count":1,"cards_count":0,"orders_count":0,"reason":"test_account","note":"","deleted_by":3,"deleted_at":"2026-02-07T18:27:42.986440Z"} 
+[2026-02-07 18:39:54] local.INFO: User deleted by admin {"user_id":9,"user_name":"Patrick","user_email":"link.card002@gmail.com","user_plan":"free","profiles_count":0,"cards_count":0,"orders_count":0,"reason":"test_account","note":"","deleted_by":3,"deleted_at":"2026-02-07T18:39:54.641087Z"} 
+[2026-02-07 18:42:18] local.INFO: User deleted by admin {"user_id":10,"user_name":"Patrick","user_email":"link.card002@gmail.com","user_plan":"free","profiles_count":0,"cards_count":0,"orders_count":0,"reason":"test_account","note":"","deleted_by":3,"deleted_at":"2026-02-07T18:42:18.982952Z"} 
+[2026-02-07 18:47:31] local.INFO: Card order paid + cards created {"order_id":11} 
+[2026-02-07 18:50:42] local.INFO: User deleted by admin {"user_id":11,"user_name":"Patrick","user_email":"link.card002@gmail.com","user_plan":"free","profiles_count":1,"cards_count":1,"orders_count":1,"reason":"test_account","note":"","deleted_by":3,"deleted_at":"2026-02-07T18:50:42.081010Z"} 
+[2026-02-07 19:06:54] local.INFO: Card order paid + cards created {"order_id":12} 
+[2026-02-07 19:13:52] local.INFO: Order deleted {"order_id":12,"user_id":12,"user_email":"link.card002@gmail.com","amount_cents":4999,"reason":"test","note":"","deleted_by":3,"deleted_at":"2026-02-07T19:13:52.583337Z"} 
+[2026-02-07 19:20:23] local.INFO: Card order paid + cards created {"order_id":13} 
+[2026-02-07 19:32:16] local.INFO: Card order paid + cards created {"order_id":14} 
+[2026-02-07 19:33:20] local.INFO: Order deleted {"order_id":14,"user_id":12,"user_email":"link.card002@gmail.com","amount_cents":4999,"reason":"duplicate","note":"","deleted_by":3,"deleted_at":"2026-02-07T19:33:20.944268Z"} 
