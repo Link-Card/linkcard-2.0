@@ -77,6 +77,11 @@ Route::middleware('auth')->get('/profile/{profile}/qr-download', function(App\Mo
 // vCard download
 Route::get('/profile/{profile}/vcard', [ProfileController::class, 'downloadVcard'])->name('profile.vcard');
 
+// Admin routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', App\Livewire\Admin\Dashboard::class)->name('admin.dashboard');
+});
+
 // NFC Card routes
 use App\Http\Controllers\CardController;
 

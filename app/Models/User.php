@@ -16,6 +16,7 @@ class User extends Authenticatable
         'email',
         'password',
         'plan',
+        'role',
     ];
 
     protected $hidden = [
@@ -44,5 +45,15 @@ class User extends Authenticatable
     public function cardOrders()
     {
         return $this->hasMany(CardOrder::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return in_array($this->role, ['admin', 'super_admin']);
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'super_admin';
     }
 }
