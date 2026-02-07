@@ -5,15 +5,15 @@ namespace App\Livewire\Cards;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\CardOrder;
+use App\Models\Card;
 use Illuminate\Support\Facades\Log;
 
 class Order extends Component
 {
     use WithFileUploads;
 
-    // Form fields
-    public int $quantity = 1;
-    public string $designType = 'standard';
+    // Cart items: [['profile_id' => X, 'quantity' => Y, 'design_type' => 'standard|custom'], ...]
+    public array $items = [];
     public $logoFile = null;
 
     // Shipping address
@@ -25,19 +25,7 @@ class Order extends Component
     public string $shippingPhone = '';
 
     // UI state
-    public int $step = 1; // 1=design, 2=address, 3=summary
-
-    protected $rules = [
-        'quantity' => 'required|integer|min:1|max:10',
-        'designType' => 'required|in:standard,custom',
-        'logoFile' => 'nullable|image|max:15360',
-        'shippingName' => 'required|string|max:255',
-        'shippingStreet' => 'required|string|max:255',
-        'shippingCity' => 'required|string|max:255',
-        'shippingProvince' => 'required|string|max:2',
-        'shippingPostalCode' => 'required|string|max:10',
-        'shippingPhone' => 'required|string|max:20',
-    ];
+    public int $step = 1; // 1=panier, 2=adresse, 3=résumé
 
     protected $messages = [
         'shippingName.required' => 'Le nom est requis.',
@@ -46,27 +34,71 @@ class Order extends Component
         'shippingPostalCode.required' => 'Le code postal est requis.',
         'shippingPhone.required' => 'Le téléphone est requis.',
         'logoFile.image' => 'Le fichier doit être une image.',
-        'logoFile.max' => 'Le logo ne doit pas dépasser 5 Mo.',
+        'logoFile.max' => 'Le logo ne doit pas dépasser 15 Mo.',
     ];
 
     public function mount()
     {
         $user = auth()->user();
         $this->shippingName = $user->name ?? '';
+
+        // Start with one item if user has profiles
+        $profiles = $user->profiles;
+        if ($profiles->count() > 0) {
+            $this->items = [[
+                'profile_id' => $profiles->first()->id,
+                'quantity' => 1,
+                'design_type' => 'standard',
+            ]];
+        }
+    }
+
+    public function addItem()
+    {
+        $profiles = auth()->user()->profiles;
+        if ($profiles->count() === 0) return;
+
+        $this->items[] = [
+            'profile_id' => $profiles->first()->id,
+            'quantity' => 1,
+            'design_type' => 'standard',
+        ];
+    }
+
+    public function removeItem($index)
+    {
+        if (count($this->items) <= 1) return;
+        unset($this->items[$index]);
+        $this->items = array_values($this->items);
+    }
+
+    public function incrementItem($index)
+    {
+        if (isset($this->items[$index]) && $this->items[$index]['quantity'] < 10) {
+            $this->items[$index]['quantity']++;
+        }
+    }
+
+    public function decrementItem($index)
+    {
+        if (isset($this->items[$index]) && $this->items[$index]['quantity'] > 1) {
+            $this->items[$index]['quantity']--;
+        }
     }
 
     public function nextStep()
     {
         if ($this->step === 1) {
-            $this->validate([
-                'quantity' => 'required|integer|min:1|max:10',
-                'designType' => 'required|in:standard,custom',
-            ]);
-
-            if ($this->designType === 'custom') {
-                $this->validate(['logoFile' => 'required|image|max:15360']);
+            if (empty($this->items)) {
+                session()->flash('error', 'Ajoutez au moins une carte.');
+                return;
             }
-
+            // Check if any custom needs logo
+            $hasCustom = collect($this->items)->contains('design_type', 'custom');
+            if ($hasCustom && !$this->logoFile) {
+                $this->addError('logoFile', 'Le logo est requis pour le design personnalisé.');
+                return;
+            }
             $this->step = 2;
         } elseif ($this->step === 2) {
             $this->validate([
@@ -88,18 +120,9 @@ class Order extends Component
         }
     }
 
-    public function incrementQuantity()
+    public function getTotalQuantityProperty(): int
     {
-        if ($this->quantity < 10) {
-            $this->quantity++;
-        }
-    }
-
-    public function decrementQuantity()
-    {
-        if ($this->quantity > 1) {
-            $this->quantity--;
-        }
+        return collect($this->items)->sum('quantity');
     }
 
     public function getUnitPriceProperty(): int
@@ -109,7 +132,7 @@ class Order extends Component
 
     public function getTotalPriceProperty(): int
     {
-        return $this->unitPrice * $this->quantity;
+        return $this->unitPrice * $this->totalQuantity;
     }
 
     public function getDisplayUnitPriceProperty(): string
@@ -131,17 +154,33 @@ class Order extends Component
     {
         $user = auth()->user();
 
-        // Save logo if custom
+        // Save logo if any custom item
         $logoPath = null;
-        if ($this->designType === 'custom' && $this->logoFile) {
+        $hasCustom = collect($this->items)->contains('design_type', 'custom');
+        if ($hasCustom && $this->logoFile) {
             $logoPath = $this->logoFile->store('card-logos', 'public');
         }
 
-        // Create order in DB
+        // Build items with profile names for admin display
+        $profiles = $user->profiles->keyBy('id');
+        $orderItems = [];
+        foreach ($this->items as $item) {
+            $profile = $profiles->get($item['profile_id']);
+            $code = Card::generateUniqueCode();
+            $orderItems[] = [
+                'profile_id' => $item['profile_id'],
+                'profile_name' => $profile ? ($profile->full_name ?? $profile->username) : 'Inconnu',
+                'quantity' => $item['quantity'],
+                'design_type' => $item['design_type'],
+                'card_code' => $code,
+            ];
+        }
+
+        // Create order
         $order = CardOrder::create([
             'user_id' => $user->id,
-            'quantity' => $this->quantity,
-            'design_type' => $this->designType,
+            'quantity' => $this->totalQuantity,
+            'design_type' => $hasCustom ? 'custom' : 'standard',
             'logo_path' => $logoPath,
             'status' => 'pending',
             'shipping_address' => [
@@ -153,10 +192,11 @@ class Order extends Component
                 'phone' => $this->shippingPhone,
                 'country' => 'CA',
             ],
+            'items' => $orderItems,
             'amount_cents' => $this->totalPrice,
         ]);
 
-        // Create Stripe Checkout Session
+        // Create Stripe Checkout
         try {
             $stripe = new \Stripe\StripeClient(config('cashier.secret'));
 
@@ -166,12 +206,12 @@ class Order extends Component
                     'price_data' => [
                         'currency' => 'cad',
                         'product_data' => [
-                            'name' => 'Carte NFC Link-Card' . ($this->designType === 'custom' ? ' (Custom)' : ''),
-                            'description' => 'Carte de visite NFC - Quantité: ' . $this->quantity,
+                            'name' => 'Cartes NFC Link-Card',
+                            'description' => $this->totalQuantity . ' carte(s) NFC',
                         ],
                         'unit_amount' => $this->unitPrice,
                     ],
-                    'quantity' => $this->quantity,
+                    'quantity' => $this->totalQuantity,
                 ]],
                 'mode' => 'payment',
                 'success_url' => route('cards.order.success', ['order' => $order->id]) . '?session_id={CHECKOUT_SESSION_ID}',
@@ -185,12 +225,6 @@ class Order extends Component
 
             $order->update(['stripe_session_id' => $session->id]);
 
-            Log::info('Card order checkout created', [
-                'order_id' => $order->id,
-                'session_id' => $session->id,
-                'amount' => $this->totalPrice,
-            ]);
-
             return $this->redirect($session->url, navigate: false);
 
         } catch (\Exception $e) {
@@ -202,7 +236,8 @@ class Order extends Component
 
     public function render()
     {
-        return view('livewire.cards.order')
-            ->layout('layouts.dashboard');
+        return view('livewire.cards.order', [
+            'profiles' => auth()->user()->profiles,
+        ])->layout('layouts.dashboard');
     }
 }

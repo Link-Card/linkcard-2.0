@@ -8,7 +8,7 @@
                 </svg>
                 Retour aux cartes
             </a>
-            <h1 class="text-2xl font-semibold" style="color: #2C2A27;">Commander une carte NFC</h1>
+            <h1 class="text-2xl font-semibold" style="color: #2C2A27;">Commander des cartes NFC</h1>
         </div>
 
         <!-- Messages -->

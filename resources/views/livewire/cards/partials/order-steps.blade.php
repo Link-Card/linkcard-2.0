@@ -1,5 +1,5 @@
 <div class="flex items-center justify-between">
-    @foreach([1 => 'Design', 2 => 'Livraison', 3 => 'Résumé'] as $num => $label)
+    @foreach([1 => 'Cartes', 2 => 'Livraison', 3 => 'Résumé'] as $num => $label)
         <div class="flex items-center {{ $num < 3 ? 'flex-1' : '' }}">
             <div class="flex items-center justify-center w-8 h-8 rounded-full text-sm font-semibold transition-colors
                 {{ $step >= $num ? 'text-white' : '' }}"

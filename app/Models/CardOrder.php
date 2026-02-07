@@ -17,11 +17,13 @@ class CardOrder extends Model
         'shipping_address',
         'tracking_number',
         'amount_cents',
+        'items',
         'notes',
     ];
 
     protected $casts = [
         'shipping_address' => 'array',
+        'items' => 'array',
     ];
 
     public function user()

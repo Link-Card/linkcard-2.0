@@ -4,6 +4,7 @@ namespace App\Livewire\Cards;
 
 use Livewire\Component;
 use App\Models\CardOrder;
+use App\Models\Card;
 use Illuminate\Support\Facades\Log;
 
 class OrderSuccess extends Component
@@ -12,12 +13,11 @@ class OrderSuccess extends Component
 
     public function mount(CardOrder $order)
     {
-        // Verify ownership
         if ($order->user_id !== auth()->id()) {
             abort(403);
         }
 
-        // Update status if still pending (payment confirmed by redirect)
+        // Verify payment and update status
         if ($order->status === 'pending' && request()->has('session_id')) {
             try {
                 $stripe = new \Stripe\StripeClient(config('cashier.secret'));
@@ -29,9 +29,11 @@ class OrderSuccess extends Component
                         'stripe_payment_id' => $session->payment_intent,
                     ]);
 
-                    Log::info('Card order paid', [
+                    // Auto-create Card entries from items
+                    $this->createCardsFromOrder($order);
+
+                    Log::info('Card order paid + cards created', [
                         'order_id' => $order->id,
-                        'payment_intent' => $session->payment_intent,
                     ]);
                 }
             } catch (\Exception $e) {
@@ -39,7 +41,26 @@ class OrderSuccess extends Component
             }
         }
 
-        $this->order = $order;
+        $this->order = $order->fresh();
+    }
+
+    private function createCardsFromOrder(CardOrder $order)
+    {
+        if (!$order->items) return;
+
+        foreach ($order->items as $item) {
+            // Check if card with this code already exists
+            if (Card::where('card_code', $item['card_code'])->exists()) continue;
+
+            Card::create([
+                'card_code' => $item['card_code'],
+                'user_id' => $order->user_id,
+                'profile_id' => $item['profile_id'],
+                'is_active' => true,
+                'order_id' => $order->id,
+                'programmed_at' => null,
+            ]);
+        }
     }
 
     public function render()
