@@ -10,15 +10,7 @@ class Home extends Component
     {
         $user = auth()->user();
         
-        // Stats utilisateur
-        $stats = [
-            'plan' => $user->subscription_plan,
-            'profiles' => 0, // À implémenter plus tard
-            'cards' => 0,    // À implémenter plus tard
-            'views' => 0,    // À implémenter plus tard
-        ];
-        
-        return view('livewire.dashboard.home', compact('stats'))
+        return view('livewire.dashboard.home')
             ->layout('layouts.dashboard');
     }
 }

@@ -43,7 +43,7 @@
                     </div>
                     <div class="ml-4">
                         <p class="text-sm font-medium text-gray-600">Cartes NFC</p>
-                        <p class="text-2xl font-bold text-gray-900">0</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ Auth::user()->cards->count() }}</p>
                     </div>
                 </div>
             </div>
@@ -58,7 +58,7 @@
                     </div>
                     <div class="ml-4">
                         <p class="text-sm font-medium text-gray-600">Vues Totales</p>
-                        <p class="text-2xl font-bold text-gray-900">0</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ Auth::user()->profiles->sum('view_count') }}</p>
                     </div>
                 </div>
             </div>
@@ -81,7 +81,7 @@
                     </div>
                 </a>
 
-                <a href="#" class="block p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition duration-150 border border-gray-200">
+                <a href="{{ route('cards.order') }}" class="block p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition duration-150 border border-gray-200">
                     <div class="flex items-center">
                         <div class="p-3 rounded-full bg-blue-100 text-blue-600">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

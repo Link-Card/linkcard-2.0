@@ -45,6 +45,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/dashboard/profiles/add-additional', function() {
         return 'Achat profils additionnels - En construction';
     })->name('profile.add-additional');
+
+    // Cartes NFC (dashboard)
+    Route::get('/dashboard/cards', App\Livewire\Cards\Index::class)->name('cards.index');
+    Route::get('/dashboard/cards/order', function() {
+        return 'Commande carte NFC - En construction (Phase 3)';
+    })->name('cards.order');
 });
 
 // QR Code download (génération à la volée)
