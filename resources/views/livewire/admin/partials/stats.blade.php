@@ -1,4 +1,4 @@
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
     <!-- Total Users -->
     <div class="bg-white rounded-xl p-4 shadow-sm">
         <div class="flex items-center space-x-3">
@@ -14,22 +14,7 @@
         </div>
     </div>
 
-    <!-- Total Orders -->
-    <div class="bg-white rounded-xl p-4 shadow-sm">
-        <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: #EFF6FF;">
-                <svg class="w-5 h-5" style="color: #4A7FBF;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                </svg>
-            </div>
-            <div>
-                <p class="text-xs" style="color: #9CA3AF;">Commandes</p>
-                <p class="text-xl font-semibold" style="color: #2C2A27;">{{ $stats['totalOrders'] }}</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Revenue -->
+    <!-- Card Revenue -->
     <div class="bg-white rounded-xl p-4 shadow-sm">
         <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: #F0F9F4;">
@@ -38,8 +23,24 @@
                 </svg>
             </div>
             <div>
-                <p class="text-xs" style="color: #9CA3AF;">Revenus</p>
+                <p class="text-xs" style="color: #9CA3AF;">Revenus cartes</p>
                 <p class="text-xl font-semibold" style="color: #2C2A27;">{{ number_format($stats['totalRevenue'] / 100, 2) }}$</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Recurring -->
+    <div class="bg-white rounded-xl p-4 shadow-sm">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background-color: #EFF6FF;">
+                <svg class="w-5 h-5" style="color: #4A7FBF;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+            </div>
+            <div>
+                <p class="text-xs" style="color: #9CA3AF;">Récurrent / mois</p>
+                <p class="text-xl font-semibold" style="color: #4A7FBF;">{{ number_format($stats['monthlyRecurring'] / 100, 2) }}$</p>
+                <p class="text-xs" style="color: #9CA3AF;">{{ $stats['proUsers'] }} PRO · {{ $stats['premiumUsers'] }} PREM</p>
             </div>
         </div>
     </div>
