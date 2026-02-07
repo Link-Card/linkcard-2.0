@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <title>Aucun profil lié - Link-Card</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,7 +14,7 @@
         {{-- Logo --}}
         <div class="mb-8">
             <a href="/">
-                <img src="/vendor/logo_final_blanc.png" alt="Link-Card" class="h-12 mx-auto" onerror="this.style.display='none'">
+                <img src="/images/logo-blanc.png" alt="Link-Card" class="h-12 mx-auto" onerror="this.style.display='none'">
             </a>
         </div>
 

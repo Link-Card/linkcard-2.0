@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Dashboard' }} - Link-Card</title>
 
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>body { font-family: 'Manrope', sans-serif; }</style>
@@ -18,7 +20,7 @@
             {{-- Logo --}}
             <div class="p-6" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
                 <div class="flex items-center space-x-3">
-                    <img src="/vendor/logo_final_blanc.png" alt="Link-Card" class="h-8" onerror="this.style.display='none'">
+                    <img src="/images/logo-blanc.png" alt="Link-Card" class="h-8" onerror="this.style.display='none'">
                     <div>
                         <h1 class="text-lg font-bold text-white">Link-Card</h1>
                         <p class="text-xs" style="color: #9CA3AF;">Dashboard</p>
