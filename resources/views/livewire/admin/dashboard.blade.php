@@ -1,4 +1,4 @@
-<div class="p-8">
+<div class="p-4 sm:p-6 lg:p-8">
     <!-- Header -->
     <div class="mb-6">
         <h1 class="text-2xl font-semibold" style="color: #2C2A27;">Administration</h1>

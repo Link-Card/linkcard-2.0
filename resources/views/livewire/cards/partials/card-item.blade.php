@@ -1,8 +1,8 @@
-<div class="bg-white rounded-xl shadow-sm p-6">
-    <div class="flex items-center justify-between">
+<div class="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <!-- Card info -->
         <div class="flex items-center space-x-4">
-            <div class="w-12 h-12 rounded-lg flex items-center justify-center {{ $card->is_active ? '' : 'opacity-50' }}" style="background-color: #F0F9F4;">
+            <div class="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 {{ $card->is_active ? '' : 'opacity-50' }}" style="background-color: #F0F9F4;">
                 <svg class="w-6 h-6" style="color: #42B574;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
                 </svg>
@@ -26,9 +26,9 @@
         </div>
 
         <!-- Actions -->
-        <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-3 sm:space-x-4">
             <!-- Profile selector -->
-            <select wire:change="updateProfile({{ $card->id }}, $event.target.value)" class="text-sm rounded-lg border px-3 py-2" style="border-color: #D1D5DB; color: #2C2A27;">
+            <select wire:change="updateProfile({{ $card->id }}, $event.target.value)" class="text-sm rounded-lg border px-3 py-2 flex-1 sm:flex-none" style="border-color: #D1D5DB; color: #2C2A27;">
                 <option value="">— Aucun profil —</option>
                 @foreach($profiles as $profile)
                     <option value="{{ $profile->id }}" {{ $card->profile_id == $profile->id ? 'selected' : '' }}>
@@ -38,7 +38,7 @@
             </select>
 
             <!-- Toggle active -->
-            <button wire:click="toggleActive({{ $card->id }})" wire:loading.attr="disabled" wire:target="toggleActive({{ $card->id }})" class="p-2 rounded-lg transition-colors disabled:opacity-40" style="color: {{ $card->is_active ? '#42B574' : '#9CA3AF' }};" title="{{ $card->is_active ? 'Désactiver' : 'Activer' }}">
+            <button wire:click="toggleActive({{ $card->id }})" wire:loading.attr="disabled" wire:target="toggleActive({{ $card->id }})" class="p-2 rounded-lg transition-colors disabled:opacity-40 flex-shrink-0" style="color: {{ $card->is_active ? '#42B574' : '#9CA3AF' }};" title="{{ $card->is_active ? 'Désactiver' : 'Activer' }}">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     @if($card->is_active)
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>

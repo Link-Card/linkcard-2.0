@@ -1,11 +1,11 @@
-<div class="p-8">
+<div class="p-4 sm:p-6 lg:p-8">
     <!-- Header -->
-    <div class="flex items-center justify-between mb-6">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-            <h1 class="text-2xl font-semibold" style="color: #2C2A27;">Mes Cartes NFC</h1>
+            <h1 class="text-xl sm:text-2xl font-semibold" style="color: #2C2A27;">Mes Cartes NFC</h1>
             <p class="text-sm mt-1" style="color: #4B5563;">Gérez vos cartes NFC et leurs profils liés.</p>
         </div>
-        <a href="{{ route('cards.order') }}" class="px-4 py-2 rounded-lg text-white text-sm font-medium transition-colors" style="background-color: #42B574;" onmouseover="this.style.backgroundColor='#3DA367'" onmouseout="this.style.backgroundColor='#42B574'">
+        <a href="{{ route('cards.order') }}" class="px-4 py-2 rounded-lg text-white text-sm font-medium transition-colors text-center sm:text-left flex-shrink-0" style="background-color: #42B574;" onmouseover="this.style.backgroundColor='#3DA367'" onmouseout="this.style.backgroundColor='#42B574'">
             + Commander une carte
         </a>
     </div>
