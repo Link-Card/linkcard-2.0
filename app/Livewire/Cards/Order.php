@@ -30,7 +30,7 @@ class Order extends Component
     protected $rules = [
         'quantity' => 'required|integer|min:1|max:10',
         'designType' => 'required|in:standard,custom',
-        'logoFile' => 'nullable|image|max:5120',
+        'logoFile' => 'nullable|image|max:15360',
         'shippingName' => 'required|string|max:255',
         'shippingStreet' => 'required|string|max:255',
         'shippingCity' => 'required|string|max:255',
@@ -64,7 +64,7 @@ class Order extends Component
             ]);
 
             if ($this->designType === 'custom') {
-                $this->validate(['logoFile' => 'required|image|max:5120']);
+                $this->validate(['logoFile' => 'required|image|max:15360']);
             }
 
             $this->step = 2;

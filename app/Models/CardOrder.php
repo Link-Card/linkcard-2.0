@@ -58,23 +58,19 @@ class CardOrder extends Model
         };
     }
 
-    /**
-     * Prix en cents selon le plan de l'utilisateur
-     */
     public static function getPriceForUser(User $user): int
     {
         return match($user->plan) {
+            'pro' => 4499,     // 44.99$
             'premium' => 3749, // 37.49$
             default => 4999,   // 49.99$
         };
     }
 
-    /**
-     * Prix affiché selon le plan
-     */
     public static function getDisplayPriceForUser(User $user): string
     {
         return match($user->plan) {
+            'pro' => '44.99',
             'premium' => '37.49',
             default => '49.99',
         };

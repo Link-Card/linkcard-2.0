@@ -134,7 +134,7 @@
                     </a>
                 @endif
 
-                <a href="#"
+                <a href="{{ route('cards.order') }}"
                    class="flex items-center space-x-4 p-4 rounded-lg border-2 border-dashed transition-all duration-200"
                    style="border-color: #D1D5DB;"
                    onmouseover="this.style.borderColor='#4A7FBF'; this.style.background='#EFF6FF'"
