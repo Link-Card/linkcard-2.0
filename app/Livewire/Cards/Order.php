@@ -124,7 +124,7 @@ class Order extends Component
 
     public function getHasDiscountProperty(): bool
     {
-        return auth()->user()->plan === 'premium';
+        return in_array(auth()->user()->plan, ['pro', 'premium']);
     }
 
     public function checkout()

@@ -89,8 +89,13 @@
                 <span class="font-semibold" style="color: #2C2A27;">{{ $this->displayUnitPrice }}$</span>
             </div>
         </div>
-        @if($this->hasDiscount)
+        @if(auth()->user()->plan === 'premium')
             <p class="text-xs mt-1" style="color: #42B574;">Réduction PREMIUM de 25% appliquée!</p>
+        @elseif(auth()->user()->plan === 'pro')
+            <p class="text-xs mt-1" style="color: #42B574;">Réduction PRO de 10% appliquée!</p>
+            <p class="text-xs mt-1" style="color: #4A7FBF;">💎 Passez à PREMIUM pour seulement 37.49$ / carte (-25%)</p>
+        @else
+            <p class="text-xs mt-1" style="color: #4A7FBF;">💎 Abonnez-vous PRO pour 44.99$ ou PREMIUM pour 37.49$ / carte</p>
         @endif
         @if($quantity > 1)
             <div class="flex justify-between items-center mt-2 pt-2" style="border-top: 1px solid #D1D5DB;">
