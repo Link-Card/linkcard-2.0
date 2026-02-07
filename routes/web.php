@@ -69,6 +69,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard/cards', App\Livewire\Cards\Index::class)->name('cards.index');
     Route::get('/dashboard/cards/order', App\Livewire\Cards\Order::class)->name('cards.order');
     Route::get('/dashboard/cards/order/{order}/success', App\Livewire\Cards\OrderSuccess::class)->name('cards.order.success');
+
+    // Connexions
+    Route::get('/dashboard/connections', App\Livewire\Connections\Index::class)->name('connections.index');
+    Route::post('/connections/send/{user}', [App\Http\Controllers\ConnectionController::class, 'send'])->name('connections.send');
+    Route::post('/connections/{connection}/accept', [App\Http\Controllers\ConnectionController::class, 'accept'])->name('connections.accept');
+    Route::post('/connections/{connection}/decline', [App\Http\Controllers\ConnectionController::class, 'decline'])->name('connections.decline');
+    Route::post('/connections/{connection}/cancel', [App\Http\Controllers\ConnectionController::class, 'cancel'])->name('connections.cancel');
+    Route::delete('/connections/{connection}', [App\Http\Controllers\ConnectionController::class, 'remove'])->name('connections.remove');
+    Route::post('/connections/accept-from/{user}', [App\Http\Controllers\ConnectionController::class, 'acceptFromProfile'])->name('connections.accept.public');
+
+    // Préférences
+    Route::get('/dashboard/preferences', App\Livewire\Preferences::class)->name('preferences.index');
 });
 
 // QR Code download

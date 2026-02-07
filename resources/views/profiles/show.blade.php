@@ -102,6 +102,20 @@
         $userPlan = auth()->check() ? (auth()->user()->plan ?? 'free') : 'free';
         $canShowQR = in_array($userPlan, ['pro', 'premium']);
         
+        // Connection status
+        $isOwnProfile = auth()->check() && auth()->id() === $profile->user_id;
+        $connectionStatus = null; // null, 'pending_sent', 'pending_received', 'accepted'
+        if (auth()->check() && !$isOwnProfile) {
+            $connection = \App\Services\ConnectionService::getConnectionBetween(auth()->id(), $profile->user_id);
+            if ($connection) {
+                if ($connection->status === 'accepted') {
+                    $connectionStatus = 'accepted';
+                } elseif ($connection->status === 'pending') {
+                    $connectionStatus = $connection->sender_id === auth()->id() ? 'pending_sent' : 'pending_received';
+                }
+            }
+        }
+        
         // Calculer si le texte doit être clair ou foncé
         $hex = ltrim($primaryColor, '#');
         $r = hexdec(substr($hex, 0, 2));
@@ -175,15 +189,15 @@
                 @foreach($profile->contentBands as $band)
 
                     @if($band->type === 'contact_button')
-                        <!-- Bouton vCard -->
-                        <a href="{{ route('profile.vcard', $profile) }}"
+                        <!-- Bouton Ajouter au contact → ouvre popup -->
+                        <button onclick="openContactPopup()"
                            class="flex items-center justify-center space-x-2 w-full py-3.5 px-5 text-white text-center rounded-xl font-semibold text-sm shadow-md transition-all duration-200"
                            style="background: {{ $secondaryColor }};"
                            onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-1px)'"
                            onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)'">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25s-1.01 2.25-2.25 2.25S9.75 10.24 9.75 9s1.01-2.25 2.25-2.25zM17 17H7v-1.5c0-1.67 3.33-2.5 5-2.5s5 .83 5 2.5V17z"/></svg>
                             <span>Ajouter aux contacts</span>
-                        </a>
+                        </button>
 
                     @elseif($band->type === 'social_link')
                         <!-- Lien social -->
@@ -368,6 +382,108 @@
     </div>
     @endif
 
+    <!-- CONTACT POPUP -->
+    <div class="share-overlay" id="contactOverlay" onclick="if(event.target === this) closeContactPopup()">
+        <div class="share-popup">
+            <div class="text-center mb-5">
+                <h3 class="text-lg font-semibold" style="color: #2C2A27;">Ajouter aux contacts</h3>
+                <p class="text-sm mt-1" style="color: #9CA3AF;">Choisissez comment ajouter {{ $profile->full_name }}</p>
+            </div>
+            
+            <div class="space-y-2">
+                <!-- Option 1: Télécharger la vCard -->
+                <a href="{{ route('profile.vcard', $profile) }}" class="w-full flex items-center gap-3 p-3.5 rounded-xl transition-all duration-200" style="border: 1px solid #E5E7EB; background: white;" onmouseover="this.style.background='#F9FAFB'; this.style.borderColor='#D1D5DB'" onmouseout="this.style.background='white'; this.style.borderColor='#E5E7EB'">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: #F3F4F6;">
+                        <svg class="w-5 h-5" fill="#2C2A27" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                    </div>
+                    <div class="text-left flex-1">
+                        <p class="font-semibold text-sm" style="color: #2C2A27;">Télécharger la vCard</p>
+                        <p class="text-xs" style="color: #9CA3AF;">Enregistrer dans vos contacts</p>
+                    </div>
+                </a>
+                
+                <!-- Option 2: Ajouter sur LinkCard -->
+                @if($isOwnProfile)
+                    {{-- C'est son propre profil --}}
+                    <div class="w-full flex items-center gap-3 p-3.5 rounded-xl opacity-50" style="border: 1px solid #E5E7EB; background: #F9FAFB;">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: #F0F9F4;">
+                            <svg class="w-5 h-5" fill="#42B574" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+                        </div>
+                        <div class="text-left flex-1">
+                            <p class="font-semibold text-sm" style="color: #9CA3AF;">C'est votre profil</p>
+                        </div>
+                    </div>
+                @elseif($connectionStatus === 'accepted')
+                    {{-- Déjà connectés --}}
+                    <div class="w-full flex items-center gap-3 p-3.5 rounded-xl" style="border: 1px solid #42B574; background: #F0F9F4;">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: white;">
+                            <svg class="w-5 h-5" fill="#42B574" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        </div>
+                        <div class="text-left flex-1">
+                            <p class="font-semibold text-sm" style="color: #42B574;">Connecté sur LinkCard</p>
+                            <p class="text-xs" style="color: #4B5563;">Vous êtes déjà connectés</p>
+                        </div>
+                    </div>
+                @elseif($connectionStatus === 'pending_sent')
+                    {{-- Demande envoyée --}}
+                    <div class="w-full flex items-center gap-3 p-3.5 rounded-xl" style="border: 1px solid #F59E0B; background: #FEF3C7;">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: white;">
+                            <svg class="w-5 h-5" fill="#F59E0B" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                        </div>
+                        <div class="text-left flex-1">
+                            <p class="font-semibold text-sm" style="color: #92400E;">Demande envoyée</p>
+                            <p class="text-xs" style="color: #92400E;">En attente d'acceptation</p>
+                        </div>
+                    </div>
+                @elseif($connectionStatus === 'pending_received')
+                    {{-- Demande reçue → accepter directement --}}
+                    <form method="POST" action="{{ route('connections.accept.public', $profile->user_id) }}">
+                        @csrf
+                        <button type="submit" class="w-full flex items-center gap-3 p-3.5 rounded-xl transition-all duration-200" style="border: 1px solid #42B574; background: #F0F9F4;" onmouseover="this.style.background='#E0F5E9'" onmouseout="this.style.background='#F0F9F4'">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: #42B574;">
+                                <svg class="w-5 h-5" fill="white" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            </div>
+                            <div class="text-left flex-1">
+                                <p class="font-semibold text-sm" style="color: #2C2A27;">Accepter la demande</p>
+                                <p class="text-xs" style="color: #4B5563;">{{ $profile->full_name }} veut se connecter</p>
+                            </div>
+                        </button>
+                    </form>
+                @elseif(auth()->check())
+                    {{-- Connecté, pas encore de demande → envoyer --}}
+                    <form method="POST" action="{{ route('connections.send', $profile->user_id) }}" id="connectionForm">
+                        @csrf
+                        <button type="submit" class="w-full flex items-center gap-3 p-3.5 rounded-xl transition-all duration-200" style="border: 1px solid #E5E7EB; background: white;" onmouseover="this.style.background='#F0F9F4'; this.style.borderColor='#42B574'" onmouseout="this.style.background='white'; this.style.borderColor='#E5E7EB'">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: #F0F9F4;">
+                                <svg class="w-5 h-5" fill="#42B574" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+                            </div>
+                            <div class="text-left flex-1">
+                                <p class="font-semibold text-sm" style="color: #2C2A27;">Ajouter sur LinkCard</p>
+                                <p class="text-xs" style="color: #9CA3AF;">Se connecter mutuellement</p>
+                            </div>
+                        </button>
+                    </form>
+                @else
+                    {{-- Pas connecté → redirect login --}}
+                    <a href="{{ route('login', ['ref' => $profile->username, 'action' => 'connect']) }}" class="w-full flex items-center gap-3 p-3.5 rounded-xl transition-all duration-200" style="border: 1px solid #E5E7EB; background: white;" onmouseover="this.style.background='#F0F9F4'; this.style.borderColor='#42B574'" onmouseout="this.style.background='white'; this.style.borderColor='#E5E7EB'">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: #F0F9F4;">
+                            <svg class="w-5 h-5" fill="#42B574" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+                        </div>
+                        <div class="text-left flex-1">
+                            <p class="font-semibold text-sm" style="color: #2C2A27;">Ajouter sur LinkCard</p>
+                            <p class="text-xs" style="color: #9CA3AF;">Connexion ou inscription requise</p>
+                        </div>
+                    </a>
+                @endif
+            </div>
+            
+            <!-- Fermer -->
+            <button onclick="closeContactPopup()" class="w-full mt-4 py-2.5 text-sm font-medium rounded-lg transition-colors" style="color: #9CA3AF;" onmouseover="this.style.color='#4B5563'; this.style.background='#F3F4F6'" onmouseout="this.style.color='#9CA3AF'; this.style.background='transparent'">
+                Fermer
+            </button>
+        </div>
+    </div>
+
     <!-- TOAST -->
     <div class="toast" id="toast">
         <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
@@ -438,6 +554,52 @@
             setTimeout(() => {
                 toast.classList.remove('show');
             }, 2500);
+        }
+        
+        // Contact popup
+        function openContactPopup() {
+            document.getElementById('contactOverlay').classList.add('active');
+        }
+        function closeContactPopup() {
+            document.getElementById('contactOverlay').classList.remove('active');
+        }
+        
+        // Handle connection form submit via AJAX
+        const connectionForm = document.getElementById('connectionForm');
+        if (connectionForm) {
+            connectionForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const btn = this.querySelector('button');
+                btn.disabled = true;
+                btn.style.opacity = '0.6';
+                
+                fetch(this.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                }).then(r => r.json()).then(data => {
+                    closeContactPopup();
+                    showToast(data.message || 'Demande envoyée !');
+                    // Update button to show pending
+                    btn.closest('form').outerHTML = `
+                        <div class="w-full flex items-center gap-3 p-3.5 rounded-xl" style="border: 1px solid #F59E0B; background: #FEF3C7;">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: white;">
+                                <svg class="w-5 h-5" fill="#F59E0B" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                            </div>
+                            <div class="text-left flex-1">
+                                <p class="font-semibold text-sm" style="color: #92400E;">Demande envoyée</p>
+                                <p class="text-xs" style="color: #92400E;">En attente d'acceptation</p>
+                            </div>
+                        </div>`;
+                }).catch(() => {
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    showToast('Erreur, réessayez.');
+                });
+            });
         }
     </script>
 
