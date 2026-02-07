@@ -8,6 +8,7 @@ use App\Models\Card;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OrderConfirmed;
+use App\Mail\NewOrderAdmin;
 
 class OrderSuccess extends Component
 {
@@ -38,11 +39,19 @@ class OrderSuccess extends Component
                         'order_id' => $order->id,
                     ]);
 
-                    // Send confirmation email
+                    // Send confirmation email to client
                     try {
                         Mail::to($order->user->email)->send(new OrderConfirmed($order));
                     } catch (\Exception $mailError) {
                         Log::error('Order confirmation email failed', ['error' => $mailError->getMessage()]);
+                    }
+
+                    // Notify admin of new order
+                    try {
+                        Mail::to(config('mail.admin_address', 'mathieu.corbeil@outlook.fr'))
+                            ->send(new NewOrderAdmin($order));
+                    } catch (\Exception $mailError) {
+                        Log::error('Admin notification email failed', ['error' => $mailError->getMessage()]);
                     }
                 }
             } catch (\Exception $e) {
