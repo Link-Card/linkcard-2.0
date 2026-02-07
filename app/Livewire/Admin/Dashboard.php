@@ -7,6 +7,9 @@ use App\Models\User;
 use App\Models\Card;
 use App\Models\CardOrder;
 use App\Models\Profile;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderProcessing;
+use App\Mail\OrderShipped;
 
 class Dashboard extends Component
 {
@@ -54,6 +57,22 @@ class Dashboard extends Component
 
         if ($this->newStatus === 'shipped') {
             Card::where('order_id', $order->id)->update(['shipped_at' => now()]);
+        }
+
+        // Send status emails
+        $order->refresh();
+        try {
+            if ($this->newStatus === 'processing') {
+                Mail::to($order->user->email)->send(new OrderProcessing($order));
+            } elseif ($this->newStatus === 'shipped') {
+                Mail::to($order->user->email)->send(new OrderShipped($order));
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Order status email failed', [
+                'order_id' => $orderId,
+                'status' => $this->newStatus,
+                'error' => $e->getMessage(),
+            ]);
         }
 
         $this->cancelEdit();

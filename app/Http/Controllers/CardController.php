@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Card;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\CardActivated;
 
 class CardController extends Controller
 {
@@ -83,6 +85,13 @@ class CardController extends Controller
             'profile_id' => $profile->id,
             'activated_at' => now(),
         ]);
+
+        // Send activation email
+        try {
+            Mail::to(auth()->user()->email)->send(new CardActivated($card->fresh(['user', 'profile'])));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Card activation email failed', ['error' => $e->getMessage()]);
+        }
 
         return redirect()->route('cards.index')->with('success', 'Carte activée avec succès !');
     }

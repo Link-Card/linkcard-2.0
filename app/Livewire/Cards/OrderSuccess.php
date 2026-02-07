@@ -6,6 +6,8 @@ use Livewire\Component;
 use App\Models\CardOrder;
 use App\Models\Card;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderConfirmed;
 
 class OrderSuccess extends Component
 {
@@ -35,6 +37,13 @@ class OrderSuccess extends Component
                     Log::info('Card order paid + cards created', [
                         'order_id' => $order->id,
                     ]);
+
+                    // Send confirmation email
+                    try {
+                        Mail::to($order->user->email)->send(new OrderConfirmed($order));
+                    } catch (\Exception $mailError) {
+                        Log::error('Order confirmation email failed', ['error' => $mailError->getMessage()]);
+                    }
                 }
             } catch (\Exception $e) {
                 Log::error('Error verifying payment', ['error' => $e->getMessage()]);
