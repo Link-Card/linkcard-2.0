@@ -1,3 +1,10 @@
+{{--
+    TODO MULTI-PROFILS:
+    - Quand le système multi-profils sera implanté, ajouter ici un sélecteur
+      de profil si le user a plusieurs profils (au lieu de confirmer direct)
+    - Tester: commande carte sur profil A, mais user a aussi profil B
+    - Tester: changement de profil lié après confirmation
+--}}
 <!DOCTYPE html>
 <html lang="fr">
 <head>

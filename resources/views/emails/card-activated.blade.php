@@ -1,5 +1,18 @@
 @extends('emails.layout')
 
+{{--
+    TODO POST-LAUNCH:
+    - Personnaliser cet email pour expliquer brièvement Link-Card aux nouveaux utilisateurs
+    - Ajouter des points forts / fonctionnalités clés à découvrir
+    - Ajouter un CTA vers des fonctionnalités premium
+    - Solliciter les features qu'ils aimeraient utiliser (mini-sondage?)
+    
+    TODO MULTI-PROFILS:
+    - Tester le flow complet quand un user a plusieurs profils sur son compte
+    - S'assurer que la page confirm-reception gère bien le cas multi-profils
+    - Tester le changement de profil lié depuis le dashboard cartes
+--}}
+
 @section('content')
     <h1 class="email-title">Carte activée avec succès!</h1>
     <p class="email-subtitle">Votre carte NFC est prête à l'emploi.</p>
