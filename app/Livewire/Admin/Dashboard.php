@@ -29,6 +29,8 @@ class Dashboard extends Component
     public ?int $deletingUserId = null;
     public string $deleteUserReason = '';
     public string $deleteUserNote = '';
+    public string $deleteUserPassword = '';
+    public string $deleteUserError = '';
 
     public function setTab($tab)
     {
@@ -146,6 +148,8 @@ class Dashboard extends Component
         $this->deletingUserId = $userId;
         $this->deleteUserReason = '';
         $this->deleteUserNote = '';
+        $this->deleteUserPassword = '';
+        $this->deleteUserError = '';
     }
 
     public function cancelDeleteUser()
@@ -153,18 +157,38 @@ class Dashboard extends Component
         $this->deletingUserId = null;
         $this->deleteUserReason = '';
         $this->deleteUserNote = '';
+        $this->deleteUserPassword = '';
+        $this->deleteUserError = '';
     }
 
     public function deleteUser()
     {
-        if (!$this->deletingUserId || !$this->deleteUserReason) return;
+        $this->deleteUserError = '';
+
+        if (!$this->deletingUserId) return;
+
+        if (!$this->deleteUserReason) {
+            $this->deleteUserError = 'Veuillez sélectionner une raison.';
+            return;
+        }
+
+        if (!$this->deleteUserPassword) {
+            $this->deleteUserError = 'Veuillez entrer votre mot de passe.';
+            return;
+        }
+
+        // Verify admin password
+        if (!\Illuminate\Support\Facades\Hash::check($this->deleteUserPassword, auth()->user()->password)) {
+            $this->deleteUserError = 'Mot de passe incorrect.';
+            $this->deleteUserPassword = '';
+            return;
+        }
 
         $user = User::findOrFail($this->deletingUserId);
 
         // Protect admin accounts
         if ($user->role === 'super_admin' || $user->role === 'admin') {
-            session()->flash('error', 'Impossible de supprimer un compte administrateur.');
-            $this->cancelDeleteUser();
+            $this->deleteUserError = 'Impossible de supprimer un compte administrateur.';
             return;
         }
 

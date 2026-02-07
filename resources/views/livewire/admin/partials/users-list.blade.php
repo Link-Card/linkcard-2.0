@@ -4,11 +4,6 @@
             {{ session('success') }}
         </div>
     @endif
-    @if(session()->has('error'))
-        <div class="m-4 p-3 rounded-lg" style="background-color: #FEF2F2; border: 1px solid #EF4444; color: #991B1B;">
-            {{ session('error') }}
-        </div>
-    @endif
 
     {{-- Delete User Modal --}}
     @if($deletingUserId)
@@ -62,7 +57,7 @@
                     {{-- Reason --}}
                     <div class="mb-3">
                         <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="color: #4B5563;">Raison *</label>
-                        <select wire:model="deleteUserReason" class="w-full text-sm rounded-xl border px-3 py-2.5" style="border-color: #D1D5DB;">
+                        <select wire:model.live="deleteUserReason" class="w-full text-sm rounded-xl border px-3 py-2.5" style="border-color: #D1D5DB;">
                             <option value="">Sélectionner...</option>
                             <option value="test_account">Compte de test</option>
                             <option value="duplicate">Compte dupliqué</option>
@@ -79,12 +74,24 @@
                         <textarea wire:model="deleteUserNote" rows="2" class="w-full text-sm rounded-xl border px-3 py-2.5" style="border-color: #D1D5DB;" placeholder="Détails supplémentaires..."></textarea>
                     </div>
 
+                    {{-- Password confirmation --}}
+                    <div class="mb-4">
+                        <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="color: #EF4444;">Mot de passe admin *</label>
+                        <input wire:model="deleteUserPassword" type="password" class="w-full text-sm rounded-xl border px-3 py-2.5" style="border-color: #D1D5DB;" placeholder="Entrez votre mot de passe pour confirmer" autocomplete="off">
+                    </div>
+
+                    @if($deleteUserError)
+                        <div class="mb-4 p-3 rounded-lg text-sm" style="background-color: #FEF2F2; border: 1px solid #EF4444; color: #991B1B;">
+                            {{ $deleteUserError }}
+                        </div>
+                    @endif
+
                     {{-- Actions --}}
                     <div class="flex space-x-3">
                         <button wire:click="cancelDeleteUser" class="flex-1 px-5 py-3 text-sm rounded-xl font-medium transition-colors" style="color: #4B5563; border: 1.5px solid #D1D5DB;">
                             Annuler
                         </button>
-                        <button wire:click="deleteUser" wire:loading.attr="disabled" class="flex-1 px-5 py-3 text-sm rounded-xl text-white font-medium transition-colors disabled:opacity-60" style="background-color: {{ $deleteUserReason ? '#EF4444' : '#D1D5DB' }};" {{ !$deleteUserReason ? 'disabled' : '' }}>
+                        <button wire:click="deleteUser" wire:loading.attr="disabled" class="flex-1 px-5 py-3 text-sm rounded-xl text-white font-medium transition-colors disabled:opacity-60" style="background-color: #EF4444;">
                             <span wire:loading.remove wire:target="deleteUser">Supprimer définitivement</span>
                             <span wire:loading wire:target="deleteUser" class="flex items-center justify-center">
                                 <svg class="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
