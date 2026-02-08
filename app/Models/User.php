@@ -26,6 +26,11 @@ class User extends Authenticatable
         'premium_bonus_used',
         'notify_connection_request',
         'notify_connection_accepted',
+        'accepted_terms_at',
+        'is_suspended',
+        'suspension_reason',
+        'suspended_at',
+        'suspended_by',
     ];
 
     protected $hidden = [
@@ -39,8 +44,21 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'verification_code_expires_at' => 'datetime',
             'welcome_email_sent_at' => 'datetime',
+            'accepted_terms_at' => 'datetime',
+            'suspended_at' => 'datetime',
+            'is_suspended' => 'boolean',
             'password' => 'hashed',
         ];
+    }
+
+    public function isSuspended(): bool
+    {
+        return $this->is_suspended;
+    }
+
+    public function profileReports()
+    {
+        return ProfileReport::whereIn('profile_id', $this->profiles()->pluck('id'));
     }
 
     public function profiles()

@@ -92,6 +92,7 @@
         .toast.show { transform: translateX(-50%) translateY(0); }
         .toast svg { width: 18px; height: 18px; fill: #7EE081; }
     </style>
+    @livewireStyles
 </head>
 <body class="min-h-screen" style="background: #F7F8F4;">
 
@@ -291,6 +292,13 @@
                 <p class="text-xs mt-2" style="color: #D1D5DB;">
                     {{ number_format($profile->view_count) }} vue{{ $profile->view_count > 1 ? 's' : '' }}
                 </p>
+                <div class="flex items-center justify-center gap-3 mt-3">
+                    <a href="{{ route('legal.terms') }}" class="text-xs" style="color: #D1D5DB;">Conditions</a>
+                    <span class="text-xs" style="color: #E5E7EB;">·</span>
+                    <a href="{{ route('legal.privacy') }}" class="text-xs" style="color: #D1D5DB;">Confidentialité</a>
+                    <span class="text-xs" style="color: #E5E7EB;">·</span>
+                    <a href="{{ route('legal.refund') }}" class="text-xs" style="color: #D1D5DB;">Remboursement</a>
+                </div>
             </div>
         </div>
     </div>
@@ -626,5 +634,6 @@
         });
     </script>
 
+    @livewireScripts
 </body>
 </html>

@@ -238,6 +238,19 @@
             @endif
 
             {{ $slot }}
+
+            {{-- Footer légal --}}
+            <footer class="mt-8 py-6 px-4">
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-2 text-xs" style="color: #9CA3AF;">
+                    <span>© {{ date('Y') }} Link-Card</span>
+                    <span class="hidden sm:inline">·</span>
+                    <div class="flex items-center gap-4">
+                        <a href="{{ route('legal.terms') }}" class="hover:underline">Conditions</a>
+                        <a href="{{ route('legal.privacy') }}" class="hover:underline">Confidentialité</a>
+                        <a href="{{ route('legal.refund') }}" class="hover:underline">Remboursement</a>
+                    </div>
+                </div>
+            </footer>
         </main>
     </div>
 

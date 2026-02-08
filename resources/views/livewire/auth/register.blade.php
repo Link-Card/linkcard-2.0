@@ -74,6 +74,18 @@
                         placeholder="••••••••">
                 </div>
 
+                <!-- Accept Terms -->
+                <div>
+                    <label class="flex items-start space-x-3 cursor-pointer">
+                        <input wire:model="accepted_terms" type="checkbox" class="mt-0.5 rounded" style="accent-color: #42B574; width: 16px; height: 16px;">
+                        <span class="text-xs leading-relaxed" style="color: #4B5563;">
+                            J'accepte les <a href="{{ route('legal.terms') }}" target="_blank" class="underline font-medium" style="color: #42B574;">conditions d'utilisation</a> 
+                            et la <a href="{{ route('legal.privacy') }}" target="_blank" class="underline font-medium" style="color: #42B574;">politique de confidentialité</a>
+                        </span>
+                    </label>
+                    @error('accepted_terms') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ $message }}</span> @enderror
+                </div>
+
                 <!-- Submit -->
                 <button type="submit" 
                     wire:loading.attr="disabled"

@@ -36,6 +36,11 @@ class ProfileController extends Controller
         // Tracker la vue (dédupliqué: même IP = 1 vue par heure)
         $this->trackView($profile, request());
 
+        // Block suspended profiles
+        if ($profile->user && $profile->user->is_suspended) {
+            return response()->view('profiles.suspended', [], 403);
+        }
+
         return view('profiles.show', compact('profile'));
     }
 

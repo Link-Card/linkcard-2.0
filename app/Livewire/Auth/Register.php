@@ -20,6 +20,7 @@ class Register extends Component
     public $password_confirmation = '';
     public $ref = '';
     public $action = '';
+    public bool $accepted_terms = false;
     
     public function mount()
     {
@@ -33,6 +34,7 @@ class Register extends Component
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => ['required', 'confirmed', new StrongPassword()],
+            'accepted_terms' => 'accepted',
         ];
     }
     
@@ -43,6 +45,7 @@ class Register extends Component
         'email.unique' => 'Cet email est déjà utilisé.',
         'password.required' => 'Le mot de passe est requis.',
         'password.confirmed' => 'Les mots de passe ne correspondent pas.',
+        'accepted_terms.accepted' => 'Vous devez accepter les conditions d\'utilisation.',
     ];
     
     public function updated($propertyName)
@@ -69,6 +72,7 @@ class Register extends Component
             'password' => Hash::make($this->password),
             'plan' => 'free',
             'referral_code' => $code,
+            'accepted_terms_at' => now(),
         ]);
         
         // Tracker le referral si ?ref= présent

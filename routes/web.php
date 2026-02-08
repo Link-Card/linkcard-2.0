@@ -9,6 +9,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Legal pages
+Route::get('/conditions', fn() => view('legal.terms'))->name('legal.terms');
+Route::get('/confidentialite', fn() => view('legal.privacy'))->name('legal.privacy');
+Route::get('/remboursement', fn() => view('legal.refund'))->name('legal.refund');
+
 // Stripe Webhook (SANS middleware CSRF)
 Route::post('/webhook/stripe', [WebhookController::class, 'handleWebhook'])->name('stripe.webhook');
 
