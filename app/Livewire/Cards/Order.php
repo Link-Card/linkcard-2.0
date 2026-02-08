@@ -172,6 +172,23 @@ class Order extends Component
         // Determine overall design type
         $designType = $hasCustom ? 'custom' : 'standard';
 
+        // Expand items: generate a card_code per card
+        $expandedItems = [];
+        foreach ($this->items as $item) {
+            $qty = $item['quantity'] ?? 1;
+            for ($i = 0; $i < $qty; $i++) {
+                $expandedItems[] = [
+                    'order_type' => $item['order_type'] ?? 'new',
+                    'profile_id' => $item['profile_id'] ?? null,
+                    'design_type' => $item['design_type'] ?? 'standard',
+                    'replace_card_id' => $item['replace_card_id'] ?? null,
+                    'card_code' => ($item['order_type'] ?? 'new') === 'replacement' && !empty($item['replace_card_id'])
+                        ? \App\Models\Card::find($item['replace_card_id'])?->card_code ?? \App\Models\Card::generateUniqueCode()
+                        : \App\Models\Card::generateUniqueCode(),
+                ];
+            }
+        }
+
         // Create order in DB
         $order = CardOrder::create([
             'user_id' => $user->id,
@@ -189,7 +206,7 @@ class Order extends Component
                 'country' => 'CA',
             ],
             'amount_cents' => $this->totalPrice,
-            'items' => $this->items,
+            'items' => $expandedItems,
         ]);
 
         // Create Stripe Checkout Session
