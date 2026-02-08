@@ -129,16 +129,27 @@
                                         </div>
                                     </div>
 
-                                    <div class="rounded-lg p-3" style="background: #FEF3C7; border: 1px solid #F59E0B;">
-                                        <p class="text-sm font-medium" style="color: #92400E;">
-                                            ⚠️ Important
-                                        </p>
-                                        <p class="text-sm mt-1" style="color: #92400E;">
-                                            Votre ancien lien continuera de fonctionner pendant <strong>90 jours</strong>.
-                                            Après cette période, il ne sera plus actif. Pensez à mettre à jour vos cartes d'affaires,
-                                            signatures email et réseaux sociaux avec votre nouveau lien.
-                                        </p>
-                                    </div>
+                                    @if(is_null($profile->username_changed_at))
+                                        {{-- Premier changement : code original → custom. Redirect permanent. --}}
+                                        <div class="rounded-lg p-3" style="background: #F0F9F4; border: 1px solid #42B574;">
+                                            <p class="text-sm" style="color: #1a5c3a;">
+                                                ✅ Votre lien d'origine (<strong>{{ $profile->username }}</strong>) continuera de fonctionner <strong>pour toujours</strong>.
+                                                Tous ceux qui l'ont déjà pourront toujours vous retrouver.
+                                            </p>
+                                        </div>
+                                    @else
+                                        {{-- Changement custom → custom. 90 jours. --}}
+                                        <div class="rounded-lg p-3" style="background: #FEF3C7; border: 1px solid #F59E0B;">
+                                            <p class="text-sm font-medium" style="color: #92400E;">
+                                                ⚠️ Important
+                                            </p>
+                                            <p class="text-sm mt-1" style="color: #92400E;">
+                                                Votre lien actuel continuera de fonctionner pendant <strong>90 jours</strong>.
+                                                Après cette période, il ne sera plus actif. Pensez à mettre à jour vos cartes d'affaires,
+                                                signatures email et réseaux sociaux avec votre nouveau lien.
+                                            </p>
+                                        </div>
+                                    @endif
 
                                     <p class="text-xs" style="color: #9CA3AF;">
                                         Vos cartes NFC ne sont pas affectées — elles s'adaptent automatiquement.

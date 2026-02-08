@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->string('old_username', 30)->unique();
             $table->foreignId('profile_id')->constrained()->onDelete('cascade');
-            $table->timestamp('expires_at');
+            $table->timestamp('expires_at')->nullable(); // null = permanent (code original)
             $table->timestamps();
 
             $table->index('old_username');
