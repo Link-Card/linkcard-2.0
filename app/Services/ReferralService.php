@@ -27,7 +27,14 @@ class ReferralService
             return false;
         }
 
+        // Chercher par referral_code d'abord, puis par username de profil
         $referrer = User::where('referral_code', $referralCode)->first();
+
+        if (!$referrer) {
+            // Fallback: chercher par username de profil
+            $profile = \App\Models\Profile::where('username', $referralCode)->first();
+            $referrer = $profile?->user;
+        }
 
         if (!$referrer || $referrer->id === $newUserId) {
             return false;
