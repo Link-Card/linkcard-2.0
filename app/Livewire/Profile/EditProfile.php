@@ -20,6 +20,9 @@ class EditProfile extends Component
     public $primary_color, $secondary_color, $photo;
     public $email, $phone, $website;
     public $contentBands = [];
+    public $customUsername = '';
+    public $editingUsername = false;
+    public $usernameError = '';
 
     public $showAddBandModal = false;
     public $editingBandId = null;
@@ -46,6 +49,7 @@ class EditProfile extends Component
         $this->email = $this->profile->email;
         $this->phone = $this->profile->phone;
         $this->website = $this->profile->website;
+        $this->customUsername = $this->profile->username;
         $this->contentBands = $this->profile->contentBands()->orderBy('order')->get()->toArray();
     }
 
@@ -84,6 +88,91 @@ class EditProfile extends Component
         if ($value && !preg_match('~^(?:f|ht)tps?://~i', $value)) {
             $this->newImageLink = 'https://' . $value;
         }
+    }
+
+    public function updateUsername()
+    {
+        $this->usernameError = '';
+
+        // Vérifier que le plan le permet
+        $check = $this->profile->canChangeUsername();
+        if (!$check['allowed']) {
+            $this->usernameError = $check['reason'];
+            return;
+        }
+
+        // Nettoyer l'input
+        $newUsername = strtolower(trim($this->customUsername));
+
+        // Même username
+        if ($newUsername === strtolower($this->profile->username)) {
+            $this->editingUsername = false;
+            return;
+        }
+
+        // Validation format
+        if (!preg_match('/^[a-z0-9][a-z0-9-]{1,28}[a-z0-9]$/', $newUsername)) {
+            $this->usernameError = 'Format invalide. 3-30 caractères : lettres, chiffres, tirets. Ne peut pas commencer ou finir par un tiret.';
+            return;
+        }
+
+        // Mots réservés
+        $reserved = ['admin', 'api', 'app', 'beta', 'blog', 'cdn', 'dashboard', 'dev', 'help',
+            'login', 'logout', 'profiles', 'signup', 'support', 'test', 'www', 'v2', 'c',
+            'register', 'password', 'reset', 'verify', 'subscription', 'webhook', 'stripe'];
+        if (in_array($newUsername, $reserved)) {
+            $this->usernameError = 'Ce nom est réservé.';
+            return;
+        }
+
+        // Unicité
+        $exists = \App\Models\Profile::where('username', $newUsername)
+            ->where('id', '!=', $this->profile->id)
+            ->exists();
+        if ($exists) {
+            $this->usernameError = 'Ce nom est déjà pris.';
+            return;
+        }
+
+        // Vérifier si pas un ancien redirect actif d'un autre profil
+        $redirectExists = \App\Models\UsernameRedirect::where('old_username', $newUsername)
+            ->where('profile_id', '!=', $this->profile->id)
+            ->where('expires_at', '>', now())
+            ->exists();
+        if ($redirectExists) {
+            $this->usernameError = 'Ce nom n\'est pas disponible pour le moment.';
+            return;
+        }
+
+        // Sauvegarder l'ancien username en redirect 90 jours
+        $oldUsername = $this->profile->username;
+        \App\Models\UsernameRedirect::updateOrCreate(
+            ['old_username' => strtolower($oldUsername)],
+            ['profile_id' => $this->profile->id, 'expires_at' => now()->addDays(90)]
+        );
+
+        // Mettre à jour le username
+        $this->profile->update([
+            'username' => $newUsername,
+            'username_changed_at' => now(),
+        ]);
+
+        // Regénérer le QR Code avec la nouvelle URL
+        $profileUrl = route('profile.public', $newUsername);
+        $qrCode = base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')->size(500)->generate($profileUrl));
+        $this->profile->update(['qr_code' => $qrCode]);
+
+        $this->profile->refresh();
+        $this->editingUsername = false;
+        $this->dispatch('auto-saved');
+        session()->flash('success', 'URL personnalisée mise à jour !');
+    }
+
+    public function cancelUsernameEdit()
+    {
+        $this->editingUsername = false;
+        $this->usernameError = '';
+        $this->customUsername = $this->profile->username;
     }
 
     public function savePhoto()

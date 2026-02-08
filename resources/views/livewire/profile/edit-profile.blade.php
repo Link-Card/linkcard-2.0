@@ -6,6 +6,7 @@
 
         <!-- EDITOR -->
         <div class="w-full lg:w-[58%] space-y-4">
+            @include('livewire.profile.partials.editor-url')
             @include('livewire.profile.partials.editor-header')
             @include('livewire.profile.partials.editor-bands')
 

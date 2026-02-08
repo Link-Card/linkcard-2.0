@@ -13,6 +13,7 @@ class Profile extends Model
     protected $fillable = [
         'user_id',
         'username',
+        'username_changed_at',
         'full_name',
         'job_title',
         'company',
@@ -37,6 +38,7 @@ class Profile extends Model
     protected $casts = [
         'is_public' => 'boolean',
         'view_count' => 'integer',
+        'username_changed_at' => 'datetime',
     ];
 
     public function user(): BelongsTo
@@ -72,5 +74,39 @@ class Profile extends Model
     public function cards()
     {
         return $this->hasMany(Card::class);
+    }
+
+    public function usernameRedirects()
+    {
+        return $this->hasMany(UsernameRedirect::class);
+    }
+
+    /**
+     * Vérifie si le user peut changer son username selon son plan.
+     */
+    public function canChangeUsername(): array
+    {
+        $user = $this->user;
+        $plan = $user->plan ?? 'free';
+
+        if ($plan === 'free') {
+            return ['allowed' => false, 'reason' => 'Disponible avec le forfait PRO ou PREMIUM.'];
+        }
+
+        if (!$this->username_changed_at) {
+            return ['allowed' => true, 'reason' => null];
+        }
+
+        $months = $plan === 'premium' ? 3 : 12; // Premium: 1x/3mois, Pro: 1x/an
+        $nextChange = $this->username_changed_at->addMonths($months);
+
+        if (now()->lt($nextChange)) {
+            return [
+                'allowed' => false,
+                'reason' => 'Prochain changement possible le ' . $nextChange->format('d/m/Y') . '.',
+            ];
+        }
+
+        return ['allowed' => true, 'reason' => null];
     }
 }

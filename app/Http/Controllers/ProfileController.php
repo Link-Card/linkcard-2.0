@@ -14,7 +14,21 @@ class ProfileController extends Controller
             ->with(['contentBands' => function($query) {
                 $query->where('is_hidden', false)->orderBy('order');
             }])
-            ->firstOrFail();
+            ->first();
+
+        // Si pas trouvé, vérifier les redirections d'anciens usernames
+        if (!$profile) {
+            $redirect = \App\Models\UsernameRedirect::where('old_username', strtolower($username))
+                ->where('expires_at', '>', now())
+                ->with('profile')
+                ->first();
+
+            if ($redirect && $redirect->profile) {
+                return redirect()->route('profile.public', $redirect->profile->username, 301);
+            }
+
+            abort(404);
+        }
 
         // Incrémenter compteur vues
         $profile->increment('view_count');
