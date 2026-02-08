@@ -13,3 +13,6 @@ Schedule::command('emails:send-welcome')->hourly();
 
 // Archiver commandes livrées depuis +30 jours (1x par jour)
 Schedule::command('orders:archive-delivered')->daily();
+
+// Expirer les plan overrides et impersonation requests
+Schedule::command('plans:expire-overrides')->hourly();

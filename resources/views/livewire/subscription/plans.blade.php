@@ -136,7 +136,15 @@
                             </button>
                             @if($isAdminGranted)
                                 <p class="text-center text-xs mt-2" style="color: #F59E0B; font-family: 'Manrope', sans-serif;">
-                                    {{ $isSuperAdmin ? 'Plan administrateur (permanent)' : 'Attribué par l\'administrateur' }}
+                                    @if($isSuperAdmin)
+                                        Plan administrateur (permanent)
+                                    @elseif($activeOverride && !$activeOverride->isPermanent())
+                                        Offert — expire le {{ $activeOverride->expires_at->format('d/m/Y') }}
+                                    @elseif($activeOverride && $activeOverride->isPermanent())
+                                        Offert — permanent
+                                    @else
+                                        Attribué par l'administrateur
+                                    @endif
                                 </p>
                             @endif
                         @elseif($isSuperAdmin)
@@ -194,7 +202,22 @@
                 </div>
                 <p class="text-[#4B5563] text-sm" style="font-family: 'Manrope', sans-serif;">
                     @if($isSuperAdmin)
-                        Votre forfait Premium est permanent en tant que super administrateur. Aucune facturation.
+                        Votre forfait est permanent en tant que super administrateur. Aucune facturation.
+                    @elseif($activeOverride)
+                        Votre forfait <strong>{{ strtoupper($activeOverride->granted_plan) }}</strong> a été attribué par l'administrateur.
+                        @if($activeOverride->isPermanent())
+                            Ce forfait est permanent. Aucune facturation.
+                        @else
+                            <br>
+                            <span style="color: #F59E0B;">
+                                Expire le {{ $activeOverride->expires_at->format('d/m/Y') }}
+                                ({{ $activeOverride->daysRemaining() }} jour{{ $activeOverride->daysRemaining() > 1 ? 's' : '' }} restant{{ $activeOverride->daysRemaining() > 1 ? 's' : '' }})
+                            </span>
+                            <br>
+                            <span class="text-xs" style="color: #9CA3AF;">
+                                Après expiration, votre compte reviendra à votre abonnement Stripe actif ou au plan gratuit.
+                            </span>
+                        @endif
                     @else
                         Votre forfait a été attribué par l'administrateur. Aucune facturation en cours.
                     @endif

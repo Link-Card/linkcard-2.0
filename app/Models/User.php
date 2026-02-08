@@ -58,6 +58,33 @@ class User extends Authenticatable
         return $this->hasMany(CardOrder::class);
     }
 
+    public function planOverrides()
+    {
+        return $this->hasMany(PlanOverride::class);
+    }
+
+    public function activePlanOverride()
+    {
+        return $this->hasOne(PlanOverride::class)
+            ->where('status', 'active')
+            ->where(function ($q) {
+                $q->whereNull('expires_at')->orWhere('expires_at', '>', now());
+            })
+            ->latest();
+    }
+
+    public function impersonationRequests()
+    {
+        return $this->hasMany(ImpersonationRequest::class, 'user_id');
+    }
+
+    public function pendingImpersonationRequest()
+    {
+        return $this->hasOne(ImpersonationRequest::class, 'user_id')
+            ->where('status', 'pending')
+            ->latest();
+    }
+
     // --- Connexions ---
 
     public function sentConnections()

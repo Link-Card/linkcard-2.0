@@ -154,12 +154,16 @@ class Dashboard extends Component
     // Plan management
     public ?int $changingPlanUserId = null;
     public string $newPlan = '';
+    public string $planDuration = '30'; // jours (0 = permanent)
+    public string $planReason = '';
     public string $planNote = '';
 
     public function startChangePlan($userId, $currentPlan)
     {
         $this->changingPlanUserId = $userId;
         $this->newPlan = $currentPlan;
+        $this->planDuration = '30';
+        $this->planReason = '';
         $this->planNote = '';
     }
 
@@ -167,6 +171,8 @@ class Dashboard extends Component
     {
         $this->changingPlanUserId = null;
         $this->newPlan = '';
+        $this->planDuration = '30';
+        $this->planReason = '';
         $this->planNote = '';
     }
 
@@ -176,11 +182,32 @@ class Dashboard extends Component
 
         $user = User::findOrFail($this->changingPlanUserId);
         $oldPlan = $user->plan;
+        $isSelf = $user->id === auth()->id() && auth()->user()->role === 'super_admin';
 
         if ($oldPlan === $this->newPlan) {
             $this->cancelChangePlan();
             return;
         }
+
+        // Cancel any existing active override
+        \App\Models\PlanOverride::where('user_id', $user->id)
+            ->where('status', 'active')
+            ->update(['status' => 'cancelled']);
+
+        // Create plan override record
+        $expiresAt = $this->planDuration === '0' ? null : now()->addDays((int)$this->planDuration);
+
+        \App\Models\PlanOverride::create([
+            'user_id' => $user->id,
+            'granted_plan' => $this->newPlan,
+            'previous_plan' => $oldPlan,
+            'granted_by' => auth()->id(),
+            'reason' => $isSelf ? 'testing' : ($this->planReason ?: 'support'),
+            'note' => $this->planNote,
+            'starts_at' => now(),
+            'expires_at' => $expiresAt,
+            'status' => 'active',
+        ]);
 
         // Update plan
         $user->update(['plan' => $this->newPlan]);
@@ -198,32 +225,68 @@ class Dashboard extends Component
             'user_name' => $user->name,
             'old_plan' => $oldPlan,
             'new_plan' => $this->newPlan,
-            'note' => $this->planNote,
+            'duration_days' => $this->planDuration,
+            'reason' => $this->planReason,
             'changed_by' => auth()->id(),
         ]);
 
         $newPlan = $this->newPlan;
         $userName = $user->name;
+        $duration = $this->planDuration === '0' ? 'permanent' : $this->planDuration . 'j';
         $this->cancelChangePlan();
-        session()->flash('success', "Plan de {$userName} changé: {$oldPlan} → {$newPlan}");
+        session()->flash('success', "Plan de {$userName}: {$oldPlan} → {$newPlan} ({$duration})");
     }
 
     // Impersonation
-    public function impersonate($userId)
+    public string $impersonateReason = '';
+
+    public function requestImpersonation($userId)
     {
         $user = User::findOrFail($userId);
 
-        // Cannot impersonate other admins
         if ($user->role === 'super_admin' || $user->role === 'admin') {
-            session()->flash('error', 'Impossible d\'usurper un compte administrateur.');
+            session()->flash('error', 'Impossible de demander l\'accès à un compte administrateur.');
             return;
         }
 
-        // Store admin ID in session to allow returning
+        // Check if already pending
+        $existing = \App\Models\ImpersonationRequest::where('admin_id', auth()->id())
+            ->where('user_id', $userId)
+            ->where('status', 'pending')
+            ->first();
+
+        if ($existing) {
+            session()->flash('error', 'Une demande est déjà en attente pour cet utilisateur.');
+            return;
+        }
+
+        // Check if already approved and still valid
+        $approved = \App\Models\ImpersonationRequest::where('admin_id', auth()->id())
+            ->where('user_id', $userId)
+            ->where('status', 'approved')
+            ->where('expires_at', '>', now())
+            ->first();
+
+        if ($approved) {
+            // Already approved → go directly
+            return $this->doImpersonate($user);
+        }
+
+        // Create new request
+        \App\Models\ImpersonationRequest::create([
+            'admin_id' => auth()->id(),
+            'user_id' => $userId,
+            'reason' => $this->impersonateReason ?: 'Support technique',
+            'status' => 'pending',
+        ]);
+
+        session()->flash('success', "Demande d'accès envoyée à {$user->name}. En attente d'approbation.");
+    }
+
+    public function doImpersonate(User $user)
+    {
         session(['impersonating_from' => auth()->id()]);
-
         auth()->login($user);
-
         return redirect()->route('dashboard');
     }
 

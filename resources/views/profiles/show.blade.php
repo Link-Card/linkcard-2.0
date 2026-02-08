@@ -100,7 +100,7 @@
         $secondaryColor = $profile->secondary_color ?? '#2D7A4F';
         $profileUrl = url()->current();
         $userPlan = auth()->check() ? (auth()->user()->plan ?? 'free') : 'free';
-        $canShowQR = in_array($userPlan, ['pro', 'premium']);
+        $canShowQR = in_array($userPlan, ['pro', 'premium']) || (auth()->check() && auth()->user()->role === 'super_admin');
         
         // Connection status
         $isOwnProfile = auth()->check() && auth()->id() === $profile->user_id;

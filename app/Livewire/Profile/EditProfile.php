@@ -247,8 +247,9 @@ class EditProfile extends Component
 
     public function getAvailableBandTypes()
     {
-        $plan = auth()->user()->plan ?? 'free';
-        $limits = PlanLimitsService::getLimits($plan);
+        $user = auth()->user();
+        $plan = $user->plan ?? 'free';
+        $limits = PlanLimitsService::getLimits($plan, $user);
         
         $visibleBands = collect($this->contentBands)->filter(fn($b) => !($b['is_hidden'] ?? false));
         
@@ -262,7 +263,7 @@ class EditProfile extends Component
             'social_link' => ['available' => $socialCount < $limits['social_links'], 'remaining' => $limits['social_links'] - $socialCount],
             'image' => ['available' => $totalImages < $limits['images'], 'remaining' => $limits['images'] - $totalImages, 'max_per_band' => min(2, $limits['images'] - $totalImages)],
             'text_block' => ['available' => $textCount < $limits['text_blocks'], 'remaining' => $limits['text_blocks'] - $textCount],
-            'image_url_allowed' => $plan !== 'free',
+            'image_url_allowed' => $plan !== 'free' || PlanLimitsService::isSuperAdmin($user),
         ];
     }
 

@@ -169,6 +169,79 @@
 
         {{-- Main content --}}
         <main class="flex-1 overflow-y-auto pt-14 lg:pt-0" style="overscroll-behavior: contain; -webkit-overflow-scrolling: touch;">
+            {{-- Impersonation request notification --}}
+            @php
+                $pendingImpersonation = Auth::check() ? \App\Models\ImpersonationRequest::where('user_id', Auth::id())
+                    ->where('status', 'pending')
+                    ->with('admin')
+                    ->first() : null;
+            @endphp
+            @if($pendingImpersonation)
+                <div class="mx-4 mt-4 p-4 rounded-xl" style="background: #FEF3C7; border: 1px solid #F59E0B;">
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background: #F59E0B;">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-semibold" style="color: #92400E;">Demande d'accès administrateur</p>
+                            <p class="text-xs mt-1" style="color: #92400E;">
+                                <strong>{{ $pendingImpersonation->admin->name }}</strong> (administrateur Link-Card) demande à accéder temporairement à votre compte pour vous aider.
+                                @if($pendingImpersonation->reason)
+                                    <br>Raison : {{ $pendingImpersonation->reason }}
+                                @endif
+                            </p>
+                            <p class="text-[10px] mt-1" style="color: #B45309;">L'accès sera limité à 24h et vous pourrez le révoquer à tout moment.</p>
+                            <div class="flex items-center space-x-2 mt-3">
+                                <form action="{{ route('impersonation.respond') }}" method="POST" class="inline">
+                                    @csrf
+                                    <input type="hidden" name="request_id" value="{{ $pendingImpersonation->id }}">
+                                    <input type="hidden" name="action" value="approve">
+                                    <button type="submit" class="px-4 py-1.5 text-xs font-medium rounded-lg text-white" style="background: #42B574;">
+                                        Autoriser (24h)
+                                    </button>
+                                </form>
+                                <form action="{{ route('impersonation.respond') }}" method="POST" class="inline">
+                                    @csrf
+                                    <input type="hidden" name="request_id" value="{{ $pendingImpersonation->id }}">
+                                    <input type="hidden" name="action" value="deny">
+                                    <button type="submit" class="px-4 py-1.5 text-xs font-medium rounded-lg" style="color: #EF4444; border: 1px solid #EF4444;">
+                                        Refuser
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            {{-- Active impersonation access (user can revoke) --}}
+            @php
+                $activeImpersonation = Auth::check() ? \App\Models\ImpersonationRequest::where('user_id', Auth::id())
+                    ->where('status', 'approved')
+                    ->where('expires_at', '>', now())
+                    ->with('admin')
+                    ->first() : null;
+            @endphp
+            @if($activeImpersonation && !session('impersonating_from'))
+                <div class="mx-4 mt-4 p-3 rounded-xl flex items-center justify-between" style="background: #EFF6FF; border: 1px solid #4A7FBF;">
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-4 h-4" style="color: #4A7FBF;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <p class="text-xs" style="color: #1E40AF;">
+                            <strong>{{ $activeImpersonation->admin->name }}</strong> a un accès temporaire à votre compte
+                            (expire {{ $activeImpersonation->expires_at->diffForHumans() }})
+                        </p>
+                    </div>
+                    <form action="{{ route('impersonation.respond') }}" method="POST" class="inline">
+                        @csrf
+                        <input type="hidden" name="request_id" value="{{ $activeImpersonation->id }}">
+                        <input type="hidden" name="action" value="revoke">
+                        <button type="submit" class="px-3 py-1 text-xs font-medium rounded-lg" style="color: #EF4444; border: 1px solid #EF4444;">
+                            Révoquer l'accès
+                        </button>
+                    </form>
+                </div>
+            @endif
+
             {{ $slot }}
         </main>
     </div>

@@ -28,13 +28,38 @@ class PlanLimitsService
         ],
     ];
 
-    public static function getLimits(string $plan): array
+    public const UNLIMITED = [
+        'profiles' => 999,
+        'social_links' => 999,
+        'images' => 999,
+        'text_blocks' => 999,
+    ];
+
+    /**
+     * Vérifie si un utilisateur est super admin (illimité sur tout)
+     */
+    public static function isSuperAdmin(User $user): bool
     {
+        return $user->role === 'super_admin';
+    }
+
+    public static function getLimits(string $plan, ?User $user = null): array
+    {
+        // Super admin = illimité
+        if ($user && self::isSuperAdmin($user)) {
+            return self::UNLIMITED;
+        }
+
         return self::LIMITS[$plan] ?? self::LIMITS['free'];
     }
 
     public static function applyLimitsOnDowngrade(User $user): array
     {
+        // Super admin ne subit jamais de limites
+        if (self::isSuperAdmin($user)) {
+            return [];
+        }
+
         $limits = self::getLimits($user->plan);
         $hiddenItems = [];
 
@@ -310,6 +335,12 @@ class PlanLimitsService
     public static function canAdd(Profile $profile, string $type, int $count = 1): bool
     {
         $user = $profile->user;
+
+        // Super admin = toujours autorisé
+        if (self::isSuperAdmin($user)) {
+            return true;
+        }
+
         $limits = self::getLimits($user->plan);
         $usage = self::getCurrentUsage($profile);
 
@@ -330,7 +361,7 @@ class PlanLimitsService
     public static function getRemainingSlots(Profile $profile): array
     {
         $user = $profile->user;
-        $limits = self::getLimits($user->plan);
+        $limits = self::getLimits($user->plan, $user);
         $usage = self::getCurrentUsage($profile);
 
         return [

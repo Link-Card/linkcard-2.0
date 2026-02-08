@@ -197,7 +197,11 @@ class Plans extends Component
         }
 
         // Detect admin-granted plan (has plan but no Stripe subscription)
-        $isAdminGranted = !$isSubscribed && ($user->plan !== 'free');
+        $activeOverride = \App\Models\PlanOverride::where('user_id', $user->id)
+            ->where('status', 'active')
+            ->where(function ($q) { $q->whereNull('expires_at')->orWhere('expires_at', '>', now()); })
+            ->first();
+        $isAdminGranted = $activeOverride !== null || (!$isSubscribed && $user->plan !== 'free');
         $isSuperAdmin = $user->role === 'super_admin';
 
         return view('livewire.subscription.plans', [
@@ -206,6 +210,7 @@ class Plans extends Component
             'isSubscribed' => $isSubscribed,
             'isAdminGranted' => $isAdminGranted,
             'isSuperAdmin' => $isSuperAdmin,
+            'activeOverride' => $activeOverride,
             'onGracePeriod' => $onGracePeriod,
             'endsAt' => $endsAt,
             'downgradeLosses' => $downgradeLosses,

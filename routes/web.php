@@ -122,6 +122,38 @@ Route::post('/admin/stop-impersonation', function () {
     return redirect()->route('admin.dashboard');
 })->middleware('auth')->name('admin.stop-impersonation');
 
+// Impersonation consent (user approves/denies/revokes)
+Route::post('/impersonation/respond', function (\Illuminate\Http\Request $request) {
+    $impRequest = \App\Models\ImpersonationRequest::findOrFail($request->request_id);
+    
+    // Only the target user can respond
+    if ($impRequest->user_id !== auth()->id()) {
+        abort(403);
+    }
+    
+    $action = $request->action;
+    
+    if ($action === 'approve') {
+        $impRequest->update([
+            'status' => 'approved',
+            'approved_at' => now(),
+            'expires_at' => now()->addHours(24),
+        ]);
+        return back()->with('success', 'Accès autorisé pour 24h. L\'administrateur peut maintenant accéder à votre compte.');
+    } elseif ($action === 'deny') {
+        $impRequest->update(['status' => 'denied']);
+        return back()->with('success', 'Demande d\'accès refusée.');
+    } elseif ($action === 'revoke') {
+        $impRequest->update([
+            'status' => 'expired',
+            'expires_at' => now(),
+        ]);
+        return back()->with('success', 'Accès administrateur révoqué.');
+    }
+    
+    return back();
+})->middleware('auth')->name('impersonation.respond');
+
 // NFC Card routes
 use App\Http\Controllers\CardController;
 
