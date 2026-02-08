@@ -131,7 +131,7 @@
                     @php $activeOverride = \App\Models\PlanOverride::where('user_id', $changingUser->id)->where('status', 'active')->where(function($q) { $q->whereNull('expires_at')->orWhere('expires_at', '>', now()); })->first(); @endphp
                     @if($activeOverride)
                         <div class="rounded-lg p-3 mb-4 text-xs" style="background: #FEF3C7; color: #92400E;">
-                            Override actif: <strong>{{ strtoupper($activeOverride->granted_plan) }}</strong>
+                            Override actif: <strong>{{ ['free' => 'GRATUIT', 'pro' => 'PRO', 'premium' => 'PREMIUM'][$activeOverride->granted_plan] ?? strtoupper($activeOverride->granted_plan) }}</strong>
                             — {{ $activeOverride->reasonLabel() }}
                             @if($activeOverride->expires_at)
                                 — expire {{ $activeOverride->expires_at->format('d/m/Y') }} ({{ $activeOverride->daysRemaining() }}j)
@@ -145,7 +145,7 @@
                     <div class="mb-3">
                         <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="color: #4B5563;">Forfait *</label>
                         <div class="grid grid-cols-3 gap-2">
-                            @foreach(['free' => 'FREE', 'pro' => 'PRO', 'premium' => 'PREMIUM'] as $planKey => $planLabel)
+                            @foreach(['free' => 'GRATUIT', 'pro' => 'PRO', 'premium' => 'PREMIUM'] as $planKey => $planLabel)
                                 <button wire:click="$set('newPlan', '{{ $planKey }}')"
                                         class="py-2 px-3 rounded-lg text-xs font-medium border-2 transition-all"
                                         style="{{ $newPlan === $planKey ? 'border-color: #42B574; background: #F0F9F4; color: #42B574;' : 'border-color: #E5E7EB; color: #4B5563;' }}">
@@ -173,7 +173,7 @@
                         @if($planDuration !== '0')
                             <p class="text-[10px] mt-1" style="color: #9CA3AF;">
                                 Expire le {{ now()->addDays((int)$planDuration)->format('d/m/Y') }}
-                                → retombe au plan Stripe actif ou FREE
+                                → retombe au plan Stripe actif ou GRATUIT
                             </p>
                         @else
                             <p class="text-[10px] mt-1" style="color: #F59E0B;">Permanent (pas d'expiration)</p>
@@ -269,7 +269,7 @@
                     <button wire:click="startChangePlan({{ $user->id }}, '{{ $user->plan }}')"
                             class="px-2 py-0.5 text-xs rounded-full font-medium"
                             style="background-color: {{ $c['bg'] }}; color: {{ $c['text'] }};">
-                        {{ strtoupper($user->plan ?? 'free') }}
+                        {{ ['free' => 'GRATUIT', 'pro' => 'PRO', 'premium' => 'PREMIUM'][$user->plan ?? 'free'] ?? 'GRATUIT' }}
                         <svg class="w-2.5 h-2.5 inline ml-0.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </button>
                     @php $uOverride = \App\Models\PlanOverride::where('user_id', $user->id)->where('status', 'active')->where(function($q) { $q->whereNull('expires_at')->orWhere('expires_at', '>', now()); })->first(); @endphp
@@ -338,7 +338,7 @@
                                         class="px-2 py-1 text-xs rounded-full font-medium cursor-pointer transition-opacity hover:opacity-80"
                                         style="background-color: {{ $c['bg'] }}; color: {{ $c['text'] }};"
                                         title="Cliquer pour changer le plan">
-                                    {{ strtoupper($user->plan ?? 'free') }}
+                                    {{ ['free' => 'GRATUIT', 'pro' => 'PRO', 'premium' => 'PREMIUM'][$user->plan ?? 'free'] ?? 'GRATUIT' }}
                                     <svg class="w-2.5 h-2.5 inline ml-0.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                                 </button>
                                 @php $dOverride = \App\Models\PlanOverride::where('user_id', $user->id)->where('status', 'active')->where(function($q) { $q->whereNull('expires_at')->orWhere('expires_at', '>', now()); })->first(); @endphp

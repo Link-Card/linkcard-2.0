@@ -232,9 +232,12 @@ class Dashboard extends Component
 
         $newPlan = $this->newPlan;
         $userName = $user->name;
+        $planLabels = ['free' => 'gratuit', 'pro' => 'pro', 'premium' => 'premium'];
+        $oldLabel = $planLabels[$oldPlan] ?? $oldPlan;
+        $newLabel = $planLabels[$newPlan] ?? $newPlan;
         $duration = $this->planDuration === '0' ? 'permanent' : $this->planDuration . 'j';
         $this->cancelChangePlan();
-        session()->flash('success', "Plan de {$userName}: {$oldPlan} → {$newPlan} ({$duration})");
+        session()->flash('success', "Plan de {$userName}: {$oldLabel} → {$newLabel} ({$duration})");
     }
 
     // Impersonation

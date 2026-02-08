@@ -6,6 +6,17 @@
             <p class="text-[#4B5563] mt-1" style="font-family: 'Manrope', sans-serif;">Choisissez le forfait adapté à vos besoins</p>
         </div>
 
+        @if(session('impersonating_from'))
+            <div class="mb-6 p-4 rounded-xl flex items-center space-x-3" style="background: #FEF3C7; border: 1px solid #F59E0B;">
+                <svg class="w-5 h-5 flex-shrink-0" style="color: #F59E0B;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
+                <p class="text-sm" style="color: #92400E;">
+                    <strong>Mode assistance</strong> — Les changements de forfait ne sont pas disponibles. Seul l'utilisateur peut modifier son abonnement.
+                </p>
+            </div>
+        @endif
+
         <!-- Success Message (retour du portail) -->
         @if($showSuccessMessage)
             <div class="mb-6 p-4 rounded-lg bg-[#F0F9F4] border border-[#42B574]" style="font-family: 'Manrope', sans-serif;">
@@ -204,7 +215,7 @@
                     @if($isSuperAdmin)
                         Votre forfait est permanent en tant que super administrateur. Aucune facturation.
                     @elseif($activeOverride)
-                        Votre forfait <strong>{{ strtoupper($activeOverride->granted_plan) }}</strong> a été attribué par l'administrateur.
+                        Votre forfait <strong>{{ ['free' => 'GRATUIT', 'pro' => 'PRO', 'premium' => 'PREMIUM'][$activeOverride->granted_plan] ?? strtoupper($activeOverride->granted_plan) }}</strong> a été attribué par l'administrateur.
                         @if($activeOverride->isPermanent())
                             Ce forfait est permanent. Aucune facturation.
                         @else

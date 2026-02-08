@@ -13,29 +13,24 @@
     <link rel="stylesheet" href="{{ asset('css/design-system.css') }}">
     @livewireStyles
 </head>
-<body style="font-family: 'Manrope', system-ui, sans-serif; background-color: #F7F8F4; overflow: hidden; height: 100dvh;" x-data="{ sidebarOpen: false }">
+<body style="font-family: 'Manrope', system-ui, sans-serif; background-color: #F7F8F4; overflow: hidden; height: 100dvh; display: flex; flex-direction: column;" x-data="{ sidebarOpen: false }">
 
     {{-- Impersonation banner --}}
     @if(session('impersonating_from'))
-        <div class="fixed top-0 left-0 right-0 z-[60] py-2 px-4 text-center text-sm font-medium text-white flex items-center justify-center space-x-3" style="background: #F59E0B;">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+        <div id="impersonation-bar" class="w-full py-2 px-4 text-center text-sm font-medium text-white flex items-center justify-center space-x-3 flex-shrink-0" style="background: #F59E0B; z-index: 9999;">
+            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
             <span>Connecté en tant que <strong>{{ Auth::user()->name }}</strong> ({{ Auth::user()->email }})</span>
             <form action="{{ route('admin.stop-impersonation') }}" method="POST" class="inline">
                 @csrf
-                <button type="submit" class="ml-2 px-3 py-1 rounded-md text-xs font-bold transition" style="background: rgba(255,255,255,0.25);" onmouseover="this.style.background='rgba(255,255,255,0.4)'" onmouseout="this.style.background='rgba(255,255,255,0.25)'">
-                    ← Retour admin
+                <button type="submit" class="ml-2 px-3 py-1 rounded-md text-xs font-bold text-white transition" style="background: rgba(255,255,255,0.25);" onmouseover="this.style.background='rgba(255,255,255,0.4)'" onmouseout="this.style.background='rgba(255,255,255,0.25)'">
+                    ← Quitter l'accès
                 </button>
             </form>
         </div>
-        <style>
-            .lg\:hidden.fixed.top-0 { top: 36px !important; }
-            @media (min-width: 1024px) { .lg\:fixed.lg\:left-0 { top: 36px !important; height: calc(100dvh - 36px) !important; } }
-            .lg\:ml-60 { padding-top: 36px; }
-        </style>
     @endif
 
     {{-- Mobile top bar --}}
-    <div class="lg:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 py-3" style="background-color: #2C2A27;">
+    <div class="lg:hidden fixed left-0 right-0 z-40 flex items-center justify-between px-4 py-3" style="background-color: #2C2A27; top: {{ session('impersonating_from') ? '36px' : '0' }};">
         <div class="flex items-center space-x-3">
             <img src="{{ asset('images/logo-blanc.png') }}" alt="Link-Card" class="h-8 w-auto">
             <span class="text-white font-semibold">Link-Card</span>
@@ -57,7 +52,7 @@
          x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
     </div>
 
-    <div class="flex h-screen">
+    <div class="flex flex-1 overflow-hidden">
         {{-- Sidebar --}}
         <aside class="fixed lg:static inset-y-0 left-0 z-50 w-64 flex flex-col transform transition-transform duration-200 ease-in-out lg:transform-none"
                :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
@@ -168,7 +163,7 @@
         </aside>
 
         {{-- Main content --}}
-        <main class="flex-1 overflow-y-auto pt-14 lg:pt-0" style="overscroll-behavior: contain; -webkit-overflow-scrolling: touch;">
+        <main class="flex-1 overflow-y-auto lg:pt-0 {{ session('impersonating_from') ? 'pt-[92px]' : 'pt-14' }}" style="overscroll-behavior: contain; -webkit-overflow-scrolling: touch;">
             {{-- Impersonation request notification --}}
             @php
                 $pendingImpersonation = Auth::check() ? \App\Models\ImpersonationRequest::where('user_id', Auth::id())

@@ -129,6 +129,11 @@ class Order extends Component
 
     public function checkout()
     {
+        if (session('impersonating_from')) {
+            session()->flash('error', 'Les achats ne sont pas disponibles en mode assistance.');
+            return;
+        }
+
         $user = auth()->user();
 
         // Save logo if custom
@@ -202,7 +207,10 @@ class Order extends Component
 
     public function render()
     {
-        return view('livewire.cards.order')
-            ->layout('layouts.dashboard');
+        $noProfiles = auth()->user()->profiles()->count() === 0;
+
+        return view('livewire.cards.order', [
+            'noProfiles' => $noProfiles,
+        ])->layout('layouts.dashboard');
     }
 }

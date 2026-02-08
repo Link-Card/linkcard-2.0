@@ -1,5 +1,27 @@
 <div class="p-4 sm:p-6 lg:p-8">
     <div class="max-w-2xl mx-auto">
+        {{-- Block purchases during impersonation --}}
+        @if(session('impersonating_from'))
+            <div class="mb-6">
+                <a href="{{ route('cards.index') }}" class="inline-flex items-center text-sm mb-4 transition-colors" style="color: #4B5563;">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    Retour aux cartes
+                </a>
+                <h1 class="text-2xl font-semibold" style="color: #2C2A27;">Commander des cartes NFC</h1>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-8 text-center">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style="background-color: #FEF3C7;">
+                    <svg class="w-8 h-8" style="color: #F59E0B;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                </div>
+                <h2 class="text-lg font-semibold mb-2" style="color: #2C2A27;">Action restreinte</h2>
+                <p class="text-sm" style="color: #4B5563;">
+                    Les achats et changements de forfait ne sont pas disponibles en mode assistance. Seul l'utilisateur peut effectuer ses propres transactions.
+                </p>
+            </div>
+        @else
+
         <!-- Header -->
         <div class="mb-6">
             <a href="{{ route('cards.index') }}" class="inline-flex items-center text-sm mb-4 transition-colors" style="color: #4B5563;" onmouseover="this.style.color='#42B574'" onmouseout="this.style.color='#4B5563'">
@@ -55,5 +77,6 @@
                 @endif
             </div>
         @endif
+        @endif {{-- end impersonation check --}}
     </div>
 </div>

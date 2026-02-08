@@ -21,6 +21,11 @@ class Plans extends Component
 
     public function subscribe(string $plan)
     {
+        if (session('impersonating_from')) {
+            session()->flash('error', 'Les transactions ne sont pas disponibles en mode assistance.');
+            return;
+        }
+
         $user = auth()->user();
 
         $priceId = $this->billingCycle === 'monthly'
@@ -49,6 +54,11 @@ class Plans extends Component
 
     public function redirectToPortal()
     {
+        if (session('impersonating_from')) {
+            session()->flash('error', 'Les transactions ne sont pas disponibles en mode assistance.');
+            return;
+        }
+
         // Ajouter ?portal_return=1 pour détecter le retour
         $returnUrl = route('subscription.plans') . '?portal_return=1';
         $url = auth()->user()->billingPortalUrl($returnUrl);
