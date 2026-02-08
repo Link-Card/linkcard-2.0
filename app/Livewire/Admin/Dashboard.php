@@ -284,7 +284,14 @@ class Dashboard extends Component
             'totalScans' => Card::sum('scan_count'),
             'proUsers' => User::where('plan', 'pro')->count(),
             'premiumUsers' => User::where('plan', 'premium')->count(),
+            'freeUsers' => User::where('plan', 'free')->count(),
         ];
+
+        // Admin stats data
+        $adminStats = [];
+        if ($this->activeTab === 'statistics') {
+            $adminStats = $this->getAdminStats();
+        }
 
         $orders = CardOrder::with('user')
             ->whereNotIn('status', ['pending', 'archived'])
@@ -302,9 +309,106 @@ class Dashboard extends Component
 
         return view('livewire.admin.dashboard', [
             'stats' => $stats,
+            'adminStats' => $adminStats,
             'orders' => $orders,
             'archivedOrders' => $archivedOrders,
             'users' => $users,
         ])->layout('layouts.dashboard');
+    }
+
+    private function getAdminStats(): array
+    {
+        // Inscriptions par jour (30 derniers jours)
+        $signupsByDay = User::where('created_at', '>=', now()->subDays(30))
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->pluck('count', 'date')
+            ->toArray();
+
+        // Remplir les jours manquants
+        $filledSignups = [];
+        for ($i = 29; $i >= 0; $i--) {
+            $date = now()->subDays($i)->format('Y-m-d');
+            $filledSignups[$date] = $signupsByDay[$date] ?? 0;
+        }
+
+        // Inscriptions par plan (30 derniers jours)
+        $signupsByPlan = User::where('created_at', '>=', now()->subDays(30))
+            ->selectRaw('plan, COUNT(*) as count')
+            ->groupBy('plan')
+            ->pluck('count', 'plan')
+            ->toArray();
+
+        // Inscriptions cette semaine vs semaine dernière
+        $thisWeek = User::where('created_at', '>=', now()->startOfWeek())->count();
+        $lastWeek = User::whereBetween('created_at', [now()->subWeek()->startOfWeek(), now()->startOfWeek()])->count();
+
+        // Inscriptions ce mois vs mois dernier
+        $thisMonth = User::where('created_at', '>=', now()->startOfMonth())->count();
+        $lastMonth = User::whereBetween('created_at', [now()->subMonth()->startOfMonth(), now()->startOfMonth()])->count();
+
+        // Vues totales profils (30 derniers jours)
+        $totalProfileViews = \App\Models\ProfileView::where('viewed_at', '>=', now()->subDays(30))->count();
+
+        // Vues par jour (30 derniers jours)
+        $viewsByDay = \App\Models\ProfileView::where('viewed_at', '>=', now()->subDays(30))
+            ->selectRaw('DATE(viewed_at) as date, COUNT(*) as count')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->pluck('count', 'date')
+            ->toArray();
+
+        $filledViews = [];
+        for ($i = 29; $i >= 0; $i--) {
+            $date = now()->subDays($i)->format('Y-m-d');
+            $filledViews[$date] = $viewsByDay[$date] ?? 0;
+        }
+
+        // Top profils vus (30 derniers jours)
+        $topProfiles = \App\Models\ProfileView::where('viewed_at', '>=', now()->subDays(30))
+            ->join('profiles', 'profile_views.profile_id', '=', 'profiles.id')
+            ->join('users', 'profiles.user_id', '=', 'users.id')
+            ->selectRaw('profiles.username, users.name, COUNT(*) as views')
+            ->groupBy('profiles.username', 'users.name')
+            ->orderByDesc('views')
+            ->limit(5)
+            ->get()
+            ->toArray();
+
+        // Clics totaux (30 derniers jours)
+        $totalClicks = \App\Models\LinkClick::where('clicked_at', '>=', now()->subDays(30))->count();
+
+        // Revenus cartes NFC par mois (6 derniers mois)
+        $revenueByMonth = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $start = now()->subMonths($i)->startOfMonth();
+            $end = now()->subMonths($i)->endOfMonth();
+            $label = $start->translatedFormat('M Y');
+            $revenue = CardOrder::whereNotIn('status', ['pending'])
+                ->whereBetween('created_at', [$start, $end])
+                ->sum('amount_cents');
+            $revenueByMonth[$label] = $revenue;
+        }
+
+        // Conversion: users qui ont upgrade
+        $upgradedUsers = User::whereIn('plan', ['pro', 'premium'])->count();
+        $conversionRate = User::count() > 0 ? round(($upgradedUsers / User::count()) * 100, 1) : 0;
+
+        return [
+            'signupsByDay' => $filledSignups,
+            'signupsByPlan' => $signupsByPlan,
+            'thisWeek' => $thisWeek,
+            'lastWeek' => $lastWeek,
+            'thisMonth' => $thisMonth,
+            'lastMonth' => $lastMonth,
+            'totalProfileViews' => $totalProfileViews,
+            'viewsByDay' => $filledViews,
+            'topProfiles' => $topProfiles,
+            'totalClicks' => $totalClicks,
+            'revenueByMonth' => $revenueByMonth,
+            'conversionRate' => $conversionRate,
+            'upgradedUsers' => $upgradedUsers,
+        ];
     }
 }

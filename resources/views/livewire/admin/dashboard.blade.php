@@ -28,6 +28,11 @@
                 style="{{ $activeTab === 'users' ? 'background-color: #FFFFFF; color: #2C2A27; box-shadow: 0 1px 3px rgba(0,0,0,0.1);' : 'color: #4B5563;' }}">
             Users ({{ $stats['totalUsers'] }})
         </button>
+        <button wire:click="setTab('statistics')"
+                class="flex-1 py-2 px-3 sm:px-4 text-xs sm:text-sm font-medium rounded-md transition-all whitespace-nowrap"
+                style="{{ $activeTab === 'statistics' ? 'background-color: #FFFFFF; color: #2C2A27; box-shadow: 0 1px 3px rgba(0,0,0,0.1);' : 'color: #4B5563;' }}">
+            Statistiques
+        </button>
     </div>
 
     <!-- Tab content -->
@@ -37,5 +42,7 @@
         @include('livewire.admin.partials.archives-list')
     @elseif($activeTab === 'users')
         @include('livewire.admin.partials.users-list')
+    @elseif($activeTab === 'statistics')
+        @include('livewire.admin.partials.statistics')
     @endif
 </div>
