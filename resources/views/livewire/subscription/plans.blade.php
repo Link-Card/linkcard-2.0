@@ -77,8 +77,11 @@
             @endphp
             
             @foreach($plans as $key => $plan)
-                @php $planLevel = $planOrder[$key] ?? 0; @endphp
-                <div x-data="{ showFeatures: false }"
+                @php
+                    $planLevel = $planOrder[$key] ?? 0;
+                    $displayOrder = match($key) { 'premium' => 1, 'pro' => 2, 'free' => 3, default => 4 };
+                @endphp
+                <div x-data="{ showFeatures: false }" style="order: {{ $displayOrder }};"
                      class="bg-white rounded-xl shadow-sm border-2 transition-all {{ $currentPlan === $key ? 'border-[#42B574]' : 'border-transparent hover:border-[#D1D5DB]' }} {{ $key === 'premium' ? 'ring-1 ring-[#42B574]/20' : '' }}">
                     
                     {{-- Recommended badge for Premium --}}
