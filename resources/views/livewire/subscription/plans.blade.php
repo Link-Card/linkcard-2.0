@@ -79,20 +79,13 @@
             @foreach($plans as $key => $plan)
                 @php
                     $planLevel = $planOrder[$key] ?? 0;
-                    $displayOrder = match($key) { 'premium' => 1, 'pro' => 2, 'free' => 3, default => 4 };
+                    $displayOrder = match($key) { 'free' => 1, 'pro' => 2, 'premium' => 3, default => 4 };
                 @endphp
                 <div x-data="{ showFeatures: false }" style="order: {{ $displayOrder }};"
-                     class="bg-white rounded-xl shadow-sm border-2 transition-all {{ $currentPlan === $key ? 'border-[#42B574]' : 'border-transparent hover:border-[#D1D5DB]' }} {{ $key === 'premium' ? 'ring-1 ring-[#42B574]/20' : '' }}">
-                    
-                    {{-- Recommended badge for Premium --}}
-                    @if($key === 'premium')
-                        <div class="text-center py-1.5 text-xs font-semibold text-white rounded-t-lg" style="background: #42B574;">
-                            Recommandé
-                        </div>
-                    @endif
+                     class="bg-white rounded-xl shadow-sm border-2 transition-all {{ $currentPlan === $key ? 'border-[#42B574]' : 'border-transparent hover:border-[#D1D5DB]' }}">
 
                     <!-- Plan Header -->
-                    <div class="p-5 sm:p-6 {{ $key !== 'premium' ? '' : '' }}">
+                    <div class="p-5 sm:p-6">
                         <div class="flex items-center justify-between mb-3">
                             <h3 class="text-lg font-semibold text-[#2C2A27]" style="font-family: 'Manrope', sans-serif;">{{ $plan['name'] }}</h3>
                             @if($currentPlan === $key)
