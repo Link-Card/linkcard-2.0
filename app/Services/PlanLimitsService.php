@@ -72,10 +72,12 @@ class PlanLimitsService
             ['profile_id' => $profile->id, 'expires_at' => now()->addDays(90)]
         );
 
-        // Mettre à jour le profil
+        // Sauvegarder le custom URL + GARDER le cooldown (username_changed_at)
+        // Empêche l'abus unsub/resub pour reset le cooldown
         $profile->update([
             'username' => $code,
-            'username_changed_at' => null, // Reset pour permettre un futur changement si re-upgrade
+            'previous_custom_username' => strtolower($customUsername),
+            // username_changed_at PAS touché → cooldown préservé
         ]);
 
         // Regénérer le QR Code
@@ -169,9 +171,58 @@ class PlanLimitsService
             $unhiddenCount += $profile->contentBands()
                 ->where('is_hidden', false)
                 ->count();
+
+            // Restaurer le custom URL si upgrade vers PRO/PREMIUM
+            if (in_array($user->plan, ['pro', 'premium']) && $profile->previous_custom_username) {
+                self::restoreCustomUrl($profile);
+            }
         }
 
         return $unhiddenCount;
+    }
+
+    /**
+     * Restaure le custom URL précédent après un re-upgrade
+     */
+    public static function restoreCustomUrl(Profile $profile): void
+    {
+        $previousUrl = $profile->previous_custom_username;
+
+        // Vérifier que personne d'autre n'a pris ce username entre-temps
+        $taken = Profile::where('username', $previousUrl)
+            ->where('id', '!=', $profile->id)
+            ->exists();
+
+        if ($taken) {
+            // URL pris par quelqu'un d'autre, tant pis
+            $profile->update(['previous_custom_username' => null]);
+            return;
+        }
+
+        $currentCode = $profile->username;
+
+        // Restaurer le custom URL
+        $profile->update([
+            'username' => $previousUrl,
+            'previous_custom_username' => null,
+            // username_changed_at reste intact → cooldown préservé
+        ]);
+
+        // Supprimer le redirect qui pointait vers ce profil (plus besoin)
+        \App\Models\UsernameRedirect::where('old_username', $previousUrl)
+            ->where('profile_id', $profile->id)
+            ->delete();
+
+        // Regénérer le QR Code
+        try {
+            $profileUrl = route('profile.public', $previousUrl);
+            $qrCode = base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')->size(500)->generate($profileUrl));
+            $profile->update(['qr_code' => $qrCode]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning('QR code regen failed on upgrade restore: ' . $e->getMessage());
+        }
+
+        \Illuminate\Support\Facades\Log::info("Custom URL restored: {$currentCode} → {$previousUrl} for profile #{$profile->id}");
     }
 
     public static function getCurrentUsage(Profile $profile): array

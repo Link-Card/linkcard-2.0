@@ -14,6 +14,7 @@ class Profile extends Model
         'user_id',
         'username',
         'username_changed_at',
+        'previous_custom_username',
         'full_name',
         'job_title',
         'company',
