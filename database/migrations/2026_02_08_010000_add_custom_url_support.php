@@ -13,11 +13,12 @@ return new class extends Migration
             $table->timestamp('username_changed_at')->nullable()->after('username');
         });
 
-        // Table de redirections permanentes pour anciens usernames
+        // Table de redirections temporaires pour anciens usernames (90 jours)
         Schema::create('username_redirects', function (Blueprint $table) {
             $table->id();
             $table->string('old_username', 30)->unique();
             $table->foreignId('profile_id')->constrained()->onDelete('cascade');
+            $table->timestamp('expires_at');
             $table->timestamps();
 
             $table->index('old_username');

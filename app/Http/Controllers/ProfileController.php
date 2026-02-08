@@ -19,6 +19,7 @@ class ProfileController extends Controller
         // Si pas trouvé, vérifier les redirections d'anciens usernames
         if (!$profile) {
             $redirect = \App\Models\UsernameRedirect::where('old_username', strtolower($username))
+                ->where('expires_at', '>', now())
                 ->with('profile')
                 ->first();
 

@@ -96,6 +96,74 @@
                         Annuler
                     </button>
                 </div>
+
+                {{-- Popup de confirmation --}}
+                @if($confirmingUsernameChange)
+                    <div class="fixed inset-0 z-50 flex items-center justify-center" style="background: rgba(0,0,0,0.5);">
+                        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full mx-4 overflow-hidden">
+                            {{-- Header --}}
+                            <div class="px-6 pt-6 pb-4">
+                                <div class="flex items-center space-x-3 mb-4">
+                                    <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: #FEF3C7;">
+                                        <svg class="w-5 h-5" style="color: #D97706;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-lg font-semibold" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">
+                                        Modifier votre lien
+                                    </h3>
+                                </div>
+
+                                <div class="space-y-3" style="font-family: 'Manrope', sans-serif;">
+                                    <p class="text-sm" style="color: #4B5563;">
+                                        Votre lien va changer de :
+                                    </p>
+                                    <div class="rounded-lg p-3 space-y-2" style="background: #F3F4F6;">
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-xs font-medium px-2 py-0.5 rounded" style="background: #FEF2F2; color: #EF4444;">Ancien</span>
+                                            <span class="text-sm" style="color: #2C2A27;">app.linkcard.ca/<strong>{{ $profile->username }}</strong></span>
+                                        </div>
+                                        <div class="flex items-center space-x-2">
+                                            <span class="text-xs font-medium px-2 py-0.5 rounded" style="background: #F0F9F4; color: #42B574;">Nouveau</span>
+                                            <span class="text-sm" style="color: #2C2A27;">app.linkcard.ca/<strong>{{ strtolower(trim($customUsername)) }}</strong></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="rounded-lg p-3" style="background: #FEF3C7; border: 1px solid #F59E0B;">
+                                        <p class="text-sm font-medium" style="color: #92400E;">
+                                            ⚠️ Important
+                                        </p>
+                                        <p class="text-sm mt-1" style="color: #92400E;">
+                                            Votre ancien lien continuera de fonctionner pendant <strong>90 jours</strong>.
+                                            Après cette période, il ne sera plus actif. Pensez à mettre à jour vos cartes d'affaires,
+                                            signatures email et réseaux sociaux avec votre nouveau lien.
+                                        </p>
+                                    </div>
+
+                                    <p class="text-xs" style="color: #9CA3AF;">
+                                        Vos cartes NFC ne sont pas affectées — elles s'adaptent automatiquement.
+                                    </p>
+                                </div>
+                            </div>
+
+                            {{-- Boutons --}}
+                            <div class="px-6 pb-6 flex items-center space-x-3">
+                                <button wire:click="confirmUsernameChange"
+                                        class="flex-1 py-2.5 rounded-lg text-sm font-medium text-white transition"
+                                        style="font-family: 'Manrope', sans-serif; background: #42B574;"
+                                        onmouseover="this.style.background='#3DA367'"
+                                        onmouseout="this.style.background='#42B574'">
+                                    Oui, changer mon lien
+                                </button>
+                                <button wire:click="cancelUsernameEdit"
+                                        class="flex-1 py-2.5 rounded-lg text-sm font-medium transition"
+                                        style="font-family: 'Manrope', sans-serif; color: #4B5563; border: 1.5px solid #D1D5DB;">
+                                    Annuler
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
         @endif
     </div>

@@ -23,6 +23,7 @@ class EditProfile extends Component
     public $customUsername = '';
     public $editingUsername = false;
     public $usernameError = '';
+    public $confirmingUsernameChange = false;
 
     public $showAddBandModal = false;
     public $editingBandId = null;
@@ -93,6 +94,7 @@ class EditProfile extends Component
     public function updateUsername()
     {
         $this->usernameError = '';
+        $this->confirmingUsernameChange = false;
 
         // Vérifier que le plan le permet
         $check = $this->profile->canChangeUsername();
@@ -137,17 +139,26 @@ class EditProfile extends Component
         // Vérifier si pas un ancien redirect actif d'un autre profil
         $redirectExists = \App\Models\UsernameRedirect::where('old_username', $newUsername)
             ->where('profile_id', '!=', $this->profile->id)
+            ->where('expires_at', '>', now())
             ->exists();
         if ($redirectExists) {
             $this->usernameError = 'Ce nom n\'est pas disponible pour le moment.';
             return;
         }
 
-        // Sauvegarder l'ancien username en redirect permanent
+        // Tout est valide → afficher la confirmation
+        $this->confirmingUsernameChange = true;
+    }
+
+    public function confirmUsernameChange()
+    {
+        $newUsername = strtolower(trim($this->customUsername));
         $oldUsername = $this->profile->username;
+
+        // Sauvegarder l'ancien username en redirect 90 jours
         \App\Models\UsernameRedirect::updateOrCreate(
             ['old_username' => strtolower($oldUsername)],
-            ['profile_id' => $this->profile->id]
+            ['profile_id' => $this->profile->id, 'expires_at' => now()->addDays(90)]
         );
 
         // Mettre à jour le username
@@ -163,6 +174,7 @@ class EditProfile extends Component
 
         $this->profile->refresh();
         $this->editingUsername = false;
+        $this->confirmingUsernameChange = false;
         $this->dispatch('auto-saved');
         session()->flash('success', 'URL personnalisée mise à jour !');
     }
@@ -171,6 +183,7 @@ class EditProfile extends Component
     {
         $this->editingUsername = false;
         $this->usernameError = '';
+        $this->confirmingUsernameChange = false;
         $this->customUsername = $this->profile->username;
     }
 
