@@ -11,9 +11,8 @@ class Order extends Component
 {
     use WithFileUploads;
 
-    // Form fields
-    public int $quantity = 1;
-    public string $designType = 'standard';
+    // Multi-item cart
+    public array $items = [];
     public $logoFile = null;
 
     // Shipping address
@@ -27,18 +26,6 @@ class Order extends Component
     // UI state
     public int $step = 1; // 1=design, 2=address, 3=summary
 
-    protected $rules = [
-        'quantity' => 'required|integer|min:1|max:10',
-        'designType' => 'required|in:standard,custom',
-        'logoFile' => 'nullable|image|max:15360',
-        'shippingName' => 'required|string|max:255',
-        'shippingStreet' => 'required|string|max:255',
-        'shippingCity' => 'required|string|max:255',
-        'shippingProvince' => 'required|string|max:2',
-        'shippingPostalCode' => 'required|string|max:10',
-        'shippingPhone' => 'required|string|max:20',
-    ];
-
     protected $messages = [
         'shippingName.required' => 'Le nom est requis.',
         'shippingStreet.required' => 'L\'adresse est requise.',
@@ -46,25 +33,73 @@ class Order extends Component
         'shippingPostalCode.required' => 'Le code postal est requis.',
         'shippingPhone.required' => 'Le téléphone est requis.',
         'logoFile.image' => 'Le fichier doit être une image.',
-        'logoFile.max' => 'Le logo ne doit pas dépasser 5 Mo.',
+        'logoFile.max' => 'Le logo ne doit pas dépasser 15 Mo.',
     ];
 
     public function mount()
     {
         $user = auth()->user();
         $this->shippingName = $user->name ?? '';
+
+        $firstProfile = $user->profiles()->first();
+        $this->items = [[
+            'order_type' => 'new',
+            'profile_id' => $firstProfile?->id ?? '',
+            'design_type' => 'standard',
+            'quantity' => 1,
+            'replace_card_id' => '',
+        ]];
+    }
+
+    public function addItem()
+    {
+        $firstProfile = auth()->user()->profiles()->first();
+        $this->items[] = [
+            'order_type' => 'new',
+            'profile_id' => $firstProfile?->id ?? '',
+            'design_type' => 'standard',
+            'quantity' => 1,
+            'replace_card_id' => '',
+        ];
+    }
+
+    public function removeItem($index)
+    {
+        if (count($this->items) > 1) {
+            unset($this->items[$index]);
+            $this->items = array_values($this->items);
+        }
+    }
+
+    public function incrementItem($index)
+    {
+        if (isset($this->items[$index]) && $this->items[$index]['quantity'] < 10) {
+            $this->items[$index]['quantity']++;
+        }
+    }
+
+    public function decrementItem($index)
+    {
+        if (isset($this->items[$index]) && $this->items[$index]['quantity'] > 1) {
+            $this->items[$index]['quantity']--;
+        }
     }
 
     public function nextStep()
     {
         if ($this->step === 1) {
-            $this->validate([
-                'quantity' => 'required|integer|min:1|max:10',
-                'designType' => 'required|in:standard,custom',
-            ]);
+            // Validate items
+            foreach ($this->items as $index => $item) {
+                if (($item['order_type'] ?? 'new') === 'replacement' && empty($item['replace_card_id'])) {
+                    $this->addError("items.{$index}.replace_card_id", 'Sélectionnez une carte à remplacer.');
+                    return;
+                }
+            }
 
-            if ($this->designType === 'custom') {
+            $hasCustom = collect($this->items)->contains('design_type', 'custom');
+            if ($hasCustom && !$this->logoFile) {
                 $this->validate(['logoFile' => 'required|image|max:15360']);
+                return;
             }
 
             $this->step = 2;
@@ -88,18 +123,9 @@ class Order extends Component
         }
     }
 
-    public function incrementQuantity()
+    public function getTotalQuantityProperty(): int
     {
-        if ($this->quantity < 10) {
-            $this->quantity++;
-        }
-    }
-
-    public function decrementQuantity()
-    {
-        if ($this->quantity > 1) {
-            $this->quantity--;
-        }
+        return collect($this->items)->sum('quantity');
     }
 
     public function getUnitPriceProperty(): int
@@ -109,7 +135,7 @@ class Order extends Component
 
     public function getTotalPriceProperty(): int
     {
-        return $this->unitPrice * $this->quantity;
+        return $this->unitPrice * $this->totalQuantity;
     }
 
     public function getDisplayUnitPriceProperty(): string
@@ -124,7 +150,7 @@ class Order extends Component
 
     public function getHasDiscountProperty(): bool
     {
-        return auth()->user()->plan === 'premium';
+        return in_array(auth()->user()->plan, ['premium', 'pro']);
     }
 
     public function checkout()
@@ -138,15 +164,19 @@ class Order extends Component
 
         // Save logo if custom
         $logoPath = null;
-        if ($this->designType === 'custom' && $this->logoFile) {
+        $hasCustom = collect($this->items)->contains('design_type', 'custom');
+        if ($hasCustom && $this->logoFile) {
             $logoPath = $this->logoFile->store('card-logos', 'public');
         }
+
+        // Determine overall design type
+        $designType = $hasCustom ? 'custom' : 'standard';
 
         // Create order in DB
         $order = CardOrder::create([
             'user_id' => $user->id,
-            'quantity' => $this->quantity,
-            'design_type' => $this->designType,
+            'quantity' => $this->totalQuantity,
+            'design_type' => $designType,
             'logo_path' => $logoPath,
             'status' => 'pending',
             'shipping_address' => [
@@ -159,6 +189,7 @@ class Order extends Component
                 'country' => 'CA',
             ],
             'amount_cents' => $this->totalPrice,
+            'items' => $this->items,
         ]);
 
         // Create Stripe Checkout Session
@@ -171,12 +202,12 @@ class Order extends Component
                     'price_data' => [
                         'currency' => 'cad',
                         'product_data' => [
-                            'name' => 'Carte NFC Link-Card' . ($this->designType === 'custom' ? ' (Custom)' : ''),
-                            'description' => 'Carte de visite NFC - Quantité: ' . $this->quantity,
+                            'name' => 'Carte NFC Link-Card' . ($hasCustom ? ' (Custom)' : ''),
+                            'description' => 'Carte de visite NFC - Quantité: ' . $this->totalQuantity,
                         ],
                         'unit_amount' => $this->unitPrice,
                     ],
-                    'quantity' => $this->quantity,
+                    'quantity' => $this->totalQuantity,
                 ]],
                 'mode' => 'payment',
                 'success_url' => route('cards.order.success', ['order' => $order->id]) . '?session_id={CHECKOUT_SESSION_ID}',
@@ -207,10 +238,15 @@ class Order extends Component
 
     public function render()
     {
-        $noProfiles = auth()->user()->profiles()->count() === 0;
+        $user = auth()->user();
+        $noProfiles = $user->profiles()->count() === 0;
+        $profiles = $user->profiles;
+        $existingCards = $user->cards()->with('profile')->get();
 
         return view('livewire.cards.order', [
             'noProfiles' => $noProfiles,
+            'profiles' => $profiles,
+            'existingCards' => $existingCards,
         ])->layout('layouts.dashboard');
     }
 }
