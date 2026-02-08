@@ -172,21 +172,32 @@ class Order extends Component
         // Determine overall design type
         $designType = $hasCustom ? 'custom' : 'standard';
 
-        // Expand items: generate a card_code per card
-        $expandedItems = [];
+        // Build grouped items with card_codes array and profile_name
+        $profiles = $user->profiles()->pluck('full_name', 'id')->toArray();
+        $orderItems = [];
         foreach ($this->items as $item) {
             $qty = $item['quantity'] ?? 1;
+            $profileId = !empty($item['profile_id']) ? (int) $item['profile_id'] : null;
+
+            // Generate card_codes for each card in this item
+            $cardCodes = [];
             for ($i = 0; $i < $qty; $i++) {
-                $expandedItems[] = [
-                    'order_type' => $item['order_type'] ?? 'new',
-                    'profile_id' => $item['profile_id'] ?? null,
-                    'design_type' => $item['design_type'] ?? 'standard',
-                    'replace_card_id' => $item['replace_card_id'] ?? null,
-                    'card_code' => ($item['order_type'] ?? 'new') === 'replacement' && !empty($item['replace_card_id'])
-                        ? \App\Models\Card::find($item['replace_card_id'])?->card_code ?? \App\Models\Card::generateUniqueCode()
-                        : \App\Models\Card::generateUniqueCode(),
-                ];
+                if (($item['order_type'] ?? 'new') === 'replacement' && !empty($item['replace_card_id'])) {
+                    $cardCodes[] = \App\Models\Card::find($item['replace_card_id'])?->card_code ?? \App\Models\Card::generateUniqueCode();
+                } else {
+                    $cardCodes[] = \App\Models\Card::generateUniqueCode();
+                }
             }
+
+            $orderItems[] = [
+                'order_type' => $item['order_type'] ?? 'new',
+                'profile_id' => $profileId,
+                'profile_name' => $profiles[$profileId] ?? 'Profil',
+                'design_type' => $item['design_type'] ?? 'standard',
+                'quantity' => $qty,
+                'replace_card_id' => $item['replace_card_id'] ?? null,
+                'card_codes' => $cardCodes,
+            ];
         }
 
         // Create order in DB
@@ -206,7 +217,7 @@ class Order extends Component
                 'country' => 'CA',
             ],
             'amount_cents' => $this->totalPrice,
-            'items' => $expandedItems,
+            'items' => $orderItems,
         ]);
 
         // Create Stripe Checkout Session

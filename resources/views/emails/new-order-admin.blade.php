@@ -39,9 +39,12 @@
         <div class="info-box">
             <p class="info-label">Cartes à programmer</p>
             @foreach($order->items as $item)
-                <p class="info-value" style="font-family: 'Courier New', monospace;">
-                    {{ $item['card_code'] }} → {{ $item['profile_name'] ?? 'Profil' }}
-                </p>
+                <p class="info-value">{{ $item['profile_name'] ?? 'Profil' }} — {{ $item['quantity'] ?? 1 }} carte(s)</p>
+                @foreach(($item['card_codes'] ?? (isset($item['card_code']) ? [$item['card_code']] : [])) as $code)
+                    <p class="info-value" style="font-family: 'Courier New', monospace; margin-left: 15px;">
+                        → {{ $code }}
+                    </p>
+                @endforeach
             @endforeach
         </div>
     @endif

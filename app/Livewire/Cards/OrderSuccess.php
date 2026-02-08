@@ -69,20 +69,28 @@ class OrderSuccess extends Component
         if (!$order->items) return;
 
         foreach ($order->items as $item) {
-            // Skip items without card_code (will be assigned by admin)
-            if (empty($item['card_code'] ?? null)) continue;
+            $cardCodes = $item['card_codes'] ?? [];
 
-            // Check if card with this code already exists
-            if (Card::where('card_code', $item['card_code'])->exists()) continue;
+            // Fallback: handle old format with single card_code
+            if (empty($cardCodes) && !empty($item['card_code'])) {
+                $cardCodes = [$item['card_code']];
+            }
 
-            Card::create([
-                'card_code' => $item['card_code'],
-                'user_id' => $order->user_id,
-                'profile_id' => $item['profile_id'] ?? null,
-                'is_active' => true,
-                'order_id' => $order->id,
-                'programmed_at' => null,
-            ]);
+            foreach ($cardCodes as $code) {
+                if (empty($code)) continue;
+
+                // Check if card with this code already exists
+                if (Card::where('card_code', $code)->exists()) continue;
+
+                Card::create([
+                    'card_code' => $code,
+                    'user_id' => $order->user_id,
+                    'profile_id' => $item['profile_id'] ?? null,
+                    'is_active' => true,
+                    'order_id' => $order->id,
+                    'programmed_at' => null,
+                ]);
+            }
         }
     }
 

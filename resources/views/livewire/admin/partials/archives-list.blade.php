@@ -37,17 +37,20 @@
                                         <div class="flex justify-between items-center mb-1">
                                             <span class="text-sm font-semibold" style="color: #2C2A27;">{{ $item['profile_name'] ?? 'Profil' }}</span>
                                             <span class="text-xs px-2 py-0.5 rounded-full font-medium" style="background-color: #F3F4F6; color: #4B5563;">
-                                                {{ $item['quantity'] }}x · {{ ($item['design_type'] ?? 'standard') === 'custom' ? 'Custom' : 'Std' }}
+                                                {{ $item['quantity'] ?? 1 }}x · {{ ($item['design_type'] ?? 'standard') === 'custom' ? 'Custom' : 'Std' }}
                                             </span>
                                         </div>
-                                        <div class="flex items-center space-x-2 mt-1">
-                                            <span class="text-xs" style="color: #9CA3AF;">Code:</span>
-                                            <code class="text-sm font-bold font-mono px-2 py-0.5 rounded" style="color: #2C2A27; background-color: #F3F4F6;">{{ $item['card_code'] ?? '' }}</code>
-                                        </div>
-                                        <div class="flex items-center space-x-2 mt-1">
-                                            <span class="text-xs" style="color: #9CA3AF;">NFC →</span>
-                                            <code class="text-xs font-mono break-all" style="color: #4A7FBF;">https://app.linkcard.ca/c/{{ $item['card_code'] ?? '' }}</code>
-                                        </div>
+                                        @php $codes = $item['card_codes'] ?? (isset($item['card_code']) ? [$item['card_code']] : []); @endphp
+                                        @foreach($codes as $code)
+                                            <div class="flex items-center space-x-2 mt-1">
+                                                <span class="text-xs" style="color: #9CA3AF;">Code:</span>
+                                                <code class="text-sm font-bold font-mono px-2 py-0.5 rounded" style="color: #2C2A27; background-color: #F3F4F6;">{{ $code }}</code>
+                                            </div>
+                                            <div class="flex items-center space-x-2 mt-1">
+                                                <span class="text-xs" style="color: #9CA3AF;">NFC →</span>
+                                                <code class="text-xs font-mono break-all" style="color: #4A7FBF;">https://app.linkcard.ca/c/{{ $code }}</code>
+                                            </div>
+                                        @endforeach
                                     </div>
                                 @endforeach
                             @endif
@@ -147,17 +150,20 @@
                                                         <div class="flex justify-between items-center mb-1">
                                                             <span class="text-sm font-semibold" style="color: #2C2A27;">{{ $item['profile_name'] ?? 'Profil' }}</span>
                                                             <span class="text-xs px-2.5 py-1 rounded-full font-medium" style="background-color: #F3F4F6; color: #4B5563;">
-                                                                {{ $item['quantity'] }} carte(s) · {{ ($item['design_type'] ?? 'standard') === 'custom' ? 'Custom' : 'Standard' }}
+                                                                {{ $item['quantity'] ?? 1 }} carte(s) · {{ ($item['design_type'] ?? 'standard') === 'custom' ? 'Custom' : 'Standard' }}
                                                             </span>
                                                         </div>
-                                                        <div class="flex items-center space-x-2 mt-2">
-                                                            <span class="text-xs" style="color: #9CA3AF;">Code:</span>
-                                                            <code class="text-sm font-bold font-mono px-2 py-0.5 rounded" style="color: #2C2A27; background-color: #F3F4F6;">{{ $item['card_code'] ?? '' }}</code>
-                                                        </div>
-                                                        <div class="flex items-center space-x-2 mt-1">
-                                                            <span class="text-xs" style="color: #9CA3AF;">NFC →</span>
-                                                            <code class="text-xs font-mono" style="color: #4A7FBF;">https://app.linkcard.ca/c/{{ $item['card_code'] ?? '' }}</code>
-                                                        </div>
+                                                        @php $codes = $item['card_codes'] ?? (isset($item['card_code']) ? [$item['card_code']] : []); @endphp
+                                                        @foreach($codes as $code)
+                                                            <div class="flex items-center space-x-2 mt-2">
+                                                                <span class="text-xs" style="color: #9CA3AF;">Code:</span>
+                                                                <code class="text-sm font-bold font-mono px-2 py-0.5 rounded" style="color: #2C2A27; background-color: #F3F4F6;">{{ $code }}</code>
+                                                            </div>
+                                                            <div class="flex items-center space-x-2 mt-1">
+                                                                <span class="text-xs" style="color: #9CA3AF;">NFC →</span>
+                                                                <code class="text-xs font-mono" style="color: #4A7FBF;">https://app.linkcard.ca/c/{{ $code }}</code>
+                                                            </div>
+                                                        @endforeach
                                                     </div>
                                                 @endforeach
                                             @endif

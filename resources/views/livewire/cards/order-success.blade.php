@@ -32,7 +32,7 @@
                         @foreach($order->items as $item)
                             <div class="flex justify-between items-center py-1">
                                 <span class="text-sm" style="color: #2C2A27;">{{ $item['profile_name'] ?? 'Profil' }}</span>
-                                <span class="text-xs" style="color: #4B5563;">{{ $item['quantity'] }} carte(s) · {{ ($item['design_type'] ?? 'standard') === 'custom' ? 'Personnalisé' : 'Standard' }}</span>
+                                <span class="text-xs" style="color: #4B5563;">{{ $item['quantity'] ?? 1 }} carte(s) · {{ ($item['design_type'] ?? 'standard') === 'custom' ? 'Personnalisé' : 'Standard' }}</span>
                             </div>
                         @endforeach
                     </div>

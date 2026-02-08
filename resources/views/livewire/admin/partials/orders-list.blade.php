@@ -50,25 +50,28 @@
                                         <div class="flex justify-between items-center mb-1">
                                             <span class="text-sm font-semibold" style="color: #2C2A27;">
                                                 {{ $item['profile_name'] ?? 'Profil' }}
-                                                @if(!empty($item['is_replacement']))
+                                                @if(($item['order_type'] ?? 'new') === 'replacement')
                                                     <span class="text-xs px-2 py-0.5 rounded-full ml-1" style="background-color: #FEF3C7; color: #92400E;">🔄</span>
                                                 @endif
                                             </span>
                                             <span class="text-xs px-2 py-0.5 rounded-full font-medium" style="background-color: {{ ($item['design_type'] ?? 'standard') === 'custom' ? '#EFF6FF' : '#F3F4F6' }}; color: {{ ($item['design_type'] ?? 'standard') === 'custom' ? '#4A7FBF' : '#4B5563' }};">
-                                                {{ $item['quantity'] }}x · {{ ($item['design_type'] ?? 'standard') === 'custom' ? 'Custom' : 'Std' }}
+                                                {{ $item['quantity'] ?? 1 }}x · {{ ($item['design_type'] ?? 'standard') === 'custom' ? 'Custom' : 'Std' }}
                                             </span>
                                         </div>
-                                        <div class="flex items-center space-x-2 mt-1 p-2 rounded-lg" style="background-color: #EFF6FF;">
-                                            <span class="text-xs font-semibold" style="color: #4A7FBF;">NFC →</span>
-                                            <code class="text-xs font-mono break-all cursor-pointer" style="color: #4A7FBF;"
-                                                  onclick="navigator.clipboard.writeText('https://app.linkcard.ca/c/{{ $item['card_code'] ?? '' }}'); let el=this; el.dataset.orig=el.innerText; el.innerText='✅ Copié!'; setTimeout(()=>el.innerText=el.dataset.orig, 1500)">
-                                                https://app.linkcard.ca/c/{{ $item['card_code'] ?? '' }}
-                                            </code>
-                                        </div>
-                                        <div class="flex items-center space-x-2 mt-1">
-                                            <span class="text-xs" style="color: #9CA3AF;">Code:</span>
-                                            <code class="text-sm font-bold font-mono px-2 py-0.5 rounded" style="color: #2C2A27; background-color: #F3F4F6;">{{ $item['card_code'] ?? '' }}</code>
-                                        </div>
+                                        @php $codes = $item['card_codes'] ?? (isset($item['card_code']) ? [$item['card_code']] : []); @endphp
+                                        @foreach($codes as $code)
+                                            <div class="flex items-center space-x-2 mt-1 p-2 rounded-lg" style="background-color: #EFF6FF;">
+                                                <span class="text-xs font-semibold" style="color: #4A7FBF;">NFC →</span>
+                                                <code class="text-xs font-mono break-all cursor-pointer" style="color: #4A7FBF;"
+                                                      onclick="navigator.clipboard.writeText('https://app.linkcard.ca/c/{{ $code }}'); let el=this; el.dataset.orig=el.innerText; el.innerText='✅ Copié!'; setTimeout(()=>el.innerText=el.dataset.orig, 1500)">
+                                                    https://app.linkcard.ca/c/{{ $code }}
+                                                </code>
+                                            </div>
+                                            <div class="flex items-center space-x-2 mt-1">
+                                                <span class="text-xs" style="color: #9CA3AF;">Code:</span>
+                                                <code class="text-sm font-bold font-mono px-2 py-0.5 rounded" style="color: #2C2A27; background-color: #F3F4F6;">{{ $code }}</code>
+                                            </div>
+                                        @endforeach
                                         @if(isset($item['profile_url']) && $item['profile_url'])
                                             <div class="flex items-center space-x-2 mt-1">
                                                 <span class="text-xs" style="color: #9CA3AF;">Profil →</span>
@@ -215,29 +218,32 @@
                                                         <div class="flex justify-between items-center mb-2">
                                                             <span class="text-sm font-semibold" style="color: #2C2A27;">
                                                                 {{ $item['profile_name'] ?? 'Profil' }}
-                                                                @if(!empty($item['is_replacement']))
+                                                                @if(($item['order_type'] ?? 'new') === 'replacement')
                                                                     <span class="text-xs px-2 py-0.5 rounded-full ml-1" style="background-color: #FEF3C7; color: #92400E;">🔄 Remplacement</span>
                                                                 @endif
                                                             </span>
                                                             <span class="text-xs px-2.5 py-1 rounded-full font-medium" style="background-color: {{ ($item['design_type'] ?? 'standard') === 'custom' ? '#EFF6FF' : '#F3F4F6' }}; color: {{ ($item['design_type'] ?? 'standard') === 'custom' ? '#4A7FBF' : '#4B5563' }};">
-                                                                {{ $item['quantity'] }} carte(s) · {{ ($item['design_type'] ?? 'standard') === 'custom' ? 'Custom' : 'Standard' }}
+                                                                {{ $item['quantity'] ?? 1 }} carte(s) · {{ ($item['design_type'] ?? 'standard') === 'custom' ? 'Custom' : 'Standard' }}
                                                             </span>
                                                         </div>
 
-                                                        {{-- NFC URL --}}
-                                                        <div class="flex items-center space-x-2 mt-2 p-2 rounded-lg" style="background-color: #EFF6FF;">
-                                                            <span class="text-xs font-semibold whitespace-nowrap" style="color: #4A7FBF;">NFC →</span>
-                                                            <code class="text-xs flex-1 cursor-pointer font-mono" style="color: #4A7FBF;"
-                                                                  onclick="navigator.clipboard.writeText('https://app.linkcard.ca/c/{{ $item['card_code'] ?? '' }}'); let el=this; el.dataset.orig=el.innerText; el.innerText='✅ Copié!'; setTimeout(()=>el.innerText=el.dataset.orig, 1500)" title="Cliquer pour copier">
-                                                                https://app.linkcard.ca/c/{{ $item['card_code'] ?? '' }}
-                                                            </code>
-                                                        </div>
+                                                        @php $codes = $item['card_codes'] ?? (isset($item['card_code']) ? [$item['card_code']] : []); @endphp
+                                                        @foreach($codes as $code)
+                                                            {{-- NFC URL --}}
+                                                            <div class="flex items-center space-x-2 mt-2 p-2 rounded-lg" style="background-color: #EFF6FF;">
+                                                                <span class="text-xs font-semibold whitespace-nowrap" style="color: #4A7FBF;">NFC →</span>
+                                                                <code class="text-xs flex-1 cursor-pointer font-mono" style="color: #4A7FBF;"
+                                                                      onclick="navigator.clipboard.writeText('https://app.linkcard.ca/c/{{ $code }}'); let el=this; el.dataset.orig=el.innerText; el.innerText='✅ Copié!'; setTimeout(()=>el.innerText=el.dataset.orig, 1500)" title="Cliquer pour copier">
+                                                                    https://app.linkcard.ca/c/{{ $code }}
+                                                                </code>
+                                                            </div>
 
-                                                        {{-- Card code --}}
-                                                        <div class="flex items-center space-x-2 mt-2">
-                                                            <span class="text-xs" style="color: #9CA3AF;">Code carte imprimé:</span>
-                                                            <code class="text-sm font-bold font-mono px-2 py-0.5 rounded" style="color: #2C2A27; background-color: #F3F4F6;">{{ $item['card_code'] ?? '' }}</code>
-                                                        </div>
+                                                            {{-- Card code --}}
+                                                            <div class="flex items-center space-x-2 mt-2">
+                                                                <span class="text-xs" style="color: #9CA3AF;">Code carte imprimé:</span>
+                                                                <code class="text-sm font-bold font-mono px-2 py-0.5 rounded" style="color: #2C2A27; background-color: #F3F4F6;">{{ $code }}</code>
+                                                            </div>
+                                                        @endforeach
 
                                                         @if(isset($item['profile_url']) && $item['profile_url'])
                                                             <div class="flex items-center space-x-2 mt-1">
