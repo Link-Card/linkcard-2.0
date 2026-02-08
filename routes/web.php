@@ -60,6 +60,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard/profiles/{profile}/edit', App\Livewire\Profile\EditProfile::class)->name('profile.edit');
     Route::get('/dashboard/subscription', App\Livewire\Subscription\Plans::class)->name('subscription.plans');
     Route::get('/dashboard/subscription/success', App\Livewire\Subscription\Success::class)->name('subscription.success');
+    Route::get('/dashboard/stats', App\Livewire\Stats\Index::class)->name('stats.index');
 
     Route::post('/dashboard/profiles/add-additional', function() {
         return 'Achat profils additionnels - En construction';
@@ -116,6 +117,9 @@ Route::get('/c/{cardCode}/activate', [CardController::class, 'showActivation'])-
 Route::post('/c/{cardCode}/activate', [CardController::class, 'activate'])->middleware('auth')->name('card.activate');
 Route::get('/c/{cardCode}/confirm', [CardController::class, 'showConfirmation'])->name('card.confirm.show');
 Route::post('/c/{cardCode}/confirm', [CardController::class, 'confirmReception'])->name('card.confirm');
+
+// Click tracking API
+Route::post('/api/track-click', [App\Http\Controllers\TrackingController::class, 'trackClick'])->name('track.click');
 
 // Profile public (DOIT RESTER EN DERNIER)
 Route::get('/{username}', [ProfileController::class, 'show'])->name('profile.public');

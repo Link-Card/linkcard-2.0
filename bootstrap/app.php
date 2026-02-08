@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         
         $middleware->validateCsrfTokens(except: [
             'webhook/stripe',
+            'api/track-click',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

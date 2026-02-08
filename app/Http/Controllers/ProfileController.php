@@ -33,10 +33,45 @@ class ProfileController extends Controller
             abort(404);
         }
 
-        // Incrémenter compteur vues
-        $profile->increment('view_count');
+        // Tracker la vue (dédupliqué: même IP = 1 vue par heure)
+        $this->trackView($profile, request());
 
         return view('profiles.show', compact('profile'));
+    }
+
+    /**
+     * Tracker une vue de profil avec déduplication
+     */
+    private function trackView(Profile $profile, Request $request): void
+    {
+        try {
+            $ipHash = hash('sha256', $request->ip() . config('app.key'));
+            $userAgent = $request->userAgent();
+            $referer = $request->header('referer');
+
+            // Déduplication: même IP ne compte qu'une fois par heure
+            $recentView = \App\Models\ProfileView::where('profile_id', $profile->id)
+                ->where('ip_hash', $ipHash)
+                ->where('viewed_at', '>', now()->subHour())
+                ->exists();
+
+            if (!$recentView) {
+                \App\Models\ProfileView::create([
+                    'profile_id' => $profile->id,
+                    'ip_hash' => $ipHash,
+                    'source' => \App\Models\ProfileView::detectSource($referer),
+                    'referer_domain' => \App\Models\ProfileView::extractDomain($referer),
+                    'device_type' => \App\Models\ProfileView::detectDevice($userAgent),
+                    'viewed_at' => now(),
+                ]);
+
+                // Incrémenter le compteur simple aussi
+                $profile->increment('view_count');
+            }
+        } catch (\Exception $e) {
+            // Ne jamais bloquer l'affichage du profil pour un problème de tracking
+            \Illuminate\Support\Facades\Log::warning('View tracking failed: ' . $e->getMessage());
+        }
     }
 
     public function downloadVcard(Profile $profile)

@@ -82,6 +82,16 @@ class Profile extends Model
         return $this->hasMany(UsernameRedirect::class);
     }
 
+    public function profileViews()
+    {
+        return $this->hasMany(ProfileView::class);
+    }
+
+    public function linkClicks()
+    {
+        return $this->hasMany(LinkClick::class);
+    }
+
     /**
      * Vérifie si le user peut changer son username selon son plan.
      */

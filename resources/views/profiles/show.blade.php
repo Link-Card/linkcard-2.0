@@ -202,7 +202,8 @@
                     @elseif($band->type === 'social_link')
                         <!-- Lien social -->
                         <a href="{{ $band->data['url'] }}" target="_blank" rel="noopener"
-                           class="block p-3.5 rounded-xl transition-all duration-200"
+                           data-band-id="{{ $band->id }}" data-band-url="{{ $band->data['url'] }}"
+                           class="block p-3.5 rounded-xl transition-all duration-200 trackable-link"
                            style="background: #F9FAFB; border: 1px solid #E5E7EB;"
                            onmouseover="this.style.background='#F3F4F6'; this.style.borderColor='#D1D5DB'"
                            onmouseout="this.style.background='#F9FAFB'; this.style.borderColor='#E5E7EB'">
@@ -227,7 +228,9 @@
                         @if(count($images) === 1)
                             <div class="rounded-xl overflow-hidden" style="border: 1px solid #E5E7EB;">
                                 @if(!empty($images[0]['link']))
-                                    <a href="{{ $images[0]['link'] }}" target="_blank" rel="noopener">
+                                    <a href="{{ $images[0]['link'] }}" target="_blank" rel="noopener"
+                                       data-band-id="{{ $band->id }}" data-band-url="{{ $images[0]['link'] }}"
+                                       class="trackable-link">
                                         <img src="{{ Storage::url($images[0]['path']) }}"
                                              class="w-full h-auto object-contain hover:opacity-90 transition"
                                              style="max-height: 300px;">
@@ -243,7 +246,9 @@
                                 @foreach(array_slice($images, 0, 2) as $img)
                                     <div class="rounded-xl overflow-hidden" style="border: 1px solid #E5E7EB;">
                                         @if(!empty($img['link']))
-                                            <a href="{{ $img['link'] }}" target="_blank" rel="noopener">
+                                            <a href="{{ $img['link'] }}" target="_blank" rel="noopener"
+                                               data-band-id="{{ $band->id }}" data-band-url="{{ $img['link'] }}"
+                                               class="trackable-link">
                                                 <img src="{{ Storage::url($img['path']) }}"
                                                      class="w-full h-auto object-contain hover:opacity-90 transition"
                                                      style="max-height: 200px;">
@@ -601,6 +606,24 @@
                 });
             });
         }
+    </script>
+
+    <!-- Click tracking -->
+    <script>
+        document.querySelectorAll('.trackable-link').forEach(link => {
+            link.addEventListener('click', function() {
+                const bandId = this.dataset.bandId;
+                const url = this.dataset.bandUrl;
+                if (bandId) {
+                    fetch('/api/track-click', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+                        body: JSON.stringify({ band_id: bandId, url: url || '' }),
+                        keepalive: true
+                    }).catch(() => {});
+                }
+            });
+        });
     </script>
 
 </body>
