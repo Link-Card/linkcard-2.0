@@ -151,6 +151,82 @@ class Dashboard extends Component
 
     // === User deletion ===
 
+    // Plan management
+    public ?int $changingPlanUserId = null;
+    public string $newPlan = '';
+    public string $planNote = '';
+
+    public function startChangePlan($userId, $currentPlan)
+    {
+        $this->changingPlanUserId = $userId;
+        $this->newPlan = $currentPlan;
+        $this->planNote = '';
+    }
+
+    public function cancelChangePlan()
+    {
+        $this->changingPlanUserId = null;
+        $this->newPlan = '';
+        $this->planNote = '';
+    }
+
+    public function changePlan()
+    {
+        if (!$this->changingPlanUserId || !$this->newPlan) return;
+
+        $user = User::findOrFail($this->changingPlanUserId);
+        $oldPlan = $user->plan;
+
+        if ($oldPlan === $this->newPlan) {
+            $this->cancelChangePlan();
+            return;
+        }
+
+        // Update plan
+        $user->update(['plan' => $this->newPlan]);
+
+        // Apply limits on downgrade or unhide on upgrade
+        $planOrder = ['free' => 0, 'pro' => 1, 'premium' => 2];
+        if ($planOrder[$this->newPlan] < $planOrder[$oldPlan]) {
+            \App\Services\PlanLimitsService::applyLimitsOnDowngrade($user);
+        } elseif ($planOrder[$this->newPlan] > $planOrder[$oldPlan]) {
+            \App\Services\PlanLimitsService::unhideOnUpgrade($user);
+        }
+
+        \Illuminate\Support\Facades\Log::info('Admin changed user plan', [
+            'user_id' => $user->id,
+            'user_name' => $user->name,
+            'old_plan' => $oldPlan,
+            'new_plan' => $this->newPlan,
+            'note' => $this->planNote,
+            'changed_by' => auth()->id(),
+        ]);
+
+        $newPlan = $this->newPlan;
+        $userName = $user->name;
+        $this->cancelChangePlan();
+        session()->flash('success', "Plan de {$userName} changé: {$oldPlan} → {$newPlan}");
+    }
+
+    // Impersonation
+    public function impersonate($userId)
+    {
+        $user = User::findOrFail($userId);
+
+        // Cannot impersonate other admins
+        if ($user->role === 'super_admin' || $user->role === 'admin') {
+            session()->flash('error', 'Impossible d\'usurper un compte administrateur.');
+            return;
+        }
+
+        // Store admin ID in session to allow returning
+        session(['impersonating_from' => auth()->id()]);
+
+        auth()->login($user);
+
+        return redirect()->route('dashboard');
+    }
+
     public function confirmDeleteUser($userId)
     {
         $this->deletingUserId = $userId;

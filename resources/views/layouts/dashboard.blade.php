@@ -15,6 +15,25 @@
 </head>
 <body style="font-family: 'Manrope', system-ui, sans-serif; background-color: #F7F8F4; overflow: hidden; height: 100dvh;" x-data="{ sidebarOpen: false }">
 
+    {{-- Impersonation banner --}}
+    @if(session('impersonating_from'))
+        <div class="fixed top-0 left-0 right-0 z-[60] py-2 px-4 text-center text-sm font-medium text-white flex items-center justify-center space-x-3" style="background: #F59E0B;">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            <span>Connecté en tant que <strong>{{ Auth::user()->name }}</strong> ({{ Auth::user()->email }})</span>
+            <form action="{{ route('admin.stop-impersonation') }}" method="POST" class="inline">
+                @csrf
+                <button type="submit" class="ml-2 px-3 py-1 rounded-md text-xs font-bold transition" style="background: rgba(255,255,255,0.25);" onmouseover="this.style.background='rgba(255,255,255,0.4)'" onmouseout="this.style.background='rgba(255,255,255,0.25)'">
+                    ← Retour admin
+                </button>
+            </form>
+        </div>
+        <style>
+            .lg\:hidden.fixed.top-0 { top: 36px !important; }
+            @media (min-width: 1024px) { .lg\:fixed.lg\:left-0 { top: 36px !important; height: calc(100dvh - 36px) !important; } }
+            .lg\:ml-60 { padding-top: 36px; }
+        </style>
+    @endif
+
     {{-- Mobile top bar --}}
     <div class="lg:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 py-3" style="background-color: #2C2A27;">
         <div class="flex items-center space-x-3">

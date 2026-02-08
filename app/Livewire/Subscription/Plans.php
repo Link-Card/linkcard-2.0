@@ -196,10 +196,16 @@ class Plans extends Component
             $downgradeLosses = $this->getDowngradeLosses($user->plan ?? 'free', $this->downgradeTo);
         }
 
+        // Detect admin-granted plan (has plan but no Stripe subscription)
+        $isAdminGranted = !$isSubscribed && ($user->plan !== 'free');
+        $isSuperAdmin = $user->role === 'super_admin';
+
         return view('livewire.subscription.plans', [
             'plans' => $plans,
             'currentPlan' => $user->plan ?? 'free',
             'isSubscribed' => $isSubscribed,
+            'isAdminGranted' => $isAdminGranted,
+            'isSuperAdmin' => $isSuperAdmin,
             'onGracePeriod' => $onGracePeriod,
             'endsAt' => $endsAt,
             'downgradeLosses' => $downgradeLosses,

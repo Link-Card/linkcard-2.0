@@ -109,6 +109,19 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', App\Livewire\Admin\Dashboard::class)->name('admin.dashboard');
 });
 
+// Stop impersonation (admin returns to own account)
+Route::post('/admin/stop-impersonation', function () {
+    $adminId = session('impersonating_from');
+    if (!$adminId) {
+        return redirect()->route('dashboard');
+    }
+    
+    session()->forget('impersonating_from');
+    auth()->login(\App\Models\User::findOrFail($adminId));
+    
+    return redirect()->route('admin.dashboard');
+})->middleware('auth')->name('admin.stop-impersonation');
+
 // NFC Card routes
 use App\Http\Controllers\CardController;
 

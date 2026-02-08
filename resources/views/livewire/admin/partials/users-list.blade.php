@@ -4,6 +4,11 @@
             {{ session('success') }}
         </div>
     @endif
+    @if(session()->has('error'))
+        <div class="m-4 p-3 rounded-lg" style="background-color: #FEF2F2; border: 1px solid #EF4444; color: #991B1B;">
+            {{ session('error') }}
+        </div>
+    @endif
 
     {{-- Delete User Modal --}}
     @if($deletingUserId)
@@ -119,25 +124,49 @@
                         </div>
                     </div>
                     @if($user->role !== 'super_admin' && $user->role !== 'admin')
-                        <button wire:click="confirmDeleteUser({{ $user->id }})" class="p-2 rounded-lg" style="color: #EF4444;">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                            </svg>
-                        </button>
+                        <div class="flex items-center space-x-1">
+                            <button wire:click="impersonate({{ $user->id }})" class="p-2 rounded-lg" style="color: #4A7FBF;" title="Voir en tant que">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            </button>
+                            <button wire:click="confirmDeleteUser({{ $user->id }})" class="p-2 rounded-lg" style="color: #EF4444;">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                            </button>
+                        </div>
                     @endif
                 </div>
                 <div class="flex flex-wrap items-center gap-2 mt-2">
-                    @php
-                        $planColors = [
-                            'free' => ['bg' => '#F3F4F6', 'text' => '#4B5563'],
-                            'pro' => ['bg' => '#EFF6FF', 'text' => '#4A7FBF'],
-                            'premium' => ['bg' => '#F0F9F4', 'text' => '#42B574'],
-                        ];
-                        $c = $planColors[$user->plan] ?? $planColors['free'];
-                    @endphp
-                    <span class="px-2 py-0.5 text-xs rounded-full font-medium" style="background-color: {{ $c['bg'] }}; color: {{ $c['text'] }};">
-                        {{ strtoupper($user->plan ?? 'free') }}
-                    </span>
+                    @if($changingPlanUserId === $user->id)
+                        <div class="flex items-center space-x-1">
+                            <select wire:model="newPlan" class="text-xs rounded-lg border px-2 py-1" style="border-color: #D1D5DB;">
+                                <option value="free">FREE</option>
+                                <option value="pro">PRO</option>
+                                <option value="premium">PREMIUM</option>
+                            </select>
+                            <button wire:click="changePlan" class="p-1 rounded" style="color: #42B574;">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            </button>
+                            <button wire:click="cancelChangePlan" class="p-1 rounded" style="color: #EF4444;">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+                        </div>
+                    @else
+                        @php
+                            $planColors = [
+                                'free' => ['bg' => '#F3F4F6', 'text' => '#4B5563'],
+                                'pro' => ['bg' => '#EFF6FF', 'text' => '#4A7FBF'],
+                                'premium' => ['bg' => '#F0F9F4', 'text' => '#42B574'],
+                            ];
+                            $c = $planColors[$user->plan] ?? $planColors['free'];
+                        @endphp
+                        <button wire:click="startChangePlan({{ $user->id }}, '{{ $user->plan }}')"
+                                class="px-2 py-0.5 text-xs rounded-full font-medium"
+                                style="background-color: {{ $c['bg'] }}; color: {{ $c['text'] }};">
+                            {{ strtoupper($user->plan ?? 'free') }}
+                            <svg class="w-2.5 h-2.5 inline ml-0.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                    @endif
                     @if($user->role === 'super_admin')
                         <span class="px-2 py-0.5 text-xs rounded-full font-medium text-white" style="background-color: #EF4444;">Super Admin</span>
                     @elseif($user->role === 'admin')
@@ -185,17 +214,38 @@
                         </td>
                         <td class="px-4 py-3 text-sm" style="color: #4B5563;">{{ $user->email }}</td>
                         <td class="px-4 py-3">
-                            @php
-                                $planColors = [
-                                    'free' => ['bg' => '#F3F4F6', 'text' => '#4B5563'],
-                                    'pro' => ['bg' => '#EFF6FF', 'text' => '#4A7FBF'],
-                                    'premium' => ['bg' => '#F0F9F4', 'text' => '#42B574'],
-                                ];
-                                $c = $planColors[$user->plan] ?? $planColors['free'];
-                            @endphp
-                            <span class="px-2 py-1 text-xs rounded-full font-medium" style="background-color: {{ $c['bg'] }}; color: {{ $c['text'] }};">
-                                {{ strtoupper($user->plan ?? 'free') }}
-                            </span>
+                            @if($changingPlanUserId === $user->id)
+                                {{-- Inline plan change --}}
+                                <div class="flex items-center space-x-1">
+                                    <select wire:model="newPlan" class="text-xs rounded-lg border px-2 py-1" style="border-color: #D1D5DB;">
+                                        <option value="free">FREE</option>
+                                        <option value="pro">PRO</option>
+                                        <option value="premium">PREMIUM</option>
+                                    </select>
+                                    <button wire:click="changePlan" class="p-1 rounded" style="color: #42B574;" title="Confirmer">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                    </button>
+                                    <button wire:click="cancelChangePlan" class="p-1 rounded" style="color: #EF4444;" title="Annuler">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                    </button>
+                                </div>
+                            @else
+                                @php
+                                    $planColors = [
+                                        'free' => ['bg' => '#F3F4F6', 'text' => '#4B5563'],
+                                        'pro' => ['bg' => '#EFF6FF', 'text' => '#4A7FBF'],
+                                        'premium' => ['bg' => '#F0F9F4', 'text' => '#42B574'],
+                                    ];
+                                    $c = $planColors[$user->plan] ?? $planColors['free'];
+                                @endphp
+                                <button wire:click="startChangePlan({{ $user->id }}, '{{ $user->plan }}')"
+                                        class="px-2 py-1 text-xs rounded-full font-medium cursor-pointer transition-opacity hover:opacity-80"
+                                        style="background-color: {{ $c['bg'] }}; color: {{ $c['text'] }};"
+                                        title="Cliquer pour changer le plan">
+                                    {{ strtoupper($user->plan ?? 'free') }}
+                                    <svg class="w-2.5 h-2.5 inline ml-0.5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                </button>
+                            @endif
                         </td>
                         <td class="px-4 py-3">
                             @if($user->role === 'super_admin')
@@ -212,11 +262,16 @@
                         <td class="px-4 py-3 text-xs" style="color: #9CA3AF;">{{ $user->created_at->format('d/m/Y') }}</td>
                         <td class="px-4 py-3 text-right">
                             @if($user->role !== 'super_admin' && $user->role !== 'admin')
-                                <button wire:click="confirmDeleteUser({{ $user->id }})" class="p-2 rounded-lg transition-colors" style="color: #EF4444;" title="Supprimer" onmouseover="this.style.backgroundColor='#FEF2F2'" onmouseout="this.style.backgroundColor='transparent'">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                    </svg>
-                                </button>
+                                <div class="flex items-center justify-end space-x-1">
+                                    <button wire:click="impersonate({{ $user->id }})" class="p-2 rounded-lg transition-colors" style="color: #4A7FBF;" title="Se connecter en tant que" onmouseover="this.style.backgroundColor='#EFF6FF'" onmouseout="this.style.backgroundColor='transparent'">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                    </button>
+                                    <button wire:click="confirmDeleteUser({{ $user->id }})" class="p-2 rounded-lg transition-colors" style="color: #EF4444;" title="Supprimer" onmouseover="this.style.backgroundColor='#FEF2F2'" onmouseout="this.style.backgroundColor='transparent'">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                        </svg>
+                                    </button>
+                                </div>
                             @else
                                 <span class="text-xs" style="color: #D1D5DB;">—</span>
                             @endif
