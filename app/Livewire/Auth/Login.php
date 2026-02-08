@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Services\ConnectionService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
@@ -12,6 +13,14 @@ class Login extends Component
     public $email = '';
     public $password = '';
     public $remember = false;
+    public $ref = '';
+    public $action = '';
+    
+    public function mount()
+    {
+        $this->ref = request()->query('ref', '');
+        $this->action = request()->query('action', '');
+    }
     
     protected $rules = [
         'email' => 'required|email',
@@ -33,10 +42,8 @@ class Login extends Component
     {
         $this->validate();
         
-        // Rate limiting key basé sur email
         $key = Str::lower($this->email).'|'.request()->ip();
         
-        // Vérifier si trop de tentatives
         if (RateLimiter::tooManyAttempts($key, 5)) {
             $seconds = RateLimiter::availableIn($key);
             $this->addError('email', "Trop de tentatives. Réessayez dans {$seconds} secondes.");
@@ -44,7 +51,6 @@ class Login extends Component
         }
         
         if (Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
-            // Réinitialiser le compteur en cas de succès
             RateLimiter::clear($key);
             session()->regenerate();
             
@@ -53,12 +59,23 @@ class Login extends Component
                 return redirect()->route('card.confirm.show', $cardCode);
             }
             
+            // Auto-connect si ?action=connect et ?ref=username
+            if ($this->action === 'connect' && $this->ref) {
+                $profile = \App\Models\Profile::where('username', $this->ref)->first();
+                if ($profile && $profile->user_id !== Auth::id()) {
+                    $result = ConnectionService::sendRequest(Auth::id(), $profile->user_id);
+                    if ($result['success']) {
+                        session()->flash('connection-sent', $result['message']);
+                    }
+                }
+                // Rediriger vers le profil après connexion
+                return redirect()->route('profile.public', $this->ref);
+            }
+            
             return redirect()->intended('dashboard');
         }
         
-        // Incrémenter le compteur d'échecs
-        RateLimiter::hit($key, 60); // 60 secondes
-        
+        RateLimiter::hit($key, 60);
         $this->addError('email', 'Les identifiants fournis sont incorrects.');
     }
     

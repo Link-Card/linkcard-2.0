@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
+use App\Mail\ConnectionAccepted;
+use App\Mail\ConnectionRequest;
 use App\Models\Connection;
 use App\Models\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Mail;
 
 class ConnectionService
 {
@@ -39,6 +42,7 @@ class ConnectionService
                     'status' => 'pending',
                     'accepted_at' => null,
                 ]);
+                self::notifyNewRequest($senderId, $receiverId);
                 return ['success' => true, 'message' => 'Demande envoyée !'];
             }
         }
@@ -48,6 +52,8 @@ class ConnectionService
             'receiver_id' => $receiverId,
             'status' => 'pending',
         ]);
+
+        self::notifyNewRequest($senderId, $receiverId);
 
         return ['success' => true, 'message' => 'Demande envoyée !'];
     }
@@ -71,6 +77,8 @@ class ConnectionService
             'status' => 'accepted',
             'accepted_at' => now(),
         ]);
+
+        self::notifyAccepted($connection);
 
         return ['success' => true, 'message' => 'Connexion acceptée !'];
     }
@@ -198,5 +206,37 @@ class ConnectionService
                   ->orWhere('receiver_id', $userId);
             })
             ->count();
+    }
+
+    /**
+     * Notifie le receiver d'une nouvelle demande.
+     */
+    private static function notifyNewRequest(int $senderId, int $receiverId): void
+    {
+        try {
+            $receiver = User::find($receiverId);
+            if ($receiver && $receiver->notify_connection_request) {
+                $sender = User::find($senderId);
+                Mail::to($receiver->email)->send(new ConnectionRequest($sender, $receiver));
+            }
+        } catch (\Exception $e) {
+            \Log::warning('Email connexion request failed: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Notifie le sender que sa demande a été acceptée.
+     */
+    private static function notifyAccepted(Connection $connection): void
+    {
+        try {
+            $sender = User::find($connection->sender_id);
+            $accepter = User::find($connection->receiver_id);
+            if ($sender && $sender->notify_connection_accepted && $accepter) {
+                Mail::to($sender->email)->send(new ConnectionAccepted($accepter, $sender));
+            }
+        } catch (\Exception $e) {
+            \Log::warning('Email connexion accepted failed: ' . $e->getMessage());
+        }
     }
 }

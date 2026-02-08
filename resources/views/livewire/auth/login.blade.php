@@ -25,6 +25,12 @@
                 </div>
             @endif
 
+            @if($action === 'connect' && $ref)
+                <div class="mb-6 p-4 rounded-lg text-sm font-medium" style="background: #F0F9F4; border: 1px solid #42B574; color: #2C2A27;">
+                    🔗 Connectez-vous pour ajouter <strong>{{ $ref }}</strong> à vos contacts LinkCard.
+                </div>
+            @endif
+
             @if ($errors->any())
                 <div class="mb-6 p-4 rounded-lg text-sm" style="background: #FEF2F2; border: 1px solid #FCA5A5; color: #991B1B;">
                     {{ $errors->first() }}
@@ -89,7 +95,7 @@
         <!-- Register link -->
         <p class="text-center text-sm mt-6" style="font-family: 'Manrope', sans-serif; color: #4B5563;">
             Pas encore de compte ?
-            <a href="{{ route('register') }}" class="font-medium" style="color: #42B574;">
+            <a href="{{ route('register', array_filter(['ref' => $ref, 'action' => $action])) }}" class="font-medium" style="color: #42B574;">
                 Créer un compte
             </a>
         </p>
