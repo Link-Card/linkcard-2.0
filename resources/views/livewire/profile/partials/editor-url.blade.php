@@ -53,9 +53,10 @@
                            class="px-3 py-1.5 rounded-lg text-xs font-medium transition inline-flex items-center space-x-1"
                            style="font-family: 'Manrope', sans-serif; background: #F0F9F4; color: #42B574; border: 1px solid #42B574;"
                            onmouseover="this.style.background='#42B574'; this.style.color='#fff'"
-                           onmouseout="this.style.background='#F0F9F4'; this.style.color='#42B574'">
+                           onmouseout="this.style.background='#F0F9F4'; this.style.color='#42B574'"
+                           title="Passez au forfait PRO pour personnaliser votre lien">
                             <span>⭐</span>
-                            <span>PRO</span>
+                            <span>Passer à PRO</span>
                         </a>
                     @endif
                 </div>

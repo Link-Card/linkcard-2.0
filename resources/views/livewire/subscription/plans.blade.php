@@ -124,7 +124,7 @@
                                         Passer à {{ $plan['name'] }}
                                     </button>
                                 @else
-                                    <button wire:click="redirectToPortal" class="w-full py-2.5 px-4 border border-[#F59E0B] text-[#D97706] rounded-lg font-medium text-sm hover:bg-[#FEF3C7] transition-colors" style="font-family: 'Manrope', sans-serif;">
+                                    <button wire:click="showDowngradeConfirm('{{ $key }}')" class="w-full py-2.5 px-4 border border-[#F59E0B] text-[#D97706] rounded-lg font-medium text-sm hover:bg-[#FEF3C7] transition-colors" style="font-family: 'Manrope', sans-serif;">
                                         Rétrograder
                                     </button>
                                 @endif
@@ -177,6 +177,62 @@
                 >
                     Ouvrir le portail de facturation
                 </button>
+            </div>
+        @endif
+
+        {{-- Popup avertissement downgrade --}}
+        @if($showDowngradeWarning)
+            <div class="fixed inset-0 z-50 flex items-center justify-center" style="background: rgba(0,0,0,0.5);">
+                <div class="bg-white rounded-2xl shadow-xl max-w-md w-full mx-4 overflow-hidden">
+                    <div class="px-6 pt-6 pb-4">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: #FEF3C7;">
+                                <svg class="w-5 h-5" style="color: #D97706;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-semibold" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">
+                                Rétrograder au {{ $downgradeTo === 'free' ? 'Gratuit' : 'Pro' }} ?
+                            </h3>
+                        </div>
+
+                        <div class="space-y-3" style="font-family: 'Manrope', sans-serif;">
+                            <p class="text-sm" style="color: #4B5563;">
+                                En changeant de forfait, vous perdrez l'accès à :
+                            </p>
+
+                            <div class="rounded-lg p-3 space-y-2" style="background: #FEF2F2; border: 1px solid #FCA5A5;">
+                                @foreach($downgradeLosses as $loss)
+                                    <div class="flex items-start space-x-2">
+                                        <svg class="w-4 h-4 mt-0.5 shrink-0" style="color: #EF4444;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                        <span class="text-sm" style="color: #991B1B;">{{ $loss }}</span>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <p class="text-xs" style="color: #9CA3AF;">
+                                Votre contenu masqué ne sera pas supprimé. Il redeviendra visible si vous passez à un forfait supérieur.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="px-6 pb-6 flex items-center space-x-3">
+                        <button wire:click="confirmDowngrade"
+                                class="flex-1 py-2.5 rounded-lg text-sm font-medium transition"
+                                style="font-family: 'Manrope', sans-serif; background: #F59E0B; color: white;"
+                                onmouseover="this.style.background='#D97706'"
+                                onmouseout="this.style.background='#F59E0B'">
+                            Continuer la rétrogradation
+                        </button>
+                        <button wire:click="cancelDowngrade"
+                                class="flex-1 py-2.5 rounded-lg text-sm font-medium transition"
+                                style="font-family: 'Manrope', sans-serif; color: #4B5563; border: 1.5px solid #D1D5DB;">
+                            Garder mon forfait
+                        </button>
+                    </div>
+                </div>
             </div>
         @endif
     </div>

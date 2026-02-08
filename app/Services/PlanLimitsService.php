@@ -40,9 +40,52 @@ class PlanLimitsService
 
         foreach ($user->profiles as $profile) {
             $hiddenItems[$profile->id] = self::applyProfileLimits($profile, $limits);
+
+            // Si downgrade à FREE → revert le custom URL vers un code aléatoire
+            if ($user->plan === 'free' && $profile->username_changed_at) {
+                self::revertCustomUrl($profile);
+            }
         }
 
         return $hiddenItems;
+    }
+
+    /**
+     * Revert un custom URL vers un code aléatoire (downgrade à free)
+     */
+    public static function revertCustomUrl(Profile $profile): void
+    {
+        $customUsername = $profile->username;
+
+        // Générer un nouveau code aléatoire 8 chars
+        $charset = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        do {
+            $code = '';
+            for ($i = 0; $i < 8; $i++) {
+                $code .= $charset[random_int(0, strlen($charset) - 1)];
+            }
+        } while (Profile::where('username', $code)->exists());
+
+        // Sauvegarder l'ancien custom URL en redirect 90 jours
+        \App\Models\UsernameRedirect::updateOrCreate(
+            ['old_username' => strtolower($customUsername)],
+            ['profile_id' => $profile->id, 'expires_at' => now()->addDays(90)]
+        );
+
+        // Mettre à jour le profil
+        $profile->update([
+            'username' => $code,
+            'username_changed_at' => null, // Reset pour permettre un futur changement si re-upgrade
+        ]);
+
+        // Regénérer le QR Code
+        try {
+            $profileUrl = route('profile.public', $code);
+            $qrCode = base64_encode(\SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')->size(500)->generate($profileUrl));
+            $profile->update(['qr_code' => $qrCode]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning('QR code regen failed on downgrade: ' . $e->getMessage());
+        }
     }
 
     public static function applyProfileLimits(Profile $profile, array $limits): array
