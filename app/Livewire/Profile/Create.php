@@ -8,16 +8,6 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class Create extends Component
 {
-    public $full_name;
-    public $job_title;
-    public $company;
-
-    protected $rules = [
-        'full_name' => 'required|string|max:100',
-        'job_title' => 'nullable|string|max:100',
-        'company' => 'nullable|string|max:100',
-    ];
-
     public function mount()
     {
         $user = auth()->user();
@@ -32,25 +22,18 @@ class Create extends Component
             session()->flash('error', 'Vous avez atteint la limite de profils pour votre plan.');
             return redirect()->route('profile.index');
         }
-    }
 
-    public function submit()
-    {
-        $this->validate();
-
-        // Générer username unique
+        // Créer le profil automatiquement et rediriger vers l'éditeur
         do {
             $username = $this->generateUsername();
         } while (Profile::where('username', $username)->exists());
 
-        // Créer profil avec valeurs par défaut
         $profile = Profile::create([
-            'user_id' => auth()->id(),
+            'user_id' => $user->id,
             'username' => $username,
-            'full_name' => $this->full_name,
-            'job_title' => $this->job_title,
-            'company' => $this->company,
+            'full_name' => $user->name,
             'primary_color' => '#42B574',
+            'secondary_color' => '#2D7A4F',
             'is_public' => true,
         ]);
 
@@ -59,7 +42,7 @@ class Create extends Component
         $qrCode = base64_encode(QrCode::format('png')->size(500)->generate($profileUrl));
         $profile->update(['qr_code' => $qrCode]);
 
-        session()->flash('success', 'Profil créé! Personnalisez-le maintenant.');
+        session()->flash('success', 'Profil créé ! Personnalisez-le maintenant.');
         return redirect()->route('profile.edit', $profile);
     }
 
