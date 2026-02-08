@@ -137,18 +137,17 @@ class EditProfile extends Component
         // Vérifier si pas un ancien redirect actif d'un autre profil
         $redirectExists = \App\Models\UsernameRedirect::where('old_username', $newUsername)
             ->where('profile_id', '!=', $this->profile->id)
-            ->where('expires_at', '>', now())
             ->exists();
         if ($redirectExists) {
             $this->usernameError = 'Ce nom n\'est pas disponible pour le moment.';
             return;
         }
 
-        // Sauvegarder l'ancien username en redirect 90 jours
+        // Sauvegarder l'ancien username en redirect permanent
         $oldUsername = $this->profile->username;
         \App\Models\UsernameRedirect::updateOrCreate(
             ['old_username' => strtolower($oldUsername)],
-            ['profile_id' => $this->profile->id, 'expires_at' => now()->addDays(90)]
+            ['profile_id' => $this->profile->id]
         );
 
         // Mettre à jour le username
