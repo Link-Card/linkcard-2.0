@@ -70,7 +70,7 @@
         </div>
 
         <!-- Plans Grid -->
-        <div class="grid md:grid-cols-3 gap-4 sm:gap-6">
+        <div class="flex flex-col md:flex-row gap-4 sm:gap-6">
             @php
                 $planOrder = ['free' => 0, 'pro' => 1, 'premium' => 2];
                 $currentLevel = $planOrder[$currentPlan] ?? 0;
@@ -79,10 +79,9 @@
             @foreach($plans as $key => $plan)
                 @php
                     $planLevel = $planOrder[$key] ?? 0;
-                    $displayOrder = match($key) { 'free' => 1, 'pro' => 2, 'premium' => 3, default => 4 };
                 @endphp
-                <div x-data="{ showFeatures: false }" style="order: {{ $displayOrder }};"
-                     class="bg-white rounded-xl shadow-sm border-2 transition-all {{ $currentPlan === $key ? 'border-[#42B574]' : 'border-transparent hover:border-[#D1D5DB]' }}">
+                <div x-data="{ showFeatures: false }"
+                     class="flex-1 bg-white rounded-xl shadow-sm border-2 transition-all {{ $currentPlan === $key ? 'border-[#42B574]' : 'border-transparent hover:border-[#D1D5DB]' }} {{ match($key) { 'free' => 'order-3 md:order-1', 'pro' => 'order-2 md:order-2', 'premium' => 'order-1 md:order-3', default => '' } }}">
 
                     <!-- Plan Header -->
                     <div class="p-5 sm:p-6">
@@ -108,33 +107,6 @@
                             </p>
                         @endif
 
-                        <!-- CTA Button -->
-                        <div class="mt-4">
-                            @if($currentPlan === $key)
-                                <button disabled class="w-full py-2.5 px-4 bg-[#E5E7EB] text-[#9CA3AF] rounded-lg font-medium text-sm cursor-not-allowed" style="font-family: 'Manrope', sans-serif;">
-                                    Plan actuel
-                                </button>
-                            @elseif($isSubscribed)
-                                @if($planLevel > $currentLevel)
-                                    <button wire:click="redirectToPortal" class="w-full py-2.5 px-4 bg-[#42B574] text-white rounded-lg font-medium text-sm hover:bg-[#3DA367] transition-colors" style="font-family: 'Manrope', sans-serif;">
-                                        Passer à {{ $plan['name'] }}
-                                    </button>
-                                @else
-                                    <button wire:click="showDowngradeConfirm('{{ $key }}')" class="w-full py-2.5 px-4 border border-[#F59E0B] text-[#D97706] rounded-lg font-medium text-sm hover:bg-[#FEF3C7] transition-colors" style="font-family: 'Manrope', sans-serif;">
-                                        Rétrograder
-                                    </button>
-                                @endif
-                            @elseif($key !== 'free')
-                                <button wire:click="subscribe('{{ $key }}')" wire:loading.attr="disabled" class="w-full py-2.5 px-4 bg-[#42B574] text-white rounded-lg font-medium text-sm hover:bg-[#3DA367] transition-colors disabled:opacity-50" style="font-family: 'Manrope', sans-serif;">
-                                    <span wire:loading.remove wire:target="subscribe">Commencer</span>
-                                    <span wire:loading wire:target="subscribe" class="flex items-center justify-center">
-                                        <svg class="animate-spin h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
-                                        Chargement...
-                                    </span>
-                                </button>
-                            @endif
-                        </div>
-
                         <!-- Features toggle (mobile) / always visible (desktop) -->
                         <button @click="showFeatures = !showFeatures" class="md:hidden w-full mt-3 flex items-center justify-center text-xs font-medium py-2 rounded-lg transition-colors" style="color: #4B5563;">
                             <span x-text="showFeatures ? 'Masquer le détail' : 'Voir le détail'"></span>
@@ -154,6 +126,33 @@
                                 </li>
                             @endforeach
                         </ul>
+                    </div>
+
+                    <!-- CTA Button (en bas) -->
+                    <div class="px-5 pb-5 sm:px-6 sm:pb-6">
+                        @if($currentPlan === $key)
+                            <button disabled class="w-full py-2.5 px-4 bg-[#E5E7EB] text-[#9CA3AF] rounded-lg font-medium text-sm cursor-not-allowed" style="font-family: 'Manrope', sans-serif;">
+                                Plan actuel
+                            </button>
+                        @elseif($isSubscribed)
+                            @if($planLevel > $currentLevel)
+                                <button wire:click="redirectToPortal" class="w-full py-2.5 px-4 bg-[#42B574] text-white rounded-lg font-medium text-sm hover:bg-[#3DA367] transition-colors" style="font-family: 'Manrope', sans-serif;">
+                                    Passer à {{ $plan['name'] }}
+                                </button>
+                            @else
+                                <button wire:click="showDowngradeConfirm('{{ $key }}')" class="w-full py-2.5 px-4 border border-[#F59E0B] text-[#D97706] rounded-lg font-medium text-sm hover:bg-[#FEF3C7] transition-colors" style="font-family: 'Manrope', sans-serif;">
+                                    Rétrograder
+                                </button>
+                            @endif
+                        @elseif($key !== 'free')
+                            <button wire:click="subscribe('{{ $key }}')" wire:loading.attr="disabled" class="w-full py-2.5 px-4 bg-[#42B574] text-white rounded-lg font-medium text-sm hover:bg-[#3DA367] transition-colors disabled:opacity-50" style="font-family: 'Manrope', sans-serif;">
+                                <span wire:loading.remove wire:target="subscribe">Commencer</span>
+                                <span wire:loading wire:target="subscribe" class="flex items-center justify-center">
+                                    <svg class="animate-spin h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                                    Chargement...
+                                </span>
+                            </button>
+                        @endif
                     </div>
                 </div>
             @endforeach
