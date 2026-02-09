@@ -47,4 +47,19 @@ class ContentBand extends Model
     {
         return $this->type === 'text_block';
     }
+
+    public function isVideoEmbed(): bool
+    {
+        return $this->type === 'video_embed';
+    }
+
+    public function isImageCarousel(): bool
+    {
+        return $this->type === 'image_carousel';
+    }
+
+    public function isCtaButton(): bool
+    {
+        return $this->type === 'cta_button';
+    }
 }

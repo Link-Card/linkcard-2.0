@@ -25,8 +25,11 @@ class Profile extends Model
         'website',
         'photo_path',
         'template_id',
+        'template_config',
         'primary_color',
         'secondary_color',
+        'text_color',
+        'button_color',
         'background_type',
         'background_value',
         'is_public',
@@ -40,7 +43,80 @@ class Profile extends Model
         'is_public' => 'boolean',
         'view_count' => 'integer',
         'username_changed_at' => 'datetime',
+        'template_config' => 'array',
     ];
+
+    /**
+     * Get the template definition from TemplateService.
+     */
+    public function getTemplateAttribute(): ?array
+    {
+        return \App\Services\TemplateService::get($this->template_id ?? 'classic');
+    }
+
+    /**
+     * Get effective template config (merges template defaults with custom overrides).
+     * Used by Custom template (#13) where user can override header_style, etc.
+     */
+    public function getEffectiveTemplateConfig(): array
+    {
+        $template = $this->template;
+        if (!$template) {
+            $template = \App\Services\TemplateService::get('classic');
+        }
+
+        // For custom template, merge user overrides
+        if ($this->template_id === 'custom' && $this->template_config) {
+            return array_merge($template, $this->template_config);
+        }
+
+        return $template;
+    }
+
+    /**
+     * Get the header style to use for rendering.
+     */
+    public function getHeaderStyle(): string
+    {
+        $config = $this->getEffectiveTemplateConfig();
+        return $config['header_style'] ?? 'classic';
+    }
+
+    /**
+     * Get the transition style to use for rendering.
+     */
+    public function getTransition(): string
+    {
+        $config = $this->getEffectiveTemplateConfig();
+        return $config['transition'] ?? 'wave';
+    }
+
+    /**
+     * Get the social display style to use for rendering.
+     */
+    public function getSocialStyle(): string
+    {
+        $config = $this->getEffectiveTemplateConfig();
+        return $config['social_style'] ?? 'pills';
+    }
+
+    /**
+     * Get the photo style to use for rendering.
+     */
+    public function getPhotoStyle(): string
+    {
+        $config = $this->getEffectiveTemplateConfig();
+        return $config['photo_style'] ?? 'round_center';
+    }
+
+    /**
+     * Check if this profile's template supports a specific feature.
+     */
+    public function templateHasFeature(string $feature): bool
+    {
+        $config = $this->getEffectiveTemplateConfig();
+        return in_array($feature, $config['features'] ?? []);
+    }
 
     public function user(): BelongsTo
     {
