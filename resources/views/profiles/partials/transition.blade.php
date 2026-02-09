@@ -3,16 +3,38 @@
 @php $transition = $transition ?? 'wave'; @endphp
 
 @if($transition === 'wave')
-    <svg viewBox="0 0 400 40" style="display: block; width: 100%; margin-top: -1px;" preserveAspectRatio="none">
-        <path d="M0,20 C80,38 150,5 220,22 C280,36 340,12 400,20 L400,40 L0,40 Z" fill="white" />
-        <path d="M0,28 C60,35 130,10 200,28 C260,40 350,18 400,26 L400,40 L0,40 Z" fill="white" opacity="0.5" />
-    </svg>
+    {{-- Animated wave from LinkCard v1 --}}
+    <div class="waves-container">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+             viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+            <defs>
+                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <g class="parallax">
+                <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7)" />
+                <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+                <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+                <use xlink:href="#gentle-wave" x="48" y="7" fill="white" />
+            </g>
+        </svg>
+    </div>
 
 @elseif($transition === 'double_wave')
-    <svg viewBox="0 0 400 50" style="display: block; width: 100%; margin-top: -1px;" preserveAspectRatio="none">
-        <path d="M0,15 C60,40 120,0 200,20 C280,40 340,5 400,18 L400,50 L0,50 Z" fill="{{ $secondaryColor }}" opacity="0.2" />
-        <path d="M0,25 C80,45 160,5 240,28 C310,45 360,15 400,25 L400,50 L0,50 Z" fill="white" />
-    </svg>
+    {{-- Double animated wave (v1 style, taller) --}}
+    <div class="waves-container" style="height: 120px;">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+             viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+            <defs>
+                <path id="gentle-wave-dbl" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <g class="parallax">
+                <use xlink:href="#gentle-wave-dbl" x="48" y="0" fill="rgba(255,255,255,0.6)" />
+                <use xlink:href="#gentle-wave-dbl" x="48" y="2" fill="rgba(255,255,255,0.4)" />
+                <use xlink:href="#gentle-wave-dbl" x="48" y="4" fill="rgba(255,255,255,0.2)" />
+                <use xlink:href="#gentle-wave-dbl" x="48" y="6" fill="white" />
+            </g>
+        </svg>
+    </div>
 
 @elseif($transition === 'arch')
     <svg viewBox="0 0 400 35" style="display: block; width: 100%; margin-top: -1px;" preserveAspectRatio="none">

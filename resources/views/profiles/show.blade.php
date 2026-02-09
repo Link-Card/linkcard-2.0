@@ -91,6 +91,46 @@
         }
         .toast.show { transform: translateX(-50%) translateY(0); }
         .toast svg { width: 18px; height: 18px; fill: #7EE081; }
+        
+        /* Animated waves (from v1) */
+        .waves-container {
+            position: relative;
+            width: 100%;
+            height: 100px;
+            margin-bottom: -7px;
+            overflow: hidden;
+        }
+        .waves-container svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .waves-container .parallax > use {
+            animation: wave-move 25s cubic-bezier(.55,.5,.45,.5) infinite;
+        }
+        .waves-container .parallax > use:nth-child(1) {
+            animation-delay: -2s;
+            animation-duration: 7s;
+        }
+        .waves-container .parallax > use:nth-child(2) {
+            animation-delay: -3s;
+            animation-duration: 10s;
+        }
+        .waves-container .parallax > use:nth-child(3) {
+            animation-delay: -4s;
+            animation-duration: 13s;
+        }
+        .waves-container .parallax > use:nth-child(4) {
+            animation-delay: -5s;
+            animation-duration: 20s;
+        }
+        @keyframes wave-move {
+            0% { transform: translate3d(-90px,0,0); }
+            100% { transform: translate3d(85px,0,0); }
+        }
+        @media (max-width: 768px) {
+            .waves-container { height: 60px; }
+        }
     </style>
     @livewireStyles
 </head>
