@@ -227,6 +227,139 @@
                             <p class="whitespace-pre-line text-sm leading-relaxed" style="color: #4B5563;">{{ $band->data['text'] }}</p>
                         </div>
 
+                    @elseif($band->type === 'video_embed')
+                        <!-- Vidéo intégrée (YouTube/TikTok) -->
+                        @php
+                            $videoUrl = $band->data['url'] ?? '';
+                            $videoId = $band->data['video_id'] ?? '';
+                            $platform = $band->data['platform'] ?? '';
+                            
+                            // Auto-detect platform + extract ID si pas encore fait
+                            if (empty($platform) && $videoUrl) {
+                                if (str_contains($videoUrl, 'youtube.com') || str_contains($videoUrl, 'youtu.be')) {
+                                    $platform = 'youtube';
+                                    if (preg_match('/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $videoUrl, $m)) {
+                                        $videoId = $m[1];
+                                    }
+                                } elseif (str_contains($videoUrl, 'tiktok.com')) {
+                                    $platform = 'tiktok';
+                                    if (preg_match('/video\/(\d+)/', $videoUrl, $m)) {
+                                        $videoId = $m[1];
+                                    }
+                                } elseif (str_contains($videoUrl, 'vimeo.com')) {
+                                    $platform = 'vimeo';
+                                    if (preg_match('/vimeo\.com\/(\d+)/', $videoUrl, $m)) {
+                                        $videoId = $m[1];
+                                    }
+                                }
+                            }
+                        @endphp
+                        
+                        @if($platform === 'youtube' && $videoId)
+                            <div class="rounded-xl overflow-hidden" style="border: 1px solid #E5E7EB;">
+                                <div style="position: relative; padding-bottom: 56.25%; height: 0;">
+                                    <iframe src="https://www.youtube.com/embed/{{ $videoId }}?rel=0" 
+                                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+                                            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        @elseif($platform === 'tiktok' && $videoId)
+                            <div class="rounded-xl overflow-hidden" style="border: 1px solid #E5E7EB;">
+                                <blockquote class="tiktok-embed" cite="{{ $videoUrl }}" data-video-id="{{ $videoId }}" style="max-width: 100%;">
+                                    <section><a target="_blank" href="{{ $videoUrl }}">Voir sur TikTok</a></section>
+                                </blockquote>
+                            </div>
+                        @elseif($platform === 'vimeo' && $videoId)
+                            <div class="rounded-xl overflow-hidden" style="border: 1px solid #E5E7EB;">
+                                <div style="position: relative; padding-bottom: 56.25%; height: 0;">
+                                    <iframe src="https://player.vimeo.com/video/{{ $videoId }}" 
+                                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+                                            frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        @elseif($videoUrl)
+                            {{-- Fallback: lien cliquable --}}
+                            <a href="{{ $videoUrl }}" target="_blank" rel="noopener"
+                               class="flex items-center gap-3 p-3.5 rounded-xl transition-all duration-200"
+                               style="background: #F9FAFB; border: 1px solid #E5E7EB;">
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: #FEE2E2;">
+                                    <svg class="w-5 h-5" fill="#EF4444" viewBox="0 0 24 24"><polygon points="9,6 19,12 9,18" /></svg>
+                                </div>
+                                <span class="font-medium text-sm" style="color: #2C2A27;">Voir la vidéo</span>
+                                <svg class="w-4 h-4 ml-auto" fill="#9CA3AF" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                            </a>
+                        @endif
+
+                    @elseif($band->type === 'image_carousel')
+                        <!-- Carrousel d'images -->
+                        @php
+                            $carouselImages = $band->data['images'] ?? [];
+                            $autoplay = $band->data['autoplay'] ?? true;
+                            $carouselId = 'carousel-' . $band->id;
+                        @endphp
+                        
+                        @if(count($carouselImages) > 0)
+                            <div class="rounded-xl overflow-hidden relative" style="border: 1px solid #E5E7EB;" id="{{ $carouselId }}" data-autoplay="{{ $autoplay ? '1' : '0' }}">
+                                {{-- Images container --}}
+                                <div class="carousel-track flex transition-transform duration-500 ease-out" style="touch-action: pan-y;">
+                                    @foreach($carouselImages as $idx => $img)
+                                        <div class="carousel-slide flex-shrink-0 w-full">
+                                            @if(!empty($img['link']))
+                                                <a href="{{ $img['link'] }}" target="_blank" rel="noopener">
+                                                    <img src="{{ Storage::url($img['path']) }}" 
+                                                         class="w-full h-auto object-contain" style="max-height: 300px;"
+                                                         alt="{{ $img['caption'] ?? '' }}">
+                                                </a>
+                                            @else
+                                                <img src="{{ Storage::url($img['path']) }}" 
+                                                     class="w-full h-auto object-contain" style="max-height: 300px;"
+                                                     alt="{{ $img['caption'] ?? '' }}">
+                                            @endif
+                                            @if(!empty($img['caption']))
+                                                <p class="text-xs text-center py-2 px-3" style="color: #9CA3AF;">{{ $img['caption'] }}</p>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                </div>
+                                
+                                {{-- Navigation arrows --}}
+                                @if(count($carouselImages) > 1)
+                                    <button onclick="carouselPrev('{{ $carouselId }}')" class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-opacity" style="background: rgba(255,255,255,0.85); box-shadow: 0 1px 4px rgba(0,0,0,0.15);">
+                                        <svg class="w-4 h-4" fill="#2C2A27" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                                    </button>
+                                    <button onclick="carouselNext('{{ $carouselId }}')" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-opacity" style="background: rgba(255,255,255,0.85); box-shadow: 0 1px 4px rgba(0,0,0,0.15);">
+                                        <svg class="w-4 h-4" fill="#2C2A27" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                                    </button>
+                                    
+                                    {{-- Dots --}}
+                                    <div class="flex justify-center gap-1.5 py-2">
+                                        @foreach($carouselImages as $idx => $img)
+                                            <button onclick="carouselGoTo('{{ $carouselId }}', {{ $idx }})" 
+                                                    class="carousel-dot w-2 h-2 rounded-full transition-all duration-200"
+                                                    style="background: {{ $idx === 0 ? '#2C2A27' : '#D1D5DB' }};"></button>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
+
+                    @elseif($band->type === 'cta_button')
+                        <!-- Bouton CTA personnalisé -->
+                        @php
+                            $btnColor = $profile->button_color ?? $secondaryColor;
+                        @endphp
+                        <a href="{{ $band->data['url'] ?? '#' }}" target="_blank" rel="noopener"
+                           data-band-id="{{ $band->id }}" data-band-url="{{ $band->data['url'] ?? '' }}"
+                           class="flex items-center justify-center space-x-2 w-full py-3.5 px-5 text-white text-center rounded-xl font-semibold text-sm shadow-md transition-all duration-200 trackable-link"
+                           style="background: {{ $btnColor }};"
+                           onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-1px)'"
+                           onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)'">
+                            @if(!empty($band->data['icon']))
+                                <span>{{ $band->data['icon'] }}</span>
+                            @endif
+                            <span>{{ $band->data['label'] ?? 'Lien' }}</span>
+                        </a>
+
                     @endif
 
                 @endforeach
@@ -590,6 +723,99 @@
             });
         });
     </script>
+
+    <!-- Carousel engine -->
+    <script>
+        const carousels = {};
+
+        function initCarousel(id) {
+            const el = document.getElementById(id);
+            if (!el || carousels[id]) return;
+            
+            const track = el.querySelector('.carousel-track');
+            const slides = el.querySelectorAll('.carousel-slide');
+            const dots = el.querySelectorAll('.carousel-dot');
+            const total = slides.length;
+            if (total <= 1) return;
+
+            carousels[id] = { current: 0, total, track, dots, el, interval: null };
+
+            // Touch/swipe support
+            let startX = 0, startY = 0, isDragging = false;
+            
+            track.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                isDragging = true;
+                clearAutoplay(id);
+            }, { passive: true });
+            
+            track.addEventListener('touchend', (e) => {
+                if (!isDragging) return;
+                const diffX = e.changedTouches[0].clientX - startX;
+                const diffY = Math.abs(e.changedTouches[0].clientY - startY);
+                // Only swipe if horizontal movement > vertical (avoid blocking scroll)
+                if (Math.abs(diffX) > 40 && Math.abs(diffX) > diffY) {
+                    if (diffX < 0) carouselNext(id);
+                    else carouselPrev(id);
+                }
+                isDragging = false;
+                startAutoplay(id);
+            }, { passive: true });
+
+            // Autoplay
+            if (el.dataset.autoplay === '1') {
+                startAutoplay(id);
+            }
+        }
+
+        function carouselGoTo(id, index) {
+            const c = carousels[id];
+            if (!c) return;
+            c.current = ((index % c.total) + c.total) % c.total;
+            c.track.style.transform = `translateX(-${c.current * 100}%)`;
+            c.dots.forEach((d, i) => {
+                d.style.background = i === c.current ? '#2C2A27' : '#D1D5DB';
+            });
+        }
+
+        function carouselNext(id) {
+            const c = carousels[id];
+            if (c) carouselGoTo(id, c.current + 1);
+        }
+
+        function carouselPrev(id) {
+            const c = carousels[id];
+            if (c) carouselGoTo(id, c.current - 1);
+        }
+
+        function startAutoplay(id) {
+            const c = carousels[id];
+            if (!c) return;
+            clearAutoplay(id);
+            c.interval = setInterval(() => carouselNext(id), 4000);
+        }
+
+        function clearAutoplay(id) {
+            const c = carousels[id];
+            if (c && c.interval) {
+                clearInterval(c.interval);
+                c.interval = null;
+            }
+        }
+
+        // Init all carousels on page
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('[id^="carousel-"]').forEach(el => {
+                initCarousel(el.id);
+            });
+        });
+    </script>
+
+    {{-- TikTok embed script (only if needed) --}}
+    @if($profile->contentBands->where('type', 'video_embed')->contains(fn($b) => ($b->data['platform'] ?? '') === 'tiktok'))
+        <script async src="https://www.tiktok.com/embed.js"></script>
+    @endif
 
     @livewireScripts
 </body>
