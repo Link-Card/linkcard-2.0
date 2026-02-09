@@ -77,6 +77,96 @@
                             <p class="text-xs mt-1" style="font-family: 'Manrope', sans-serif; color: #42B574;">Passez au plan supérieur →</p>
                         </div>
                     @endif
+
+                    {{-- Séparateur types spécialisés --}}
+                    @if($availableTypes['video_embed']['available'] || $availableTypes['image_carousel']['available'] || $availableTypes['cta_button']['available'])
+                        <div class="flex items-center gap-3 pt-2">
+                            <div class="flex-1 h-px" style="background: #E5E7EB;"></div>
+                            <span class="text-[10px] font-semibold uppercase tracking-wider" style="color: #9CA3AF; font-family: 'Manrope', sans-serif;">Spécialisés</span>
+                            <div class="flex-1 h-px" style="background: #E5E7EB;"></div>
+                        </div>
+                    @endif
+
+                    <!-- Video Embed -->
+                    @if($availableTypes['video_embed']['available'])
+                        <button wire:click="selectBandType('video_embed')" class="w-full p-4 rounded-xl text-left transition-all duration-200" style="border: 1.5px solid #E5E7EB;" onmouseover="this.style.borderColor='#42B574'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" onmouseout="this.style.borderColor='#E5E7EB'; this.style.boxShadow='none'">
+                            <div class="flex items-center space-x-4">
+                                <span class="w-10 h-10 rounded-full flex items-center justify-center" style="background: #FEE2E2;">
+                                    <svg class="w-5 h-5" fill="#DC2626" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                </span>
+                                <div>
+                                    <p class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">Vidéo</p>
+                                    <p class="text-xs" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">YouTube, Vimeo, TikTok · {{ $availableTypes['video_embed']['remaining'] }} restante(s)</p>
+                                </div>
+                            </div>
+                        </button>
+                    @elseif(($availableTypes['video_embed']['plan_required'] ?? null))
+                        <div class="w-full p-4 rounded-xl opacity-60" style="border: 1.5px solid #E5E7EB; background: #F9FAFB;">
+                            <div class="flex items-center space-x-4">
+                                <span class="w-10 h-10 rounded-full flex items-center justify-center" style="background: #F3F4F6;">
+                                    <svg class="w-5 h-5" fill="#9CA3AF" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                </span>
+                                <div class="flex-1">
+                                    <p class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Vidéo</p>
+                                    <p class="text-xs" style="font-family: 'Manrope', sans-serif; color: #F59E0B;">Disponible avec PRO ou PREMIUM</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+                    <!-- Image Carousel -->
+                    @if($availableTypes['image_carousel']['available'])
+                        <button wire:click="selectBandType('image_carousel')" class="w-full p-4 rounded-xl text-left transition-all duration-200" style="border: 1.5px solid #E5E7EB;" onmouseover="this.style.borderColor='#42B574'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" onmouseout="this.style.borderColor='#E5E7EB'; this.style.boxShadow='none'">
+                            <div class="flex items-center space-x-4">
+                                <span class="w-10 h-10 rounded-full flex items-center justify-center" style="background: #FEF3C7;">
+                                    <svg class="w-5 h-5" fill="#D97706" viewBox="0 0 24 24"><path d="M2 6h4v11H2zm5-1h4v13H7zm5-1h4v15h-4zm5-1h4v17h-4z"/></svg>
+                                </span>
+                                <div>
+                                    <p class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">Carrousel</p>
+                                    <p class="text-xs" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">2-12 images défilantes · {{ $availableTypes['image_carousel']['remaining'] }} restant(s)</p>
+                                </div>
+                            </div>
+                        </button>
+                    @elseif(($availableTypes['image_carousel']['plan_required'] ?? null))
+                        <div class="w-full p-4 rounded-xl opacity-60" style="border: 1.5px solid #E5E7EB; background: #F9FAFB;">
+                            <div class="flex items-center space-x-4">
+                                <span class="w-10 h-10 rounded-full flex items-center justify-center" style="background: #F3F4F6;">
+                                    <svg class="w-5 h-5" fill="#9CA3AF" viewBox="0 0 24 24"><path d="M2 6h4v11H2zm5-1h4v13H7zm5-1h4v15h-4zm5-1h4v17h-4z"/></svg>
+                                </span>
+                                <div class="flex-1">
+                                    <p class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Carrousel</p>
+                                    <p class="text-xs" style="font-family: 'Manrope', sans-serif; color: #F59E0B;">Disponible avec PRO ou PREMIUM</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+                    <!-- CTA Button -->
+                    @if($availableTypes['cta_button']['available'])
+                        <button wire:click="selectBandType('cta_button')" class="w-full p-4 rounded-xl text-left transition-all duration-200" style="border: 1.5px solid #E5E7EB;" onmouseover="this.style.borderColor='#42B574'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'" onmouseout="this.style.borderColor='#E5E7EB'; this.style.boxShadow='none'">
+                            <div class="flex items-center space-x-4">
+                                <span class="w-10 h-10 rounded-full flex items-center justify-center" style="background: #F0F9F4;">
+                                    <svg class="w-5 h-5" fill="#42B574" viewBox="0 0 24 24"><path d="M19 7H5c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm0 8H5V9h14v6z"/></svg>
+                                </span>
+                                <div>
+                                    <p class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">Bouton CTA</p>
+                                    <p class="text-xs" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Lien externe avec icône · {{ $availableTypes['cta_button']['remaining'] }} restant(s)</p>
+                                </div>
+                            </div>
+                        </button>
+                    @elseif(($availableTypes['cta_button']['plan_required'] ?? null))
+                        <div class="w-full p-4 rounded-xl opacity-60" style="border: 1.5px solid #E5E7EB; background: #F9FAFB;">
+                            <div class="flex items-center space-x-4">
+                                <span class="w-10 h-10 rounded-full flex items-center justify-center" style="background: #F3F4F6;">
+                                    <svg class="w-5 h-5" fill="#9CA3AF" viewBox="0 0 24 24"><path d="M19 7H5c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm0 8H5V9h14v6z"/></svg>
+                                </span>
+                                <div class="flex-1">
+                                    <p class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Bouton CTA</p>
+                                    <p class="text-xs" style="font-family: 'Manrope', sans-serif; color: #F59E0B;">Disponible avec PRO ou PREMIUM</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 </div>
                 <button wire:click="closeAddBandModal" class="w-full mt-4 py-2.5 rounded-lg text-sm font-medium transition-colors" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;" onmouseover="this.style.color='#4B5563'; this.style.background='#F3F4F6'" onmouseout="this.style.color='#9CA3AF'; this.style.background='transparent'">
                     Annuler
@@ -96,6 +186,9 @@
                             @if($newBandType === 'social_link') un lien
                             @elseif($newBandType === 'image') une image
                             @elseif($newBandType === 'text_block') du texte
+                            @elseif($newBandType === 'video_embed') une vidéo
+                            @elseif($newBandType === 'image_carousel') un carrousel
+                            @elseif($newBandType === 'cta_button') un bouton CTA
                             @endif
                         </h3>
                     </div>
@@ -208,6 +301,92 @@
                             @error('newTextContent') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ $message }}</span> @enderror
                         </div>
                         <button wire:click="addTextBlock" class="w-full py-2.5 text-white rounded-lg font-medium text-sm transition-all duration-200" style="font-family: 'Manrope', sans-serif; background: #42B574;" onmouseover="this.style.background='#3DA367'" onmouseout="this.style.background='#42B574'">
+                            {{ $editingBandId ? 'Enregistrer' : 'Ajouter' }}
+                        </button>
+                    </div>
+                @endif
+
+                <!-- VIDEO EMBED -->
+                @if($newBandType === 'video_embed')
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="font-family: 'Manrope', sans-serif; color: #4B5563;">URL de la vidéo</label>
+                            <input type="url" wire:model="newVideoUrl" placeholder="https://youtube.com/watch?v=..." class="w-full px-4 py-2.5 rounded-lg" style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; font-size: 14px;" onfocus="this.style.borderColor='#42B574'" onblur="this.style.borderColor='#D1D5DB'">
+                            <p class="text-xs mt-1.5" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">YouTube, Vimeo ou TikTok supportés</p>
+                            @error('newVideoUrl') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ $message }}</span> @enderror
+                        </div>
+                        <button wire:click="addVideoEmbed" class="w-full py-2.5 text-white rounded-lg font-medium text-sm transition-all duration-200" style="font-family: 'Manrope', sans-serif; background: #42B574;" onmouseover="this.style.background='#3DA367'" onmouseout="this.style.background='#42B574'">
+                            {{ $editingBandId ? 'Enregistrer' : 'Ajouter' }}
+                        </button>
+                    </div>
+                @endif
+
+                <!-- IMAGE CAROUSEL -->
+                @if($newBandType === 'image_carousel')
+                    <div class="space-y-4">
+                        @if($editingBandId && !empty($existingCarouselImages))
+                            <div>
+                                <p class="text-xs mb-2 font-medium" style="font-family: 'Manrope', sans-serif; color: #4B5563;">Images actuelles ({{ count($existingCarouselImages) }}) :</p>
+                                <div class="flex flex-wrap gap-2">
+                                    @foreach($existingCarouselImages as $idx => $img)
+                                        <div class="relative group">
+                                            <img src="{{ Storage::url($img['path']) }}" class="h-16 w-16 object-cover rounded-lg" style="border: 1px solid #E5E7EB;">
+                                            <button wire:click="removeCarouselImage({{ $idx }})" class="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" style="background: #EF4444;">
+                                                <svg class="w-3 h-3" fill="white" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                                            </button>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+                        <div>
+                            <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="font-family: 'Manrope', sans-serif; color: #4B5563;">
+                                {{ $editingBandId ? 'Ajouter des images' : 'Images (2-12)' }}
+                            </label>
+                            <input type="file" wire:model="newCarouselImages" accept="image/*" multiple class="w-full text-sm rounded-lg" style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; padding: 8px 12px;">
+                            <p class="text-xs mt-1" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Min 2, max 12 images · 10 MB chacune</p>
+                            <div wire:loading wire:target="newCarouselImages" class="flex items-center space-x-1 mt-1">
+                                <svg class="animate-spin h-3 w-3" style="color: #42B574;" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" opacity="0.25"/><path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                                <span class="text-xs" style="color: #9CA3AF;">Upload...</span>
+                            </div>
+                            @error('newCarouselImages') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ $message }}</span> @enderror
+                            @error('newCarouselImages.*') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" wire:model="newCarouselAutoplay" class="sr-only peer">
+                                <div class="w-9 h-5 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all" style="background: #D1D5DB;" x-bind:style="$wire.newCarouselAutoplay ? 'background: #42B574' : 'background: #D1D5DB'"></div>
+                            </label>
+                            <span class="text-sm" style="font-family: 'Manrope', sans-serif; color: #4B5563;">Défilement automatique</span>
+                        </div>
+                        <button wire:click="addImageCarousel" class="w-full py-2.5 text-white rounded-lg font-medium text-sm transition-all duration-200" style="font-family: 'Manrope', sans-serif; background: #42B574;" onmouseover="this.style.background='#3DA367'" onmouseout="this.style.background='#42B574'">
+                            {{ $editingBandId ? 'Enregistrer' : 'Ajouter' }}
+                        </button>
+                    </div>
+                @endif
+
+                <!-- CTA BUTTON -->
+                @if($newBandType === 'cta_button')
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="font-family: 'Manrope', sans-serif; color: #4B5563;">Icône (emoji)</label>
+                            <div class="flex gap-2 flex-wrap">
+                                @foreach(['🔗', '📅', '🛒', '📞', '📧', '💬', '🎯', '📍', '🎟️', '📝'] as $emoji)
+                                    <button wire:click="$set('newCtaIcon', '{{ $emoji }}')" class="w-10 h-10 rounded-lg text-lg flex items-center justify-center transition-all" style="border: 1.5px solid {{ $newCtaIcon === $emoji ? '#42B574' : '#E5E7EB' }}; background: {{ $newCtaIcon === $emoji ? '#F0F9F4' : 'white' }};">{{ $emoji }}</button>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="font-family: 'Manrope', sans-serif; color: #4B5563;">Texte du bouton</label>
+                            <input type="text" wire:model="newCtaLabel" maxlength="60" placeholder="Réserver une consultation" class="w-full px-4 py-2.5 rounded-lg" style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; font-size: 14px;" onfocus="this.style.borderColor='#42B574'" onblur="this.style.borderColor='#D1D5DB'">
+                            @error('newCtaLabel') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="font-family: 'Manrope', sans-serif; color: #4B5563;">URL de destination</label>
+                            <input type="url" wire:model="newCtaUrl" placeholder="https://calendly.com/..." class="w-full px-4 py-2.5 rounded-lg" style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; font-size: 14px;" onfocus="this.style.borderColor='#42B574'" onblur="this.style.borderColor='#D1D5DB'">
+                            @error('newCtaUrl') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ $message }}</span> @enderror
+                        </div>
+                        <button wire:click="addCtaButton" class="w-full py-2.5 text-white rounded-lg font-medium text-sm transition-all duration-200" style="font-family: 'Manrope', sans-serif; background: #42B574;" onmouseover="this.style.background='#3DA367'" onmouseout="this.style.background='#42B574'">
                             {{ $editingBandId ? 'Enregistrer' : 'Ajouter' }}
                         </button>
                     </div>

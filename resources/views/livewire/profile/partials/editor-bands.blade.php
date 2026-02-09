@@ -56,6 +56,12 @@
                                 <svg class="w-5 h-5" fill="{{ $isHidden ? '#9CA3AF' : '#D97706' }}" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
                             @elseif($band['type'] === 'text_block')
                                 <svg class="w-5 h-5" fill="{{ $isHidden ? '#9CA3AF' : '#6B7280' }}" viewBox="0 0 24 24"><path d="M3 18h12v-2H3v2zM3 6v2h18V6H3zm0 7h18v-2H3v2z"/></svg>
+                            @elseif($band['type'] === 'video_embed')
+                                <svg class="w-5 h-5" fill="{{ $isHidden ? '#9CA3AF' : '#DC2626' }}" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            @elseif($band['type'] === 'image_carousel')
+                                <svg class="w-5 h-5" fill="{{ $isHidden ? '#9CA3AF' : '#D97706' }}" viewBox="0 0 24 24"><path d="M2 6h4v11H2zm5-1h4v13H7zm5-1h4v15h-4zm5-1h4v17h-4z"/></svg>
+                            @elseif($band['type'] === 'cta_button')
+                                <svg class="w-5 h-5" fill="{{ $isHidden ? '#9CA3AF' : '#42B574' }}" viewBox="0 0 24 24"><path d="M19 7H5c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm0 8H5V9h14v6z"/></svg>
                             @endif
                         </span>
                         
@@ -69,6 +75,9 @@
                                     @endphp
                                     Image{{ $imgCount > 1 ? 's ('.$imgCount.')' : '' }}
                                 @elseif($band['type'] === 'text_block') {{ Str::limit($band['data']['text'] ?? 'Texte', 30) }}
+                                @elseif($band['type'] === 'video_embed') Vidéo {{ ucfirst($band['data']['platform'] ?? '') }}
+                                @elseif($band['type'] === 'image_carousel') Carrousel ({{ count($band['data']['images'] ?? []) }} images)
+                                @elseif($band['type'] === 'cta_button') {{ $band['data']['icon'] ?? '🔗' }} {{ $band['data']['label'] ?? 'Bouton CTA' }}
                                 @endif
                             </span>
                             @if($isHidden)
