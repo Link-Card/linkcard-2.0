@@ -46,42 +46,44 @@
                     </div>
                 </div>
             @elseif($headerStyle === 'split')
-                <div class="flex">
-                    <div class="w-[38%] flex items-center justify-center py-10" style="background: {{ $primary_color }};">
-                        @if($profile->photo_path)
-                            <img src="{{ Storage::url($profile->photo_path) }}" class="w-20 h-20 rounded-full object-cover border-3 border-white shadow-xl">
-                        @else
-                            <div class="w-20 h-20 rounded-full bg-white/30 border-3 border-white shadow-xl flex items-center justify-center">
-                                <span class="text-3xl">👤</span>
-                            </div>
-                        @endif
+                <div style="background: linear-gradient(180deg, {{ $primary_color }}, {{ $secondary_color }});">
+                    <div class="flex">
+                        <div class="w-[38%] flex items-center justify-center py-10" style="background: {{ $primary_color }};">
+                            @if($profile->photo_path)
+                                <img src="{{ Storage::url($profile->photo_path) }}" class="w-20 h-20 rounded-full object-cover border-3 border-white shadow-xl">
+                            @else
+                                <div class="w-20 h-20 rounded-full bg-white/30 border-3 border-white shadow-xl flex items-center justify-center">
+                                    <span class="text-3xl">👤</span>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="w-[62%] flex flex-col justify-center py-10 px-4" style="background: linear-gradient(180deg, {{ $secondary_color }}, {{ $primary_color }}); color: {{ $headerTextColor }};">
+                            <h2 class="text-lg font-semibold" style="font-family: 'Manrope', sans-serif;">{{ $full_name ?: 'Votre nom' }}</h2>
+                            @if($job_title)<p class="text-xs font-medium mt-1" style="opacity: 0.9;">{{ $job_title }}</p>@endif
+                            @if($company || $location)<p class="text-xs mt-0.5" style="opacity: 0.8;">{{ $company }}@if($company && $location) · @endif{{ $location }}</p>@endif
+                        </div>
                     </div>
-                    <div class="w-[62%] flex flex-col justify-center py-10 px-4" style="background: linear-gradient(180deg, {{ $secondary_color }}, {{ $primary_color }}); color: {{ $headerTextColor }};">
-                        <h2 class="text-lg font-semibold" style="font-family: 'Manrope', sans-serif;">{{ $full_name ?: 'Votre nom' }}</h2>
-                        @if($job_title)<p class="text-xs font-medium mt-1" style="opacity: 0.9;">{{ $job_title }}</p>@endif
-                        @if($company || $location)<p class="text-xs mt-0.5" style="opacity: 0.8;">{{ $company }}@if($company && $location) · @endif{{ $location }}</p>@endif
-                    </div>
+                    @include('livewire.profile.partials.preview-transition', ['transition' => 'wave'])
                 </div>
-                @include('livewire.profile.partials.preview-transition', ['transition' => 'wave'])
             @elseif($headerStyle === 'geometric')
                 <div class="relative overflow-hidden" style="background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});">
                     <div class="absolute" style="top: 10px; left: -20px; width: 80px; height: 80px; border-radius: 50%; background: rgba(255,255,255,0.07);"></div>
                     <div class="absolute" style="top: -15px; right: 20px; width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.05);"></div>
-                    <div class="relative z-10 px-6 pt-10 pb-8 text-center" style="color: {{ $headerTextColor }};">
+                    <div class="relative z-10 px-6 pt-10 pb-2 text-center" style="color: {{ $headerTextColor }};">
                         @include('livewire.profile.partials.preview-photo', ['photoStyle' => 'square_center'])
                         @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
                     </div>
+                    @include('livewire.profile.partials.preview-transition', ['transition' => 'chevron'])
                 </div>
-                @include('livewire.profile.partials.preview-transition', ['transition' => 'chevron'])
             @else
                 {{-- classic, wave, diagonal, arch --}}
                 <div style="background: linear-gradient({{ $headerStyle === 'diagonal' ? '135deg' : '180deg' }}, {{ $primary_color }} 0%, {{ $secondary_color }} 100%);">
-                    <div class="px-6 pt-10 {{ in_array($transition, ['wave','double_wave','arch','diagonal']) ? 'pb-10' : 'pb-6' }} text-center" style="color: {{ $headerTextColor }};">
+                    <div class="px-6 pt-10 pb-2 text-center" style="color: {{ $headerTextColor }};">
                         @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
                         @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
                     </div>
+                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
-                @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
             @endif
 
             <!-- CONTENT BANDS -->
