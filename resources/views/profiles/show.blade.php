@@ -117,6 +117,11 @@
             }
         }
         
+        // Template resolution
+        $templateSlug = $profile->template_id ?? 'classic';
+        $templateConfig = $profile->getEffectiveTemplateConfig();
+        $headerStyle = $templateConfig['header_style'] ?? 'classic';
+        
         // Calculer si le texte doit être clair ou foncé
         $hex = ltrim($primaryColor, '#');
         $r = hexdec(substr($hex, 0, 2));
@@ -124,64 +129,16 @@
         $b = hexdec(substr($hex, 4, 2));
         $luminance = (0.299 * $r + 0.587 * $g + 0.114 * $b) / 255;
         $headerTextColor = $luminance > 0.6 ? '#2C2A27' : '#FFFFFF';
+        
+        // Available header partials
+        $validHeaders = ['classic', 'wave', 'minimal', 'diagonal', 'arch', 'split', 'banner', 'geometric', 'bold'];
+        $headerPartial = in_array($headerStyle, $validHeaders) ? $headerStyle : 'classic';
     @endphp
 
     <div class="max-w-md mx-auto min-h-screen relative">
 
-        <!-- HEADER GRADIENT -->
-        <div class="relative" style="background: linear-gradient(180deg, {{ $primaryColor }} 0%, {{ $secondaryColor }} 100%);">
-            
-            <!-- Bouton Partage -->
-            <button class="share-btn" onclick="openSharePopup()" style="position: absolute; top: 16px; right: 16px; z-index: 10;">
-                <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
-            </button>
-            
-            <div class="px-6 pt-12 pb-8 text-center" style="color: {{ $headerTextColor }};">
-
-                <!-- Photo -->
-                <div class="flex justify-center mb-5">
-                    @if($profile->photo_path)
-                        <img src="{{ Storage::url($profile->photo_path) }}"
-                             class="w-28 h-28 rounded-full object-cover border-4 border-white shadow-xl">
-                    @else
-                        <div class="w-28 h-28 rounded-full bg-white/30 border-4 border-white shadow-xl flex items-center justify-center">
-                            <span class="text-5xl">👤</span>
-                        </div>
-                    @endif
-                </div>
-
-                <!-- Nom -->
-                <h1 class="text-2xl font-semibold" style="letter-spacing: -0.02em;">{{ $profile->full_name }}</h1>
-
-                <!-- Titre -->
-                @if($profile->job_title)
-                    <p class="text-base font-medium mt-1" style="opacity: 0.9;">{{ $profile->job_title }}</p>
-                @endif
-
-                <!-- Entreprise + Lieu -->
-                @if($profile->company || $profile->location)
-                    <p class="text-sm mt-1" style="opacity: 0.8;">
-                        {{ $profile->company }}@if($profile->company && $profile->location) · @endif{{ $profile->location }}
-                    </p>
-                @endif
-
-                <!-- Téléphone + Email -->
-                @if($profile->phone || $profile->email)
-                    <div class="mt-4 space-y-1">
-                        @if($profile->phone)
-                            <a href="tel:{{ $profile->phone }}" class="block text-sm hover:underline" style="opacity: 0.85;">
-                                {{ $profile->phone }}
-                            </a>
-                        @endif
-                        @if($profile->email)
-                            <a href="mailto:{{ $profile->email }}" class="block text-sm hover:underline" style="opacity: 0.85;">
-                                {{ $profile->email }}
-                            </a>
-                        @endif
-                    </div>
-                @endif
-            </div>
-        </div>
+        <!-- HEADER (Template: {{ $headerPartial }}) -->
+        @include('profiles.partials.headers.' . $headerPartial)
 
         <!-- CONTENT BANDS -->
         <div class="bg-white min-h-[200px]">
