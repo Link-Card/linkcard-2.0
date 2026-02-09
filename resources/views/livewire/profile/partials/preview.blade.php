@@ -6,37 +6,83 @@
     <div class="rounded-2xl overflow-hidden" style="box-shadow: 0 8px 32px rgba(0,0,0,0.12); border: 1px solid #E5E7EB;">
         <div class="overflow-y-auto" style="max-height: calc(100vh - 120px); background: #F7F8F4;">
 
-            <!-- HEADER GRADIENT -->
-            <div style="background: linear-gradient(180deg, {{ $primary_color }} 0%, {{ $secondary_color }} 100%);">
-                <div class="px-6 pt-10 pb-6 text-center" style="color: {{ $headerTextColor }};">
-                    @if($profile->photo_path)
-                        <img src="{{ Storage::url($profile->photo_path) }}" class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-xl mx-auto mb-4">
-                    @else
-                        <div class="w-24 h-24 rounded-full bg-white/30 border-4 border-white shadow-xl mx-auto mb-4 flex items-center justify-center">
-                            <span class="text-4xl">👤</span>
-                        </div>
-                    @endif
+            @php
+                $templateSlug = $profile->template_id ?? 'classic';
+                $templateConfig = $profile->getEffectiveTemplateConfig();
+                $headerStyle = $templateConfig['header_style'] ?? 'classic';
+                $transition = $templateConfig['transition'] ?? 'wave';
+                $photoStyle = $templateConfig['photo_style'] ?? 'round_center';
+            @endphp
 
-                    <h2 class="text-2xl font-semibold" style="font-family: 'Manrope', sans-serif;">{{ $full_name ?: 'Votre nom' }}</h2>
-
-                    @if($job_title)
-                        <p class="text-base font-medium mt-1" style="font-family: 'Manrope', sans-serif; opacity: 0.9;">{{ $job_title }}</p>
-                    @endif
-
-                    @if($company || $location)
-                        <p class="text-sm mt-1" style="font-family: 'Manrope', sans-serif; opacity: 0.8;">
-                            {{ $company }}@if($company && $location) · @endif{{ $location }}
-                        </p>
-                    @endif
-
-                    @if($phone || $email)
-                        <div class="mt-3 space-y-0.5">
-                            @if($phone)<p class="text-sm" style="opacity: 0.85;">{{ $phone }}</p>@endif
-                            @if($email)<p class="text-sm" style="opacity: 0.85;">{{ $email }}</p>@endif
-                        </div>
-                    @endif
+            {{-- HEADER based on template --}}
+            @if($headerStyle === 'bold')
+                <div style="background: #2C2A27; position: relative;">
+                    <div class="absolute bottom-0 left-0 right-0" style="height: 4px; background: linear-gradient(90deg, {{ $primary_color }}, {{ $secondary_color }});"></div>
+                    <div class="px-6 pt-10 pb-6 text-center" style="color: #FFFFFF;">
+                        @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle, 'borderStyle' => "border: 3px solid {$primary_color};"])
+                        @include('livewire.profile.partials.preview-info', ['textColor' => '#FFFFFF'])
+                    </div>
                 </div>
-            </div>
+            @elseif($headerStyle === 'minimal')
+                <div style="height: 5px; background: linear-gradient(90deg, {{ $primary_color }}, {{ $secondary_color }});"></div>
+                <div class="bg-white px-6 pt-8 pb-6 text-center">
+                    @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle, 'shadowColor' => $primary_color])
+                    @include('livewire.profile.partials.preview-info', ['textColor' => '#2C2A27'])
+                </div>
+            @elseif($headerStyle === 'banner')
+                <div style="height: 100px; background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});"></div>
+                <div class="bg-white text-center pb-4">
+                    <div class="flex justify-center">
+                        @if($profile->photo_path)
+                            <img src="{{ Storage::url($profile->photo_path) }}" class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-xl" style="margin-top: -48px;">
+                        @else
+                            <div class="w-24 h-24 rounded-full border-4 border-white shadow-xl flex items-center justify-center" style="margin-top: -48px; background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});">
+                                <span class="text-4xl">👤</span>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="mt-3 px-6">
+                        @include('livewire.profile.partials.preview-info', ['textColor' => '#2C2A27'])
+                    </div>
+                </div>
+            @elseif($headerStyle === 'split')
+                <div class="flex">
+                    <div class="w-[38%] flex items-center justify-center py-10" style="background: {{ $primary_color }};">
+                        @if($profile->photo_path)
+                            <img src="{{ Storage::url($profile->photo_path) }}" class="w-20 h-20 rounded-full object-cover border-3 border-white shadow-xl">
+                        @else
+                            <div class="w-20 h-20 rounded-full bg-white/30 border-3 border-white shadow-xl flex items-center justify-center">
+                                <span class="text-3xl">👤</span>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="w-[62%] flex flex-col justify-center py-10 px-4" style="background: linear-gradient(180deg, {{ $secondary_color }}, {{ $primary_color }}); color: {{ $headerTextColor }};">
+                        <h2 class="text-lg font-semibold" style="font-family: 'Manrope', sans-serif;">{{ $full_name ?: 'Votre nom' }}</h2>
+                        @if($job_title)<p class="text-xs font-medium mt-1" style="opacity: 0.9;">{{ $job_title }}</p>@endif
+                        @if($company || $location)<p class="text-xs mt-0.5" style="opacity: 0.8;">{{ $company }}@if($company && $location) · @endif{{ $location }}</p>@endif
+                    </div>
+                </div>
+                @include('livewire.profile.partials.preview-transition', ['transition' => 'wave'])
+            @elseif($headerStyle === 'geometric')
+                <div class="relative overflow-hidden" style="background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});">
+                    <div class="absolute" style="top: 10px; left: -20px; width: 80px; height: 80px; border-radius: 50%; background: rgba(255,255,255,0.07);"></div>
+                    <div class="absolute" style="top: -15px; right: 20px; width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.05);"></div>
+                    <div class="relative z-10 px-6 pt-10 pb-8 text-center" style="color: {{ $headerTextColor }};">
+                        @include('livewire.profile.partials.preview-photo', ['photoStyle' => 'square_center'])
+                        @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
+                    </div>
+                </div>
+                @include('livewire.profile.partials.preview-transition', ['transition' => 'chevron'])
+            @else
+                {{-- classic, wave, diagonal, arch --}}
+                <div style="background: linear-gradient({{ $headerStyle === 'diagonal' ? '135deg' : '180deg' }}, {{ $primary_color }} 0%, {{ $secondary_color }} 100%);">
+                    <div class="px-6 pt-10 {{ in_array($transition, ['wave','double_wave','arch','diagonal']) ? 'pb-10' : 'pb-6' }} text-center" style="color: {{ $headerTextColor }};">
+                        @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
+                        @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
+                    </div>
+                </div>
+                @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
+            @endif
 
             <!-- CONTENT BANDS -->
             <div class="bg-white">
@@ -86,6 +132,35 @@
                         @elseif($band['type'] === 'text_block')
                             <div class="p-4 rounded-xl" style="background: #F9FAFB; border: 1px solid #E5E7EB;">
                                 <p class="whitespace-pre-line text-sm" style="font-family: 'Manrope', sans-serif; color: #4B5563;">{{ $band['data']['text'] ?? '' }}</p>
+                            </div>
+
+                        @elseif($band['type'] === 'video_embed')
+                            <div class="rounded-xl overflow-hidden" style="border: 1px solid #E5E7EB; background: #000;">
+                                <div class="flex items-center justify-center py-8">
+                                    <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: rgba(255,0,0,0.8);">
+                                        <svg class="w-4 h-4" fill="white" viewBox="0 0 24 24"><polygon points="9,6 19,12 9,18"/></svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                        @elseif($band['type'] === 'cta_button')
+                            <div class="flex items-center justify-center space-x-2 w-full py-3.5 px-5 text-white text-center rounded-xl font-semibold text-sm shadow-md"
+                                 style="font-family: 'Manrope', sans-serif; background: {{ $profile->button_color ?? $secondary_color }};">
+                                @if(!empty($band['data']['icon']))<span>{{ $band['data']['icon'] }}</span>@endif
+                                <span>{{ $band['data']['label'] ?? 'Lien' }}</span>
+                            </div>
+
+                        @elseif($band['type'] === 'image_carousel')
+                            <div class="rounded-xl overflow-hidden" style="border: 1px solid #E5E7EB;">
+                                @php $carImages = $band['data']['images'] ?? []; @endphp
+                                @if(count($carImages) > 0)
+                                    <img src="{{ Storage::url($carImages[0]['path']) }}" class="w-full h-auto object-contain" style="max-height: 180px;">
+                                    <div class="flex justify-center gap-1 py-1.5">
+                                        @foreach($carImages as $idx => $ci)
+                                            <div class="w-1.5 h-1.5 rounded-full" style="background: {{ $idx === 0 ? '#2C2A27' : '#D1D5DB' }};"></div>
+                                        @endforeach
+                                    </div>
+                                @endif
                             </div>
                         @endif
 

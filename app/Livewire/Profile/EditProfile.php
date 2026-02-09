@@ -196,6 +196,21 @@ class EditProfile extends Component
         $this->customUsername = $this->profile->username;
     }
 
+    public function changeTemplate(string $slug)
+    {
+        $userPlan = auth()->user()->plan ?? 'free';
+
+        // Vérifier que le template existe et que le plan le permet
+        if (!\App\Services\TemplateService::canUse($slug, $userPlan)) {
+            session()->flash('error', 'Ce template nécessite un forfait supérieur.');
+            return;
+        }
+
+        $this->profile->update(['template_id' => $slug]);
+        $this->profile->refresh();
+        $this->dispatch('auto-saved');
+    }
+
     public function savePhoto()
     {
         $this->validate(['photo' => 'image|max:51200']);
