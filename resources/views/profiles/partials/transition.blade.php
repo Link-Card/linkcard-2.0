@@ -21,7 +21,7 @@
 
 @elseif($transition === 'double_wave')
     {{-- Double animated wave (v1 style, taller) --}}
-    <div class="waves-container" style="height: 120px;">
+    <div class="waves-container" style="height: 70px;">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
              viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
             <defs>

@@ -96,8 +96,8 @@
         .waves-container {
             position: relative;
             width: 100%;
-            height: 100px;
-            margin-bottom: -2px; /* overlap slightly into next section */
+            height: 60px;
+            margin-bottom: -2px;
             overflow: hidden;
         }
         .waves-container svg {
@@ -127,9 +127,6 @@
         @keyframes wave-move {
             0% { transform: translate3d(-90px,0,0); }
             100% { transform: translate3d(85px,0,0); }
-        }
-        @media (max-width: 768px) {
-            .waves-container { height: 60px; }
         }
     </style>
     @livewireStyles
