@@ -12,5 +12,5 @@
         @include('profiles.partials.photo', ['photoStyle' => 'square_center'])
         @include('profiles.partials.info')
     </div>
+    @include('profiles.partials.transition', ['transition' => 'chevron'])
 </div>
-@include('profiles.partials.transition', ['transition' => 'chevron'])

@@ -97,7 +97,7 @@
             position: relative;
             width: 100%;
             height: 100px;
-            margin-bottom: -7px;
+            margin-bottom: -2px; /* overlap slightly into next section */
             overflow: hidden;
         }
         .waves-container svg {

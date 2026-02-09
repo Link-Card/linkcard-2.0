@@ -5,5 +5,6 @@
         @include('profiles.partials.photo', ['photoStyle' => 'round_center'])
         @include('profiles.partials.info')
     </div>
+    {{-- Wave inside header so it overlaps the gradient --}}
+    @include('profiles.partials.transition', ['transition' => 'wave'])
 </div>
-@include('profiles.partials.transition', ['transition' => 'wave'])
