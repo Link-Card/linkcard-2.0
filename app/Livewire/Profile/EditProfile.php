@@ -560,6 +560,13 @@ class EditProfile extends Component
     public function addImageCarousel()
     {
         $rules = ['newCarouselAutoplay' => 'boolean'];
+        $messages = [
+            'newCarouselImages.required' => 'Veuillez sélectionner au moins 2 images. Si l\'upload a échoué, essayez avec moins de fichiers.',
+            'newCarouselImages.min' => 'Un carrousel nécessite au moins 2 images.',
+            'newCarouselImages.max' => 'Maximum 12 images par carrousel.',
+            'newCarouselImages.*.image' => 'Chaque fichier doit être une image (JPG, PNG, etc.).',
+            'newCarouselImages.*.max' => 'Chaque image ne doit pas dépasser 20 MB.',
+        ];
         if (!$this->editingBandId) {
             $rules['newCarouselImages'] = 'required|array|min:2|max:12';
             $rules['newCarouselImages.*'] = 'image|max:20480';
@@ -567,7 +574,7 @@ class EditProfile extends Component
             $rules['newCarouselImages'] = 'nullable|array|max:12';
             $rules['newCarouselImages.*'] = 'image|max:20480';
         }
-        $this->validate($rules);
+        $this->validate($rules, $messages);
 
         $images = $this->existingCarouselImages;
         if ($this->newCarouselImages) {

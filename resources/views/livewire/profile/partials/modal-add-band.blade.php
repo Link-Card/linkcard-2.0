@@ -261,11 +261,11 @@
                             <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="font-family: 'Manrope', sans-serif; color: #4B5563;">
                                 {{ $editingBandId ? 'Remplacer les images' : 'Images (1 ou 2)' }}
                             </label>
-                            <div x-data="{ imgProgress: 0, imgUploading: false }"
-                                 x-on:livewire-upload-start="imgUploading = true; imgProgress = 0"
+                            <div x-data="{ imgProgress: 0, imgUploading: false, imgError: false }"
+                                 x-on:livewire-upload-start="imgUploading = true; imgProgress = 0; imgError = false"
                                  x-on:livewire-upload-finish="imgUploading = false; imgProgress = 100"
                                  x-on:livewire-upload-cancel="imgUploading = false; imgProgress = 0"
-                                 x-on:livewire-upload-error="imgUploading = false; imgProgress = 0"
+                                 x-on:livewire-upload-error="imgUploading = false; imgProgress = 0; imgError = true"
                                  x-on:livewire-upload-progress="imgProgress = $event.detail.progress">
                                 <input type="file" wire:model="newImages" accept="image/*" multiple class="w-full text-sm rounded-lg" style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; padding: 8px 12px;">
                                 <p class="text-xs mt-1" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">
@@ -277,8 +277,11 @@
                                         <span class="text-xs font-medium" style="color: #42B574; font-family: 'Manrope', sans-serif;" x-text="Math.round(imgProgress) + '%'"></span>
                                     </div>
                                     <div class="w-full h-2 rounded-full overflow-hidden" style="background: #E5E7EB;">
-                                        <div class="h-full rounded-full transition-all duration-300" style="background: #42B574;" :style="'width: ' + imgProgress + '%'"></div>
+                                        <div class="h-full rounded-full transition-all duration-300" :style="'background: #42B574; width: ' + imgProgress + '%'"></div>
                                     </div>
+                                </div>
+                                <div x-show="imgError" x-cloak class="mt-2 p-2 rounded-lg text-xs" style="background: #FEF2F2; color: #EF4444; font-family: 'Manrope', sans-serif;">
+                                    Échec de l'upload. Fichier trop volumineux ou format non supporté.
                                 </div>
                             </div>
                             @error('newImages') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ $message }}</span> @enderror
@@ -355,26 +358,29 @@
                             <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="font-family: 'Manrope', sans-serif; color: #4B5563;">
                                 {{ $editingBandId ? 'Ajouter des images' : 'Images (2-12)' }}
                             </label>
-                            <div x-data="{ carouselProgress: 0, carouselUploading: false }"
-                                 x-on:livewire-upload-start="carouselUploading = true; carouselProgress = 0"
+                            <div x-data="{ carouselProgress: 0, carouselUploading: false, carouselError: false }"
+                                 x-on:livewire-upload-start="carouselUploading = true; carouselProgress = 0; carouselError = false"
                                  x-on:livewire-upload-finish="carouselUploading = false; carouselProgress = 100"
                                  x-on:livewire-upload-cancel="carouselUploading = false; carouselProgress = 0"
-                                 x-on:livewire-upload-error="carouselUploading = false; carouselProgress = 0"
+                                 x-on:livewire-upload-error="carouselUploading = false; carouselProgress = 0; carouselError = true"
                                  x-on:livewire-upload-progress="carouselProgress = $event.detail.progress">
                                 <input type="file" wire:model="newCarouselImages" accept="image/*" multiple class="w-full text-sm rounded-lg" style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; padding: 8px 12px;">
                                 <p class="text-xs mt-1" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Min 2, max 12 images · 20 MB chacune</p>
+                                <div x-show="carouselError" x-cloak class="mt-2 p-2 rounded-lg text-xs" style="background: #FEF2F2; color: #EF4444; font-family: 'Manrope', sans-serif;">
+                                    Échec de l'upload. Les fichiers sont peut-être trop volumineux. Essayez moins d'images à la fois ou réduisez leur taille.
+                                </div>
                                 <div x-show="carouselUploading" x-cloak class="mt-2">
                                     <div class="flex items-center justify-between mb-1">
                                         <span class="text-xs font-medium" style="color: #42B574; font-family: 'Manrope', sans-serif;">Upload en cours...</span>
                                         <span class="text-xs font-medium" style="color: #42B574; font-family: 'Manrope', sans-serif;" x-text="Math.round(carouselProgress) + '%'"></span>
                                     </div>
                                     <div class="w-full h-2 rounded-full overflow-hidden" style="background: #E5E7EB;">
-                                        <div class="h-full rounded-full transition-all duration-300" style="background: #42B574;" :style="'width: ' + carouselProgress + '%'"></div>
+                                        <div class="h-full rounded-full transition-all duration-300" :style="'background: #42B574; width: ' + carouselProgress + '%'"></div>
                                     </div>
                                 </div>
                             </div>
-                            @error('newCarouselImages') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ $message }}</span> @enderror
-                            @error('newCarouselImages.*') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ $message }}</span> @enderror
+                            @error('newCarouselImages') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ str_replace('The new carousel images field is required.', 'Veuillez sélectionner au moins 2 images.', $message) }}</span> @enderror
+                            @error('newCarouselImages.*') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ str_replace(['The new carousel images', 'may not be greater than'], ['Une image', 'ne doit pas dépasser'], $message) }}</span> @enderror
                         </div>
                         <div class="flex items-center space-x-3">
                             <label class="relative inline-flex items-center cursor-pointer">

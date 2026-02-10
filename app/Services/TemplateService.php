@@ -169,7 +169,7 @@ class TemplateService
                 'description' => 'Galerie carrousel d\'images',
                 'category' => 'specialized',
                 'required_plan' => 'pro',
-                'header_style' => 'classic',
+                'header_style' => 'arch',
                 'transition' => 'wave',
                 'photo_style' => 'round_center',
                 'social_style' => 'circles',
