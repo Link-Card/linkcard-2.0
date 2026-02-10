@@ -121,8 +121,14 @@ Route::post('/admin/stop-impersonation', function () {
         return redirect()->route('dashboard');
     }
     
+    $admin = \App\Models\User::find($adminId);
+    if (!$admin || $admin->role !== 'super_admin') {
+        session()->forget('impersonating_from');
+        return redirect()->route('dashboard');
+    }
+    
     session()->forget('impersonating_from');
-    auth()->login(\App\Models\User::findOrFail($adminId));
+    auth()->login($admin);
     
     return redirect()->route('admin.dashboard');
 })->middleware('auth')->name('admin.stop-impersonation');

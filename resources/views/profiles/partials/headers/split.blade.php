@@ -25,7 +25,7 @@
                 </p>
             @endif
             @if($profile->phone)
-                <a href="tel:{{ $profile->phone }}" class="text-xs mt-3 hover:underline" style="opacity: 0.85; color: {{ $headerTextColor }};">{{ $profile->phone }}</a>
+                <a href="tel:{{ $profile->phone }}" class="text-xs mt-3 hover:underline" style="opacity: 0.85; color: {{ $headerTextColor }};">{{ $profile->formatted_phone }}</a>
             @endif
             @if($profile->email)
                 <a href="mailto:{{ $profile->email }}" class="text-xs mt-0.5 hover:underline" style="opacity: 0.85; color: {{ $headerTextColor }};">{{ $profile->email }}</a>

@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Models\User;
 use App\Models\Card;
 use App\Models\CardOrder;
@@ -13,6 +14,7 @@ use App\Mail\OrderShipped;
 
 class Dashboard extends Component
 {
+    use WithPagination;
     public string $activeTab = 'orders';
     public string $userSearch = '';
     public string $userSortField = 'created_at';
@@ -48,6 +50,12 @@ class Dashboard extends Component
             $this->userSortField = $field;
             $this->userSortDirection = $field === 'created_at' ? 'desc' : 'asc';
         }
+        $this->resetPage();
+    }
+
+    public function updatedUserSearch()
+    {
+        $this->resetPage();
     }
 
     public function startEdit($orderId)
@@ -419,11 +427,6 @@ class Dashboard extends Component
 
     public function render()
     {
-        // Auto-archive: shipped > 1 month ago
-        CardOrder::where('status', 'delivered')
-            ->where('updated_at', '<', now()->subMonth())
-            ->update(['status' => 'archived']);
-
         $proMonthly = User::where('plan', 'pro')->count() * 500;
         $premiumMonthly = User::where('plan', 'premium')->count() * 800;
 
@@ -458,7 +461,9 @@ class Dashboard extends Component
             ->orderByDesc('created_at')
             ->get();
 
-        $usersQuery = User::with('profiles')->withCount(['profiles', 'cards', 'cardOrders']);
+        $usersQuery = User::with('profiles')
+            ->withCount(['profiles', 'cards', 'cardOrders'])
+            ->withSum('profiles as total_views', 'view_count');
 
         // Search
         if ($this->userSearch) {
@@ -485,19 +490,12 @@ class Dashboard extends Component
         } elseif ($sortField === 'card_orders_count') {
             $usersQuery->orderBy('card_orders_count', $sortDir);
         } elseif ($sortField === 'total_views') {
-            $usersQuery->withSum('profiles as total_views', 'view_count')->orderBy('total_views', $sortDir);
+            $usersQuery->orderBy('total_views', $sortDir);
         } else {
             $usersQuery->orderByDesc('created_at');
         }
 
-        $users = $usersQuery->get();
-
-        // Add total views for each user
-        $users->each(function ($user) {
-            if (!isset($user->total_views)) {
-                $user->total_views = $user->profiles()->sum('view_count');
-            }
-        });
+        $users = $usersQuery->paginate(50);
 
         return view('livewire.admin.dashboard', [
             'stats' => $stats,

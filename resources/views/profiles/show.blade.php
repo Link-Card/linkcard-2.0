@@ -134,8 +134,8 @@
 <body class="min-h-screen" style="background: #F7F8F4;">
 
     @php
-        $primaryColor = $profile->primary_color ?? '#42B574';
-        $secondaryColor = $profile->secondary_color ?? '#2D7A4F';
+        $primaryColor = preg_match('/^#[a-fA-F0-9]{6}$/', $profile->primary_color ?? '') ? $profile->primary_color : '#42B574';
+        $secondaryColor = preg_match('/^#[a-fA-F0-9]{6}$/', $profile->secondary_color ?? '') ? $profile->secondary_color : '#2D7A4F';
         $profileUrl = url()->current();
         $userPlan = auth()->check() ? (auth()->user()->plan ?? 'free') : 'free';
         $canShowQR = in_array($userPlan, ['pro', 'premium']) || (auth()->check() && auth()->user()->role === 'super_admin');
