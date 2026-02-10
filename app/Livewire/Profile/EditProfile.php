@@ -36,6 +36,17 @@ class EditProfile extends Component
     public $newVideoUrl = '';
     public $newCtaLabel = '', $newCtaUrl = '', $newCtaIcon = '', $newCtaBgColor = '#42B574';
     public $newCarouselImages = [], $newCarouselAutoplay = true, $existingCarouselImages = [];
+    public $carouselFilesReceived = 0;
+
+    public function updatedNewCarouselImages()
+    {
+        // Track how many files Livewire actually received
+        $this->carouselFilesReceived = is_array($this->newCarouselImages) ? count($this->newCarouselImages) : 0;
+        \Log::info('Carousel upload received', [
+            'count' => $this->carouselFilesReceived,
+            'files' => collect($this->newCarouselImages)->map(fn($f) => $f?->getClientOriginalName())->toArray(),
+        ]);
+    }
 
     public function mount(Profile $profile)
     {
@@ -320,7 +331,7 @@ class EditProfile extends Component
     public function openAddBandModal($type = null)
     {
         $this->editingBandId = null;
-        $this->reset(['newBandType', 'newSocialPlatform', 'newSocialUrl', 'newImages', 'newImageLink', 'newTextContent', 'currentImagePaths', 'newVideoUrl', 'newCtaLabel', 'newCtaUrl', 'newCtaIcon', 'newCtaBgColor', 'newCarouselImages', 'newCarouselAutoplay', 'existingCarouselImages']);
+        $this->reset(['newBandType', 'newSocialPlatform', 'newSocialUrl', 'newImages', 'newImageLink', 'newTextContent', 'currentImagePaths', 'newVideoUrl', 'newCtaLabel', 'newCtaUrl', 'newCtaIcon', 'newCtaBgColor', 'newCarouselImages', 'newCarouselAutoplay', 'existingCarouselImages', 'carouselFilesReceived']);
         if ($type) {
             $available = $this->getAvailableBandTypes();
             if (isset($available[$type]) && !$available[$type]['available']) {
@@ -381,7 +392,7 @@ class EditProfile extends Component
     {
         $this->showAddBandModal = false;
         $this->editingBandId = null;
-        $this->reset(['newBandType', 'newSocialPlatform', 'newSocialUrl', 'newImages', 'newImageLink', 'newTextContent', 'currentImagePaths', 'newVideoUrl', 'newCtaLabel', 'newCtaUrl', 'newCtaIcon', 'newCtaBgColor', 'newCarouselImages', 'newCarouselAutoplay', 'existingCarouselImages']);
+        $this->reset(['newBandType', 'newSocialPlatform', 'newSocialUrl', 'newImages', 'newImageLink', 'newTextContent', 'currentImagePaths', 'newVideoUrl', 'newCtaLabel', 'newCtaUrl', 'newCtaIcon', 'newCtaBgColor', 'newCarouselImages', 'newCarouselAutoplay', 'existingCarouselImages', 'carouselFilesReceived']);
     }
 
     // ========== DELETE (using trait) ==========
@@ -559,20 +570,27 @@ class EditProfile extends Component
 
     public function addImageCarousel()
     {
+        \Log::info('addImageCarousel called', [
+            'newCarouselImages_type' => gettype($this->newCarouselImages),
+            'newCarouselImages_count' => is_array($this->newCarouselImages) ? count($this->newCarouselImages) : 'not_array',
+            'editingBandId' => $this->editingBandId,
+            'carouselFilesReceived' => $this->carouselFilesReceived,
+        ]);
+
         $rules = ['newCarouselAutoplay' => 'boolean'];
         $messages = [
-            'newCarouselImages.required' => 'Veuillez sélectionner au moins 2 images. Si l\'upload a échoué, essayez avec moins de fichiers.',
+            'newCarouselImages.required' => 'Les fichiers n\'ont pas été reçus. Essayez avec moins d\'images (3-4 à la fois) ou des fichiers plus petits.',
             'newCarouselImages.min' => 'Un carrousel nécessite au moins 2 images.',
             'newCarouselImages.max' => 'Maximum 12 images par carrousel.',
-            'newCarouselImages.*.image' => 'Chaque fichier doit être une image (JPG, PNG, etc.).',
+            'newCarouselImages.*.mimes' => 'Format accepté : JPG, PNG, GIF, WebP.',
             'newCarouselImages.*.max' => 'Chaque image ne doit pas dépasser 20 MB.',
         ];
         if (!$this->editingBandId) {
             $rules['newCarouselImages'] = 'required|array|min:2|max:12';
-            $rules['newCarouselImages.*'] = 'image|max:20480';
+            $rules['newCarouselImages.*'] = 'mimes:jpeg,jpg,png,gif,webp,avif,bmp|max:20480';
         } else {
             $rules['newCarouselImages'] = 'nullable|array|max:12';
-            $rules['newCarouselImages.*'] = 'image|max:20480';
+            $rules['newCarouselImages.*'] = 'mimes:jpeg,jpg,png,gif,webp,avif,bmp|max:20480';
         }
         $this->validate($rules, $messages);
 

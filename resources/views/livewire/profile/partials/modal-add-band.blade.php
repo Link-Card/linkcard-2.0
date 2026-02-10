@@ -358,16 +358,16 @@
                             <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="font-family: 'Manrope', sans-serif; color: #4B5563;">
                                 {{ $editingBandId ? 'Ajouter des images' : 'Images (2-12)' }}
                             </label>
-                            <div x-data="{ carouselProgress: 0, carouselUploading: false, carouselError: false }"
-                                 x-on:livewire-upload-start="carouselUploading = true; carouselProgress = 0; carouselError = false"
-                                 x-on:livewire-upload-finish="carouselUploading = false; carouselProgress = 100"
+                            <div x-data="{ carouselProgress: 0, carouselUploading: false, carouselError: false, carouselDone: false }"
+                                 x-on:livewire-upload-start="carouselUploading = true; carouselProgress = 0; carouselError = false; carouselDone = false"
+                                 x-on:livewire-upload-finish="carouselUploading = false; carouselDone = true"
                                  x-on:livewire-upload-cancel="carouselUploading = false; carouselProgress = 0"
                                  x-on:livewire-upload-error="carouselUploading = false; carouselProgress = 0; carouselError = true"
                                  x-on:livewire-upload-progress="carouselProgress = $event.detail.progress">
-                                <input type="file" wire:model="newCarouselImages" accept="image/*" multiple class="w-full text-sm rounded-lg" style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; padding: 8px 12px;">
-                                <p class="text-xs mt-1" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Min 2, max 12 images · 20 MB chacune</p>
+                                <input type="file" wire:model="newCarouselImages" accept="image/jpeg,image/png,image/gif,image/webp" multiple class="w-full text-sm rounded-lg" style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; padding: 8px 12px;">
+                                <p class="text-xs mt-1" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Min 2, max 12 images · JPG, PNG, WebP · 20 MB max chacune</p>
                                 <div x-show="carouselError" x-cloak class="mt-2 p-2 rounded-lg text-xs" style="background: #FEF2F2; color: #EF4444; font-family: 'Manrope', sans-serif;">
-                                    Échec de l'upload. Les fichiers sont peut-être trop volumineux. Essayez moins d'images à la fois ou réduisez leur taille.
+                                    ⚠️ Échec de l'upload. Essayez avec moins d'images à la fois (3-4) ou des fichiers plus petits.
                                 </div>
                                 <div x-show="carouselUploading" x-cloak class="mt-2">
                                     <div class="flex items-center justify-between mb-1">
@@ -378,9 +378,15 @@
                                         <div class="h-full rounded-full transition-all duration-300" :style="'background: #42B574; width: ' + carouselProgress + '%'"></div>
                                     </div>
                                 </div>
+                                @if($carouselFilesReceived > 0)
+                                    <div class="mt-2 p-2 rounded-lg text-xs flex items-center space-x-1" style="background: #F0F9F4; color: #42B574; font-family: 'Manrope', sans-serif;">
+                                        <svg class="w-4 h-4 flex-shrink-0" fill="#42B574" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                        <span>{{ $carouselFilesReceived }} image(s) prête(s)</span>
+                                    </div>
+                                @endif
                             </div>
-                            @error('newCarouselImages') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ str_replace('The new carousel images field is required.', 'Veuillez sélectionner au moins 2 images.', $message) }}</span> @enderror
-                            @error('newCarouselImages.*') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ str_replace(['The new carousel images', 'may not be greater than'], ['Une image', 'ne doit pas dépasser'], $message) }}</span> @enderror
+                            @error('newCarouselImages') <span class="text-xs mt-1 block" style="color: #EF4444; font-family: 'Manrope', sans-serif;">{{ $message }}</span> @enderror
+                            @error('newCarouselImages.*') <span class="text-xs mt-1 block" style="color: #EF4444; font-family: 'Manrope', sans-serif;">{{ $message }}</span> @enderror
                         </div>
                         <div class="flex items-center space-x-3">
                             <label class="relative inline-flex items-center cursor-pointer">
@@ -389,8 +395,9 @@
                             </label>
                             <span class="text-sm" style="font-family: 'Manrope', sans-serif; color: #4B5563;">Défilement automatique</span>
                         </div>
-                        <button wire:click="addImageCarousel" class="w-full py-2.5 text-white rounded-lg font-medium text-sm transition-all duration-200" style="font-family: 'Manrope', sans-serif; background: #42B574;" onmouseover="this.style.background='#3DA367'" onmouseout="this.style.background='#42B574'">
-                            {{ $editingBandId ? 'Enregistrer' : 'Ajouter' }}
+                        <button wire:click="addImageCarousel" wire:loading.attr="disabled" class="w-full py-2.5 text-white rounded-lg font-medium text-sm transition-all duration-200 disabled:opacity-50" style="font-family: 'Manrope', sans-serif; background: #42B574;" onmouseover="this.style.background='#3DA367'" onmouseout="this.style.background='#42B574'">
+                            <span wire:loading.remove wire:target="addImageCarousel">{{ $editingBandId ? 'Enregistrer' : 'Ajouter' }}</span>
+                            <span wire:loading wire:target="addImageCarousel">Enregistrement...</span>
                         </button>
                     </div>
                 @endif
