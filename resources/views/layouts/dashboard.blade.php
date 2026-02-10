@@ -26,7 +26,12 @@
 <body style="font-family: 'Manrope', system-ui, sans-serif; background-color: #F7F8F4; overflow: hidden; height: 100dvh; display: flex; flex-direction: column;" x-data="{ sidebarOpen: false }">
     <style>
         @media (max-width: 1023px) {
-            body { overflow: auto !important; height: auto !important; }
+            body {
+                overflow-y: auto !important;
+                height: auto !important;
+                min-height: 100dvh;
+            }
+            .flex-wrapper-scroll { overflow: visible !important; flex: none !important; }
             #main-content { overflow: visible !important; }
         }
     </style>
@@ -47,7 +52,7 @@
     @endif
 
     {{-- Mobile top bar --}}
-    <div id="mobile-header" class="lg:hidden fixed left-0 right-0 z-40 flex items-center justify-between px-4 py-3" style="background-color: #2C2A27; top: 0;">>
+    <div id="mobile-header" class="lg:hidden fixed left-0 right-0 z-40 flex items-center justify-between px-4 py-3" style="background-color: #2C2A27; top: 0;">
         <div class="flex items-center space-x-3">
             <img src="{{ asset('images/logo-blanc.png') }}" alt="Link-Card" class="h-8 w-auto">
             <span class="text-white font-semibold">Link-Card</span>
@@ -69,7 +74,7 @@
          x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
     </div>
 
-    <div class="flex flex-1 overflow-hidden">
+    <div class="flex flex-1 overflow-hidden flex-wrapper-scroll">
         {{-- Sidebar --}}
         <aside class="fixed lg:static inset-y-0 left-0 z-50 w-64 flex flex-col transform transition-transform duration-200 ease-in-out lg:transform-none"
                :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
