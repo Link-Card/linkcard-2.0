@@ -378,10 +378,14 @@
                                         <div class="h-full rounded-full transition-all duration-300" :style="'background: #42B574; width: ' + carouselProgress + '%'"></div>
                                     </div>
                                 </div>
+                                <div x-show="carouselDone && {{ $carouselFilesReceived }} === 0" x-cloak class="mt-2 p-2 rounded-lg text-xs flex items-center space-x-2" style="background: #F0F9F4; color: #42B574; font-family: 'Manrope', sans-serif;">
+                                    <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                                    <span>Traitement des images...</span>
+                                </div>
                                 @if($carouselFilesReceived > 0)
                                     <div class="mt-2 p-2 rounded-lg text-xs flex items-center space-x-1" style="background: #F0F9F4; color: #42B574; font-family: 'Manrope', sans-serif;">
                                         <svg class="w-4 h-4 flex-shrink-0" fill="#42B574" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                                        <span>{{ $carouselFilesReceived }} image(s) prête(s)</span>
+                                        <span>✅ {{ $carouselFilesReceived }} image(s) prête(s) — vous pouvez cliquer Ajouter</span>
                                     </div>
                                 @endif
                             </div>
