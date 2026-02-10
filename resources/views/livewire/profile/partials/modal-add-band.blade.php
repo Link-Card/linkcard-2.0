@@ -149,8 +149,8 @@
                                     <svg class="w-5 h-5" fill="#42B574" viewBox="0 0 24 24"><path d="M19 7H5c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm0 8H5V9h14v6z"/></svg>
                                 </span>
                                 <div>
-                                    <p class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">Bouton CTA</p>
-                                    <p class="text-xs" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Lien externe avec icône · {{ $availableTypes['cta_button']['remaining'] }} restant(s)</p>
+                                    <p class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">Bouton</p>
+                                    <p class="text-xs" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Lien externe personnalisé · {{ $availableTypes['cta_button']['remaining'] }} restant(s)</p>
                                 </div>
                             </div>
                         </button>
@@ -161,7 +161,7 @@
                                     <svg class="w-5 h-5" fill="#9CA3AF" viewBox="0 0 24 24"><path d="M19 7H5c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm0 8H5V9h14v6z"/></svg>
                                 </span>
                                 <div class="flex-1">
-                                    <p class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Bouton CTA</p>
+                                    <p class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Bouton</p>
                                     <p class="text-xs" style="font-family: 'Manrope', sans-serif; color: #F59E0B;">Disponible avec PRO ou PREMIUM</p>
                                 </div>
                             </div>
@@ -188,7 +188,7 @@
                             @elseif($newBandType === 'text_block') du texte
                             @elseif($newBandType === 'video_embed') une vidéo
                             @elseif($newBandType === 'image_carousel') un carrousel
-                            @elseif($newBandType === 'cta_button') un bouton CTA
+                            @elseif($newBandType === 'cta_button') un bouton
                             @endif
                         </h3>
                     </div>
@@ -344,7 +344,7 @@
                                 {{ $editingBandId ? 'Ajouter des images' : 'Images (2-12)' }}
                             </label>
                             <input type="file" wire:model="newCarouselImages" accept="image/*" multiple class="w-full text-sm rounded-lg" style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; padding: 8px 12px;">
-                            <p class="text-xs mt-1" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Min 2, max 12 images · 10 MB chacune</p>
+                            <p class="text-xs mt-1" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Min 2, max 12 images · 20 MB chacune</p>
                             <div wire:loading wire:target="newCarouselImages" class="flex items-center space-x-1 mt-1">
                                 <svg class="animate-spin h-3 w-3" style="color: #42B574;" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" opacity="0.25"/><path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
                                 <span class="text-xs" style="color: #9CA3AF;">Upload...</span>
@@ -369,22 +369,35 @@
                 @if($newBandType === 'cta_button')
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="font-family: 'Manrope', sans-serif; color: #4B5563;">Icône (emoji)</label>
-                            <div class="flex gap-2 flex-wrap">
-                                @foreach(['🔗', '📅', '🛒', '📞', '📧', '💬', '🎯', '📍', '🎟️', '📝'] as $emoji)
-                                    <button wire:click="$set('newCtaIcon', '{{ $emoji }}')" class="w-10 h-10 rounded-lg text-lg flex items-center justify-center transition-all" style="border: 1.5px solid {{ $newCtaIcon === $emoji ? '#42B574' : '#E5E7EB' }}; background: {{ $newCtaIcon === $emoji ? '#F0F9F4' : 'white' }};">{{ $emoji }}</button>
-                                @endforeach
-                            </div>
-                        </div>
-                        <div>
                             <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="font-family: 'Manrope', sans-serif; color: #4B5563;">Texte du bouton</label>
                             <input type="text" wire:model="newCtaLabel" maxlength="60" placeholder="Réserver une consultation" class="w-full px-4 py-2.5 rounded-lg" style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; font-size: 14px;" onfocus="this.style.borderColor='#42B574'" onblur="this.style.borderColor='#D1D5DB'">
                             @error('newCtaLabel') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="font-family: 'Manrope', sans-serif; color: #4B5563;">URL de destination</label>
-                            <input type="url" wire:model="newCtaUrl" placeholder="https://calendly.com/..." class="w-full px-4 py-2.5 rounded-lg" style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; font-size: 14px;" onfocus="this.style.borderColor='#42B574'" onblur="this.style.borderColor='#D1D5DB'">
+                            <input type="text" wire:model="newCtaUrl" placeholder="calendly.com/mon-lien" class="w-full px-4 py-2.5 rounded-lg" style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; font-size: 14px;" onfocus="this.style.borderColor='#42B574'" onblur="this.style.borderColor='#D1D5DB'">
+                            <p class="text-xs mt-1" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">https:// sera ajouté automatiquement</p>
                             @error('newCtaUrl') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="font-family: 'Manrope', sans-serif; color: #4B5563;">Couleur du bouton</label>
+                            <div class="flex items-center gap-3">
+                                <input type="color" wire:model.live="newCtaBgColor" class="w-10 h-10 rounded-lg cursor-pointer border-0 p-0" style="background: transparent;">
+                                <input type="text" wire:model.live="newCtaBgColor" class="flex-1 px-3 py-2 rounded-lg text-sm font-mono" style="border: 1.5px solid #D1D5DB;" onfocus="this.style.borderColor='#42B574'" onblur="this.style.borderColor='#D1D5DB'">
+                            </div>
+                            {{-- Preview --}}
+                            <div class="mt-2 p-3 rounded-lg text-center text-sm font-medium transition-all" style="background: {{ $newCtaBgColor ?? '#42B574' }}; color: {{ (function() { $hex = ltrim($newCtaBgColor ?? '#42B574', '#'); if (strlen($hex) !== 6) return '#FFFFFF'; $r = hexdec(substr($hex, 0, 2)); $g = hexdec(substr($hex, 2, 2)); $b = hexdec(substr($hex, 4, 2)); return ((0.299 * $r + 0.587 * $g + 0.114 * $b) / 255 > 0.6) ? '#2C2A27' : '#FFFFFF'; })() }}; border-radius: 12px; font-family: 'Manrope', sans-serif;">
+                                {{ $newCtaIcon ? $newCtaIcon . ' ' : '' }}{{ $newCtaLabel ?: 'Aperçu du bouton' }}
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="font-family: 'Manrope', sans-serif; color: #4B5563;">Icône (optionnel)</label>
+                            <div class="flex gap-2 flex-wrap">
+                                <button wire:click="$set('newCtaIcon', '')" class="w-10 h-10 rounded-lg text-xs flex items-center justify-center transition-all" style="border: 1.5px solid {{ $newCtaIcon === '' ? '#42B574' : '#E5E7EB' }}; background: {{ $newCtaIcon === '' ? '#F0F9F4' : 'white' }}; font-family: 'Manrope', sans-serif; color: #9CA3AF;">Ø</button>
+                                @foreach(['📅', '🛒', '📞', '📧', '💬', '🎯', '📍', '🎟️', '📝', '🔗'] as $emoji)
+                                    <button wire:click="$set('newCtaIcon', '{{ $emoji }}')" class="w-10 h-10 rounded-lg text-lg flex items-center justify-center transition-all" style="border: 1.5px solid {{ $newCtaIcon === $emoji ? '#42B574' : '#E5E7EB' }}; background: {{ $newCtaIcon === $emoji ? '#F0F9F4' : 'white' }};">{{ $emoji }}</button>
+                                @endforeach
+                            </div>
                         </div>
                         <button wire:click="addCtaButton" class="w-full py-2.5 text-white rounded-lg font-medium text-sm transition-all duration-200" style="font-family: 'Manrope', sans-serif; background: #42B574;" onmouseover="this.style.background='#3DA367'" onmouseout="this.style.background='#42B574'">
                             {{ $editingBandId ? 'Enregistrer' : 'Ajouter' }}

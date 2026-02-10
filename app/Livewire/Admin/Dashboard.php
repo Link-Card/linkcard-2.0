@@ -14,6 +14,8 @@ use App\Mail\OrderShipped;
 class Dashboard extends Component
 {
     public string $activeTab = 'orders';
+    public string $userSearch = '';
+    public string $userSort = 'newest';
 
     // Order editing
     public ?int $editingOrderId = null;
@@ -445,9 +447,36 @@ class Dashboard extends Component
             ->orderByDesc('created_at')
             ->get();
 
-        $users = User::withCount(['profiles', 'cards', 'cardOrders'])
-            ->orderByDesc('created_at')
-            ->get();
+        $usersQuery = User::with('profiles')->withCount(['profiles', 'cards', 'cardOrders']);
+
+        // Search
+        if ($this->userSearch) {
+            $search = $this->userSearch;
+            $usersQuery->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhereHas('profiles', function ($pq) use ($search) {
+                      $pq->where('username', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        // Sort
+        $usersQuery = match ($this->userSort) {
+            'oldest' => $usersQuery->orderBy('created_at', 'asc'),
+            'most_views' => $usersQuery->withSum('profiles as total_views', 'view_count')->orderByDesc('total_views'),
+            'least_views' => $usersQuery->withSum('profiles as total_views', 'view_count')->orderBy('total_views'),
+            default => $usersQuery->orderByDesc('created_at'),
+        };
+
+        $users = $usersQuery->get();
+
+        // Add total views for each user
+        $users->each(function ($user) {
+            if (!isset($user->total_views)) {
+                $user->total_views = $user->profiles()->sum('view_count');
+            }
+        });
 
         return view('livewire.admin.dashboard', [
             'stats' => $stats,

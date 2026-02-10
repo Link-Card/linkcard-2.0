@@ -381,14 +381,19 @@
                         @endif
 
                     @elseif($band->type === 'cta_button')
-                        <!-- Bouton CTA personnalisé -->
+                        <!-- Bouton personnalisé -->
                         @php
-                            $btnColor = $profile->button_color ?? $secondaryColor;
+                            $btnBg = $band->data['bg_color'] ?? $profile->button_color ?? $secondaryColor;
+                            $bHex = ltrim($btnBg, '#');
+                            if (strlen($bHex) === 6) {
+                                $bR = hexdec(substr($bHex, 0, 2)); $bG = hexdec(substr($bHex, 2, 2)); $bB = hexdec(substr($bHex, 4, 2));
+                                $btnTextColor = ((0.299 * $bR + 0.587 * $bG + 0.114 * $bB) / 255 > 0.6) ? '#2C2A27' : '#FFFFFF';
+                            } else { $btnTextColor = '#FFFFFF'; }
                         @endphp
                         <a href="{{ $band->data['url'] ?? '#' }}" target="_blank" rel="noopener"
                            data-band-id="{{ $band->id }}" data-band-url="{{ $band->data['url'] ?? '' }}"
-                           class="flex items-center justify-center space-x-2 w-full py-3.5 px-5 text-white text-center rounded-xl font-semibold text-sm shadow-md transition-all duration-200 trackable-link"
-                           style="background: {{ $btnColor }};"
+                           class="flex items-center justify-center space-x-2 w-full py-3.5 px-5 text-center rounded-xl font-semibold text-sm shadow-md transition-all duration-200 trackable-link"
+                           style="background: {{ $btnBg }}; color: {{ $btnTextColor }};"
                            onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-1px)'"
                            onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)'">
                             @if(!empty($band->data['icon']))

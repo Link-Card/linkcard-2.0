@@ -10,7 +10,7 @@ class ProfileController extends Controller
 {
     public function show($username)
     {
-        $profile = Profile::where('username', $username)
+        $profile = Profile::whereRaw('LOWER(username) = ?', [strtolower($username)])
             ->with(['contentBands' => function($query) {
                 $query->where('is_hidden', false)->orderBy('order');
             }])
@@ -81,6 +81,31 @@ class ProfileController extends Controller
 
     public function downloadVcard(Profile $profile)
     {
+        // Track vCard download as a link click
+        try {
+            $ipHash = hash('sha256', request()->ip() . config('app.key'));
+            $contactBand = $profile->contentBands()->where('type', 'contact_button')->first();
+            
+            $recentClick = \App\Models\LinkClick::where('profile_id', $profile->id)
+                ->where('platform', 'vcard_download')
+                ->where('ip_hash', $ipHash)
+                ->where('clicked_at', '>', now()->subMinutes(5))
+                ->exists();
+
+            if (!$recentClick) {
+                \App\Models\LinkClick::create([
+                    'profile_id' => $profile->id,
+                    'content_band_id' => $contactBand?->id,
+                    'platform' => 'vcard_download',
+                    'url' => route('profile.vcard', $profile),
+                    'ip_hash' => $ipHash,
+                    'clicked_at' => now(),
+                ]);
+            }
+        } catch (\Exception $e) {
+            // Ne jamais bloquer le téléchargement pour un problème de tracking
+        }
+
         $vcard = "BEGIN:VCARD\n";
         $vcard .= "VERSION:3.0\n";
         $vcard .= "FN:" . $profile->full_name . "\n";

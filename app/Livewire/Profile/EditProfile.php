@@ -34,7 +34,7 @@ class EditProfile extends Component
 
     // Nouveaux types de bandes (Sprint 7 Phase 5)
     public $newVideoUrl = '';
-    public $newCtaLabel = '', $newCtaUrl = '', $newCtaIcon = '🔗';
+    public $newCtaLabel = '', $newCtaUrl = '', $newCtaIcon = '', $newCtaBgColor = '#42B574';
     public $newCarouselImages = [], $newCarouselAutoplay = true, $existingCarouselImages = [];
 
     public function mount(Profile $profile)
@@ -320,7 +320,7 @@ class EditProfile extends Component
     public function openAddBandModal($type = null)
     {
         $this->editingBandId = null;
-        $this->reset(['newBandType', 'newSocialPlatform', 'newSocialUrl', 'newImages', 'newImageLink', 'newTextContent', 'currentImagePaths', 'newVideoUrl', 'newCtaLabel', 'newCtaUrl', 'newCtaIcon', 'newCarouselImages', 'newCarouselAutoplay', 'existingCarouselImages']);
+        $this->reset(['newBandType', 'newSocialPlatform', 'newSocialUrl', 'newImages', 'newImageLink', 'newTextContent', 'currentImagePaths', 'newVideoUrl', 'newCtaLabel', 'newCtaUrl', 'newCtaIcon', 'newCtaBgColor', 'newCarouselImages', 'newCarouselAutoplay', 'existingCarouselImages']);
         if ($type) {
             $available = $this->getAvailableBandTypes();
             if (isset($available[$type]) && !$available[$type]['available']) {
@@ -368,7 +368,8 @@ class EditProfile extends Component
         } elseif ($band->type === 'cta_button') {
             $this->newCtaLabel = $band->data['label'] ?? '';
             $this->newCtaUrl = $band->data['url'] ?? '';
-            $this->newCtaIcon = $band->data['icon'] ?? '🔗';
+            $this->newCtaIcon = $band->data['icon'] ?? '';
+            $this->newCtaBgColor = $band->data['bg_color'] ?? '#42B574';
         } elseif ($band->type === 'image_carousel') {
             $this->existingCarouselImages = $band->data['images'] ?? [];
             $this->newCarouselAutoplay = $band->data['autoplay'] ?? true;
@@ -380,7 +381,7 @@ class EditProfile extends Component
     {
         $this->showAddBandModal = false;
         $this->editingBandId = null;
-        $this->reset(['newBandType', 'newSocialPlatform', 'newSocialUrl', 'newImages', 'newImageLink', 'newTextContent', 'currentImagePaths', 'newVideoUrl', 'newCtaLabel', 'newCtaUrl', 'newCtaIcon', 'newCarouselImages', 'newCarouselAutoplay', 'existingCarouselImages']);
+        $this->reset(['newBandType', 'newSocialPlatform', 'newSocialUrl', 'newImages', 'newImageLink', 'newTextContent', 'currentImagePaths', 'newVideoUrl', 'newCtaLabel', 'newCtaUrl', 'newCtaIcon', 'newCtaBgColor', 'newCarouselImages', 'newCarouselAutoplay', 'existingCarouselImages']);
     }
 
     // ========== DELETE (using trait) ==========
@@ -561,10 +562,10 @@ class EditProfile extends Component
         $rules = ['newCarouselAutoplay' => 'boolean'];
         if (!$this->editingBandId) {
             $rules['newCarouselImages'] = 'required|array|min:2|max:12';
-            $rules['newCarouselImages.*'] = 'image|max:10240';
+            $rules['newCarouselImages.*'] = 'image|max:20480';
         } else {
             $rules['newCarouselImages'] = 'nullable|array|max:12';
-            $rules['newCarouselImages.*'] = 'image|max:10240';
+            $rules['newCarouselImages.*'] = 'image|max:20480';
         }
         $this->validate($rules);
 
@@ -612,13 +613,24 @@ class EditProfile extends Component
 
     public function addCtaButton()
     {
+        // Auto-prefix https://
+        if ($this->newCtaUrl && !preg_match('~^(?:f|ht)tps?://~i', $this->newCtaUrl)) {
+            $this->newCtaUrl = 'https://' . $this->newCtaUrl;
+        }
+
         $this->validate([
             'newCtaLabel' => 'required|string|max:60',
             'newCtaUrl' => 'required|url',
             'newCtaIcon' => 'nullable|string|max:10',
+            'newCtaBgColor' => 'required|string|max:20',
         ]);
 
-        $data = ['label' => $this->newCtaLabel, 'url' => $this->newCtaUrl, 'icon' => $this->newCtaIcon ?: '🔗'];
+        $data = [
+            'label' => $this->newCtaLabel,
+            'url' => $this->newCtaUrl,
+            'icon' => $this->newCtaIcon ?: '',
+            'bg_color' => $this->newCtaBgColor ?: '#42B574',
+        ];
 
         if ($this->editingBandId) {
             ContentBand::findOrFail($this->editingBandId)->update(['data' => $data]);

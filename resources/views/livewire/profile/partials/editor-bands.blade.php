@@ -77,7 +77,7 @@
                                 @elseif($band['type'] === 'text_block') {{ Str::limit($band['data']['text'] ?? 'Texte', 30) }}
                                 @elseif($band['type'] === 'video_embed') Vidéo {{ ucfirst($band['data']['platform'] ?? '') }}
                                 @elseif($band['type'] === 'image_carousel') Carrousel ({{ count($band['data']['images'] ?? []) }} images)
-                                @elseif($band['type'] === 'cta_button') {{ $band['data']['icon'] ?? '🔗' }} {{ $band['data']['label'] ?? 'Bouton CTA' }}
+                                @elseif($band['type'] === 'cta_button') {{ $band['data']['icon'] ?? '🔗' }} {{ $band['data']['label'] ?? 'Bouton' }}
                                 @endif
                             </span>
                             @if($isHidden)

@@ -146,8 +146,17 @@
                             </div>
 
                         @elseif($band['type'] === 'cta_button')
-                            <div class="flex items-center justify-center space-x-2 w-full py-3.5 px-5 text-white text-center rounded-xl font-semibold text-sm shadow-md"
-                                 style="font-family: 'Manrope', sans-serif; background: {{ $profile->button_color ?? $secondary_color }};">
+                            @php
+                                $pBtnBg = $band['data']['bg_color'] ?? $profile->button_color ?? $secondary_color;
+                                $pHex = ltrim($pBtnBg, '#');
+                                $pBtnText = '#FFFFFF';
+                                if (strlen($pHex) === 6) {
+                                    $pR = hexdec(substr($pHex, 0, 2)); $pG = hexdec(substr($pHex, 2, 2)); $pB = hexdec(substr($pHex, 4, 2));
+                                    $pBtnText = ((0.299 * $pR + 0.587 * $pG + 0.114 * $pB) / 255 > 0.6) ? '#2C2A27' : '#FFFFFF';
+                                }
+                            @endphp
+                            <div class="flex items-center justify-center space-x-2 w-full py-3.5 px-5 text-center rounded-xl font-semibold text-sm shadow-md"
+                                 style="font-family: 'Manrope', sans-serif; background: {{ $pBtnBg }}; color: {{ $pBtnText }};">
                                 @if(!empty($band['data']['icon']))<span>{{ $band['data']['icon'] }}</span>@endif
                                 <span>{{ $band['data']['label'] ?? 'Lien' }}</span>
                             </div>

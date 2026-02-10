@@ -13,7 +13,7 @@
 <p>Pour toute question ou demande relative à vos renseignements personnels :</p>
 <p><strong>Responsable :</strong> Mathieu Corbeil<br>
 <strong>Courriel :</strong> <a href="mailto:privacy@linkcard.ca">privacy@linkcard.ca</a><br>
-<strong>Adresse :</strong> Link-Card inc., Saint-Pierre-les-Becquets, QC, Canada</p>
+<strong>Adresse :</strong> Link-Card inc., Saint-Alexis-Des-Monts, QC, Canada</p>
 
 <h2>3. Renseignements recueillis</h2>
 

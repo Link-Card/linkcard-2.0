@@ -212,6 +212,20 @@
         @endif
     @endif
 
+    {{-- Search & Sort --}}
+    <div class="p-4 flex flex-col sm:flex-row gap-3" style="border-bottom: 1px solid #E5E7EB;">
+        <div class="flex-1 relative">
+            <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2" style="color: #9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input type="text" wire:model.live.debounce.300ms="userSearch" placeholder="Rechercher par nom, email ou URL profil..." class="w-full pl-10 pr-4 py-2 text-sm rounded-lg" style="border: 1.5px solid #D1D5DB; font-family: 'Manrope', sans-serif;" onfocus="this.style.borderColor='#42B574'" onblur="this.style.borderColor='#D1D5DB'">
+        </div>
+        <select wire:model.live="userSort" class="px-3 py-2 text-sm rounded-lg" style="border: 1.5px solid #D1D5DB; font-family: 'Manrope', sans-serif; color: #4B5563;">
+            <option value="newest">Plus récent</option>
+            <option value="oldest">Plus ancien</option>
+            <option value="most_views">Plus de vues</option>
+            <option value="least_views">Moins de vues</option>
+        </select>
+    </div>
+
     {{-- Mobile: Cards --}}
     <div class="md:hidden divide-y" style="border-color: #E5E7EB;">
         @foreach($users as $user)
@@ -222,7 +236,12 @@
                             {{ strtoupper(substr($user->name, 0, 1)) }}
                         </div>
                         <div>
-                            <p class="text-sm font-medium" style="color: #2C2A27;">{{ $user->name }}</p>
+                            @php $mFirstProfile = $user->profiles->first(); @endphp
+                            @if($mFirstProfile)
+                                <a href="{{ route('profile.public', $mFirstProfile->username) }}" target="_blank" class="text-sm font-medium hover:underline" style="color: #2C2A27;">{{ $user->name }}</a>
+                            @else
+                                <p class="text-sm font-medium" style="color: #2C2A27;">{{ $user->name }}</p>
+                            @endif
                             <p class="text-xs" style="color: #9CA3AF;">{{ $user->email }}</p>
                         </div>
                     </div>
@@ -289,6 +308,7 @@
                     <span>{{ $user->profiles_count }} profil(s)</span>
                     <span>{{ $user->cards_count }} carte(s)</span>
                     <span>{{ $user->card_orders_count }} cmd</span>
+                    <span>{{ $user->total_views ?? 0 }} vues</span>
                 </div>
             </div>
         @endforeach
@@ -307,6 +327,7 @@
                     <th class="text-left px-4 py-3 text-xs font-medium" style="color: #4B5563;">Profils</th>
                     <th class="text-left px-4 py-3 text-xs font-medium" style="color: #4B5563;">Cartes</th>
                     <th class="text-left px-4 py-3 text-xs font-medium" style="color: #4B5563;">Commandes</th>
+                    <th class="text-left px-4 py-3 text-xs font-medium" style="color: #4B5563;">Vues</th>
                     <th class="text-left px-4 py-3 text-xs font-medium" style="color: #4B5563;">Inscrit le</th>
                     <th class="text-right px-4 py-3 text-xs font-medium" style="color: #4B5563;">Actions</th>
                 </tr>
@@ -320,7 +341,12 @@
                                 <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold text-white" style="background-color: #42B574;">
                                     {{ strtoupper(substr($user->name, 0, 1)) }}
                                 </div>
-                                <span class="text-sm font-medium" style="color: #2C2A27;">{{ $user->name }}</span>
+                                @php $firstProfile = $user->profiles->first(); @endphp
+                                @if($firstProfile)
+                                    <a href="{{ route('profile.public', $firstProfile->username) }}" target="_blank" class="text-sm font-medium hover:underline" style="color: #2C2A27;">{{ $user->name }}</a>
+                                @else
+                                    <span class="text-sm font-medium" style="color: #2C2A27;">{{ $user->name }}</span>
+                                @endif
                             </div>
                         </td>
                         <td class="px-4 py-3 text-sm" style="color: #4B5563;">{{ $user->email }}</td>
@@ -361,6 +387,7 @@
                         <td class="px-4 py-3 text-sm text-center" style="color: #2C2A27;">{{ $user->profiles_count }}</td>
                         <td class="px-4 py-3 text-sm text-center" style="color: #2C2A27;">{{ $user->cards_count }}</td>
                         <td class="px-4 py-3 text-sm text-center" style="color: #2C2A27;">{{ $user->card_orders_count }}</td>
+                        <td class="px-4 py-3 text-sm text-center" style="color: #2C2A27;">{{ $user->total_views ?? 0 }}</td>
                         <td class="px-4 py-3 text-xs" style="color: #9CA3AF;">{{ $user->created_at->format('d/m/Y') }}</td>
                         <td class="px-4 py-3 text-right">
                             @if($user->role !== 'super_admin' && $user->role !== 'admin')
