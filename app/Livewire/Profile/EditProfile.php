@@ -37,31 +37,11 @@ class EditProfile extends Component
     public $newCtaLabel = '', $newCtaUrl = '', $newCtaIcon = '', $newCtaBgColor = '#42B574';
     public $newCarouselImages = [], $newCarouselAutoplay = true, $existingCarouselImages = [];
     public $carouselFilesReceived = 0;
-    public $stagedCarouselPaths = []; // Fichiers déjà stockés en staging
 
     public function updatedNewCarouselImages()
     {
-        // Immédiatement stocker les fichiers dès qu'ils arrivent (avant que Livewire perde la référence)
-        if (!empty($this->newCarouselImages) && is_array($this->newCarouselImages)) {
-            foreach ($this->newCarouselImages as $img) {
-                try {
-                    // Valider chaque fichier individuellement
-                    if ($img && method_exists($img, 'store')) {
-                        $path = $img->store('carousel-staging', 'public');
-                        if ($path) {
-                            $this->stagedCarouselPaths[] = $path;
-                        }
-                    }
-                } catch (\Exception $e) {
-                    \Log::warning('Carousel staging failed for file', ['error' => $e->getMessage()]);
-                }
-            }
-            $this->carouselFilesReceived = count($this->stagedCarouselPaths);
-            \Log::info('Carousel files staged', [
-                'count' => $this->carouselFilesReceived,
-                'paths' => $this->stagedCarouselPaths,
-            ]);
-        }
+        // Juste compter — les fichiers restent dans $this->newCarouselImages
+        $this->carouselFilesReceived = is_array($this->newCarouselImages) ? count($this->newCarouselImages) : 0;
     }
 
     public function mount(Profile $profile)
@@ -347,7 +327,7 @@ class EditProfile extends Component
     public function openAddBandModal($type = null)
     {
         $this->editingBandId = null;
-        $this->reset(['newBandType', 'newSocialPlatform', 'newSocialUrl', 'newImages', 'newImageLink', 'newTextContent', 'currentImagePaths', 'newVideoUrl', 'newCtaLabel', 'newCtaUrl', 'newCtaIcon', 'newCtaBgColor', 'newCarouselImages', 'newCarouselAutoplay', 'existingCarouselImages', 'carouselFilesReceived', 'stagedCarouselPaths']);
+        $this->reset(['newBandType', 'newSocialPlatform', 'newSocialUrl', 'newImages', 'newImageLink', 'newTextContent', 'currentImagePaths', 'newVideoUrl', 'newCtaLabel', 'newCtaUrl', 'newCtaIcon', 'newCtaBgColor', 'newCarouselImages', 'newCarouselAutoplay', 'existingCarouselImages', 'carouselFilesReceived']);
         if ($type) {
             $available = $this->getAvailableBandTypes();
             if (isset($available[$type]) && !$available[$type]['available']) {
@@ -408,7 +388,7 @@ class EditProfile extends Component
     {
         $this->showAddBandModal = false;
         $this->editingBandId = null;
-        $this->reset(['newBandType', 'newSocialPlatform', 'newSocialUrl', 'newImages', 'newImageLink', 'newTextContent', 'currentImagePaths', 'newVideoUrl', 'newCtaLabel', 'newCtaUrl', 'newCtaIcon', 'newCtaBgColor', 'newCarouselImages', 'newCarouselAutoplay', 'existingCarouselImages', 'carouselFilesReceived', 'stagedCarouselPaths']);
+        $this->reset(['newBandType', 'newSocialPlatform', 'newSocialUrl', 'newImages', 'newImageLink', 'newTextContent', 'currentImagePaths', 'newVideoUrl', 'newCtaLabel', 'newCtaUrl', 'newCtaIcon', 'newCtaBgColor', 'newCarouselImages', 'newCarouselAutoplay', 'existingCarouselImages', 'carouselFilesReceived']);
     }
 
     // ========== DELETE (using trait) ==========
@@ -586,26 +566,10 @@ class EditProfile extends Component
 
     public function addImageCarousel()
     {
-        \Log::info('addImageCarousel called', [
-            'stagedPaths' => $this->stagedCarouselPaths,
-            'stagedCount' => count($this->stagedCarouselPaths),
-            'existingCount' => count($this->existingCarouselImages),
-            'editingBandId' => $this->editingBandId,
-        ]);
-
         $images = $this->existingCarouselImages;
 
-        // Utiliser les fichiers déjà stockés en staging
-        if (!empty($this->stagedCarouselPaths)) {
-            foreach ($this->stagedCarouselPaths as $stagingPath) {
-                // Déplacer de carousel-staging vers carousel-images
-                $newPath = str_replace('carousel-staging/', 'carousel-images/', $stagingPath);
-                \Storage::disk('public')->move($stagingPath, $newPath);
-                $images[] = ['path' => $newPath, 'caption' => '', 'link' => ''];
-            }
-        }
-        // Fallback : si Livewire a gardé la référence (petits fichiers)
-        elseif (!empty($this->newCarouselImages) && is_array($this->newCarouselImages)) {
+        // Stocker directement les fichiers uploadés
+        if (!empty($this->newCarouselImages) && is_array($this->newCarouselImages)) {
             foreach ($this->newCarouselImages as $img) {
                 try {
                     if ($img && method_exists($img, 'store')) {
@@ -615,20 +579,13 @@ class EditProfile extends Component
                         }
                     }
                 } catch (\Exception $e) {
-                    \Log::warning('Carousel fallback store failed', ['error' => $e->getMessage()]);
+                    \Log::warning('Carousel store failed', ['error' => $e->getMessage()]);
                 }
             }
         }
 
-        $totalNew = count($images) - count($this->existingCarouselImages);
-
         if (!$this->editingBandId && count($images) < 2) {
-            $this->addError('newCarouselImages', 'Un carrousel nécessite au moins 2 images. Sélectionnez vos fichiers et attendez la fin de l\'upload avant de cliquer Ajouter.');
-            return;
-        }
-
-        if (count($images) < 2) {
-            $this->addError('newCarouselImages', 'Le carrousel doit contenir au moins 2 images.');
+            $this->addError('newCarouselImages', 'Un carrousel nécessite au moins 2 images.');
             return;
         }
 
