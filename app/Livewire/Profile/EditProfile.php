@@ -60,7 +60,7 @@ class EditProfile extends Component
         $this->primary_color = $this->profile->primary_color ?? '#2D7A4F';
         $this->secondary_color = $this->profile->secondary_color ?? '#1a5c3a';
         $this->email = $this->profile->email;
-        $this->phone = $this->profile->phone;
+        $this->phone = $this->profile->formatted_phone ?? $this->profile->phone;
         $this->website = $this->profile->website;
         $this->customUsername = $this->profile->username;
         $this->contentBands = $this->profile->contentBands()->orderBy('order')->get()->toArray();

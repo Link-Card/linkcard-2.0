@@ -24,6 +24,12 @@
     @livewireStyles
 </head>
 <body style="font-family: 'Manrope', system-ui, sans-serif; background-color: #F7F8F4; overflow: hidden; height: 100dvh; display: flex; flex-direction: column;" x-data="{ sidebarOpen: false }">
+    <style>
+        @media (max-width: 1023px) {
+            body { overflow: auto !important; height: auto !important; }
+            #main-content { overflow: visible !important; }
+        }
+    </style>
 
     {{-- Impersonation banner --}}
     @if(session('impersonating_from'))

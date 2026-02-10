@@ -71,9 +71,20 @@
                     <input type="email" wire:model.live.debounce.500ms="email" class="w-full px-4 py-2.5 rounded-lg" style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; font-size: 14px;" onfocus="this.style.borderColor='#42B574'; this.style.boxShadow='0 0 0 3px #F0F9F4'" onblur="this.style.borderColor='#D1D5DB'; this.style.boxShadow='none'">
                     @error('email') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ $message }}</span> @enderror
                 </div>
-                <div>
+                <div x-data="{
+                    formatPhone(e) {
+                        let digits = e.target.value.replace(/\D/g, '');
+                        if (digits.length > 10) digits = digits.substring(0, 10);
+                        let formatted = '';
+                        if (digits.length > 6) formatted = digits.substring(0,3) + '-' + digits.substring(3,6) + '-' + digits.substring(6);
+                        else if (digits.length > 3) formatted = digits.substring(0,3) + '-' + digits.substring(3);
+                        else formatted = digits;
+                        e.target.value = formatted;
+                        $wire.set('phone', formatted);
+                    }
+                }">
                     <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="font-family: 'Manrope', sans-serif; color: #4B5563;">Téléphone</label>
-                    <input type="tel" wire:model.live.debounce.500ms="phone" class="w-full px-4 py-2.5 rounded-lg" style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; font-size: 14px;" onfocus="this.style.borderColor='#42B574'; this.style.boxShadow='0 0 0 3px #F0F9F4'" onblur="this.style.borderColor='#D1D5DB'; this.style.boxShadow='none'">
+                    <input type="tel" wire:model.live.debounce.500ms="phone" x-on:input="formatPhone($event)" class="w-full px-4 py-2.5 rounded-lg" style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; font-size: 14px;" onfocus="this.style.borderColor='#42B574'; this.style.boxShadow='0 0 0 3px #F0F9F4'" onblur="this.style.borderColor='#D1D5DB'; this.style.boxShadow='none'" placeholder="819-244-6640">
                 </div>
             </div>
 
