@@ -158,6 +158,7 @@
         $templateSlug = $profile->template_id ?? 'classic';
         $templateConfig = $profile->getEffectiveTemplateConfig();
         $headerStyle = $templateConfig['header_style'] ?? 'classic';
+        $templateTransition = $templateConfig['transition'] ?? 'wave';
         
         // Calculer si le texte doit être clair ou foncé
         $hex = ltrim($primaryColor, '#');

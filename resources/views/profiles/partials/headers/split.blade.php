@@ -32,5 +32,5 @@
             @endif
         </div>
     </div>
-    @include('profiles.partials.transition', ['transition' => 'wave'])
+    @include('profiles.partials.transition', ['transition' => $templateTransition ?? 'wave'])
 </div>
