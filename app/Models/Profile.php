@@ -196,4 +196,27 @@ class Profile extends Model
 
         return ['allowed' => true, 'reason' => null];
     }
+
+    /**
+     * Format phone number with dashes (819-244-6640).
+     */
+    public function getFormattedPhoneAttribute(): ?string
+    {
+        if (!$this->phone) return null;
+
+        $digits = preg_replace('/\D/', '', $this->phone);
+
+        // 10 digits: XXX-XXX-XXXX
+        if (strlen($digits) === 10) {
+            return substr($digits, 0, 3) . '-' . substr($digits, 3, 3) . '-' . substr($digits, 6);
+        }
+
+        // 11 digits (1XXXXXXXXXX): 1-XXX-XXX-XXXX
+        if (strlen($digits) === 11 && $digits[0] === '1') {
+            return '1-' . substr($digits, 1, 3) . '-' . substr($digits, 4, 3) . '-' . substr($digits, 7);
+        }
+
+        // Other formats: return as-is
+        return $this->phone;
+    }
 }

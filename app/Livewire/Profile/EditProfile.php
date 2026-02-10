@@ -76,8 +76,8 @@ class EditProfile extends Component
             'location' => 'nullable|string|max:100',
             'email' => 'nullable|email|max:100',
             'phone' => 'nullable|string|max:20',
-            'primary_color' => 'required|string',
-            'secondary_color' => 'required|string',
+            'primary_color' => 'required|string|regex:/^#[a-fA-F0-9]{6}$/',
+            'secondary_color' => 'required|string|regex:/^#[a-fA-F0-9]{6}$/',
         ];
 
         if (in_array($property, $autoSaveFields) && isset($rules[$property])) {

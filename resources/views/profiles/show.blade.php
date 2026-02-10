@@ -22,24 +22,24 @@
     <style>
         body { font-family: 'Manrope', system-ui, -apple-system, sans-serif; }
         
-        /* Share Button */
+        /* Share Button — uses profile primary color via CSS variable set in body */
         .share-btn {
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: #42B574;
+            background: var(--share-color, #42B574);
             border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 8px rgba(66, 181, 116, 0.4);
+            box-shadow: 0 2px 8px color-mix(in srgb, var(--share-color, #42B574) 40%, transparent);
         }
         .share-btn:hover { 
             transform: scale(1.05); 
-            background: #3DA367;
-            box-shadow: 0 4px 12px rgba(66, 181, 116, 0.5);
+            filter: brightness(0.9);
+            box-shadow: 0 4px 12px color-mix(in srgb, var(--share-color, #42B574) 50%, transparent);
         }
         .share-btn svg { width: 20px; height: 20px; fill: white; }
         
@@ -172,6 +172,8 @@
         $validHeaders = ['classic', 'wave', 'minimal', 'diagonal', 'arch', 'split', 'banner', 'geometric', 'bold'];
         $headerPartial = in_array($headerStyle, $validHeaders) ? $headerStyle : 'classic';
     @endphp
+
+    <style>:root { --share-color: {{ $primaryColor }}; }</style>
 
     <div class="max-w-md mx-auto min-h-screen relative">
 

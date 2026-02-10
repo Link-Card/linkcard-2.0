@@ -15,7 +15,13 @@
 
 @if($phone || $email)
     <div class="mt-3 space-y-0.5">
-        @if($phone)<p class="text-sm" style="opacity: 0.85; color: {{ $textColor }};">{{ $phone }}</p>@endif
+        @if($phone)
+            @php
+                $digits = preg_replace('/\D/', '', $phone);
+                $fmtPhone = strlen($digits) === 10 ? substr($digits,0,3).'-'.substr($digits,3,3).'-'.substr($digits,6) : $phone;
+            @endphp
+            <p class="text-sm" style="opacity: 0.85; color: {{ $textColor }};">{{ $fmtPhone }}</p>
+        @endif
         @if($email)<p class="text-sm" style="opacity: 0.85; color: {{ $textColor }};">{{ $email }}</p>@endif
     </div>
 @endif

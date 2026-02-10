@@ -148,6 +148,27 @@
                                             @endif
                                         @endif
                                     </div>
+                                    {{-- Quick contact icons --}}
+                                    <div class="flex gap-1.5 flex-shrink-0">
+                                        @if($profile && $profile->phone)
+                                            <a href="tel:{{ $profile->phone }}" title="Appeler {{ $otherUser->name }}"
+                                               class="w-9 h-9 rounded-full flex items-center justify-center transition-all"
+                                               style="background: #F0F9F4;"
+                                               onmouseover="this.style.background='#42B574'; this.querySelector('svg').style.fill='#FFFFFF'"
+                                               onmouseout="this.style.background='#F0F9F4'; this.querySelector('svg').style.fill='#42B574'">
+                                                <svg class="w-4 h-4" fill="#42B574" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                                            </a>
+                                        @endif
+                                        @if($profile && $profile->email)
+                                            <a href="mailto:{{ $profile->email }}" title="Envoyer un courriel à {{ $otherUser->name }}"
+                                               class="w-9 h-9 rounded-full flex items-center justify-center transition-all"
+                                               style="background: #EFF6FF;"
+                                               onmouseover="this.style.background='#4A7FBF'; this.querySelector('svg').style.fill='#FFFFFF'"
+                                               onmouseout="this.style.background='#EFF6FF'; this.querySelector('svg').style.fill='#4A7FBF'">
+                                                <svg class="w-4 h-4" fill="#4A7FBF" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                                            </a>
+                                        @endif
+                                    </div>
                                 </div>
                                 <div class="flex gap-2">
                                     @if($profile)

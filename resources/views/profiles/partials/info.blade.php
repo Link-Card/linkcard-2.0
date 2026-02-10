@@ -19,7 +19,7 @@
         <div class="mt-4 space-y-1">
             @if($profile->phone)
                 <a href="tel:{{ $profile->phone }}" class="block text-sm hover:underline" style="opacity: 0.85; color: {{ $headerTextColor }};">
-                    {{ $profile->phone }}
+                    {{ $profile->formatted_phone }}
                 </a>
             @endif
             @if($profile->email)

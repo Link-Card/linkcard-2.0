@@ -29,18 +29,19 @@
     @if(session('impersonating_from'))
         <div id="impersonation-bar" class="w-full py-2 px-4 text-center text-sm font-medium text-white flex items-center justify-center space-x-3 flex-shrink-0" style="background: #F59E0B; z-index: 9999;">
             <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-            <span>Connecté en tant que <strong>{{ Auth::user()->name }}</strong> ({{ Auth::user()->email }})</span>
+            <span class="hidden sm:inline">Connecté en tant que <strong>{{ Auth::user()->name }}</strong> ({{ Auth::user()->email }})</span>
+            <span class="sm:hidden"><strong>{{ Auth::user()->name }}</strong></span>
             <form action="{{ route('admin.stop-impersonation') }}" method="POST" class="inline">
                 @csrf
                 <button type="submit" class="ml-2 px-3 py-1 rounded-md text-xs font-bold text-white transition" style="background: rgba(255,255,255,0.25);" onmouseover="this.style.background='rgba(255,255,255,0.4)'" onmouseout="this.style.background='rgba(255,255,255,0.25)'">
-                    ← Quitter l'accès
+                    ← Quitter
                 </button>
             </form>
         </div>
     @endif
 
     {{-- Mobile top bar --}}
-    <div class="lg:hidden fixed left-0 right-0 z-40 flex items-center justify-between px-4 py-3" style="background-color: #2C2A27; top: {{ session('impersonating_from') ? '36px' : '0' }};">
+    <div id="mobile-header" class="lg:hidden fixed left-0 right-0 z-40 flex items-center justify-between px-4 py-3" style="background-color: #2C2A27; top: 0;">>
         <div class="flex items-center space-x-3">
             <img src="{{ asset('images/logo-blanc.png') }}" alt="Link-Card" class="h-8 w-auto">
             <span class="text-white font-semibold">Link-Card</span>
@@ -173,7 +174,7 @@
         </aside>
 
         {{-- Main content --}}
-        <main class="flex-1 overflow-y-auto lg:pt-0 {{ session('impersonating_from') ? 'pt-[92px]' : 'pt-14' }}" style="overscroll-behavior: contain; -webkit-overflow-scrolling: touch;">
+        <main id="main-content" class="flex-1 overflow-y-auto lg:pt-0 pt-14" style="-webkit-overflow-scrolling: touch;">
             {{-- Impersonation request notification --}}
             @php
                 $pendingImpersonation = Auth::check() ? \App\Models\ImpersonationRequest::where('user_id', Auth::id())
@@ -265,5 +266,23 @@
     </div>
 
     @livewireScripts
+
+    @if(session('impersonating_from'))
+    <script>
+        function adjustImpersonationOffsets() {
+            const bar = document.getElementById('impersonation-bar');
+            const header = document.getElementById('mobile-header');
+            const main = document.getElementById('main-content');
+            if (!bar || !header) return;
+            const barH = bar.offsetHeight;
+            header.style.top = barH + 'px';
+            if (main && window.innerWidth < 1024) {
+                main.style.paddingTop = (barH + header.offsetHeight) + 'px';
+            }
+        }
+        adjustImpersonationOffsets();
+        window.addEventListener('resize', adjustImpersonationOffsets);
+    </script>
+    @endif
 </body>
 </html>
