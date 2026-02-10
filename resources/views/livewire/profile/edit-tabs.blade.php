@@ -194,14 +194,14 @@
                         </div>
                     </div>
 
-                    <!-- Bandes Images -->
+                    <!-- Sections Images -->
                     <div>
-                        <h3 class="text-lg font-semibold mb-4">🖼️ Bandes d'images</h3>
+                        <h3 class="text-lg font-semibold mb-4">🖼️ Sections images</h3>
                         
                         @if(count($bands) > 0)
                             @foreach($bands as $band)
                                 <div class="border rounded-lg p-4 mb-4">
-                                    <h4 class="font-medium mb-3">Bande {{ $band['band_number'] }}</h4>
+                                    <h4 class="font-medium mb-3">Section {{ $band['band_number'] }}</h4>
                                     <p class="text-sm text-gray-500">Gestion des images (à venir)</p>
                                 </div>
                             @endforeach
@@ -209,7 +209,7 @@
 
                         <button wire:click="addBand" 
                             class="px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg hover:border-indigo-500 w-full text-gray-600 hover:text-indigo-600">
-                            + Ajouter une bande
+                            + Ajouter une section
                         </button>
                     </div>
 

@@ -331,7 +331,7 @@ class EditProfile extends Component
         if ($type) {
             $available = $this->getAvailableBandTypes();
             if (isset($available[$type]) && !$available[$type]['available']) {
-                session()->flash('error', 'Limite atteinte pour ce type de bande. Passez à un forfait supérieur pour en ajouter plus.');
+                session()->flash('error', 'Vous avez atteint le maximum pour ce type de contenu. Passez au forfait supérieur pour en ajouter.');
                 return;
             }
             $this->newBandType = $type;
@@ -343,7 +343,7 @@ class EditProfile extends Component
     {
         $available = $this->getAvailableBandTypes();
         if (isset($available[$type]) && !$available[$type]['available']) {
-            session()->flash('error', 'Limite atteinte pour ce type de bande. Passez à un forfait supérieur pour en ajouter plus.');
+            session()->flash('error', 'Vous avez atteint le maximum pour ce type de contenu. Passez au forfait supérieur pour en ajouter.');
             return;
         }
         $this->newBandType = $type;
@@ -355,7 +355,7 @@ class EditProfile extends Component
         if ($band->profile_id !== $this->profile->id) abort(403);
         
         if ($band->is_hidden) {
-            session()->flash('error', 'Cette bande est masquée. Passez à un forfait supérieur pour la débloquer ou supprimez-la.');
+            session()->flash('error', 'Cette section est masquée. Passez au forfait supérieur pour la débloquer ou supprimez-la.');
             return;
         }
 
@@ -406,10 +406,10 @@ class EditProfile extends Component
             'video_embed' => 'Vidéo ' . ($band->data['platform'] ?? ''),
             'image_carousel' => 'Carrousel (' . count($band->data['images'] ?? []) . ' images)',
             'cta_button' => 'Bouton: ' . ($band->data['label'] ?? 'CTA'),
-            default => 'Bande'
+            default => 'Section'
         };
 
-        $this->confirmDeleteItem($bandId, $name, 'cette bande');
+        $this->confirmDeleteItem($bandId, $name, 'cette section');
     }
 
     public function deleteConfirmed()

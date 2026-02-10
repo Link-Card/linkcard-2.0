@@ -160,7 +160,7 @@
             <div class="mb-3 text-sm">
                 <span class="font-medium">{{ count($links) }}/{{ $maxLinks }}</span> liens utilisés
                 @if(!$canAddMoreLinks)
-                    <span class="text-red-600 ml-2">⚠️ Limite atteinte pour le plan {{ auth()->user()->plan }}</span>
+                    <span class="text-red-600 ml-2">⚠️ Maximum atteint</span>
                 @endif
             </div>
 
@@ -213,11 +213,11 @@
             @else
                 <div class="border-t pt-4 bg-yellow-50 p-4 rounded">
                     <p class="text-sm text-gray-700">
-                        🔒 Vous avez atteint la limite de liens pour votre plan <strong>{{ auth()->user()->plan }}</strong>.
+                        🔒 Vous avez utilisé tous vos liens sociaux.
                         @if(auth()->user()->plan === 'free')
-                            Passez au plan PRO pour ajouter jusqu'à 10 liens.
+                            Passez au forfait PRO pour en ajouter jusqu'à 10.
                         @elseif(auth()->user()->plan === 'pro')
-                            Passez au plan PREMIUM pour ajouter jusqu'à 20 liens.
+                            Passez au forfait PREMIUM pour en ajouter jusqu'à 20.
                         @endif
                     </p>
                 </div>

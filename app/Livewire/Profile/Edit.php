@@ -128,7 +128,7 @@ class Edit extends Component
         };
 
         if ($currentLinksCount >= $maxLinks) {
-            session()->flash('link-error', "Limite de liens atteinte pour le plan {$user->plan}. Max: {$maxLinks} liens.");
+            session()->flash('link-error', "Vous avez utilisé vos {$maxLinks} liens sociaux. Passez au forfait supérieur pour en ajouter.");
             return;
         }
 
@@ -201,7 +201,7 @@ class Edit extends Component
         $newImagesCount = count($this->newImages);
         
         if (($currentImagesCount + $newImagesCount) > $maxImages) {
-            session()->flash('gallery-error', "Limite d'images atteinte pour le plan {$user->plan}. Max: {$maxImages} images. Vous avez déjà {$currentImagesCount} image(s).");
+            session()->flash('gallery-error', "Vous avez utilisé vos {$maxImages} images. Passez au forfait supérieur pour en ajouter.");
             return;
         }
 

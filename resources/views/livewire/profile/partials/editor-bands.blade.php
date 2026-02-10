@@ -17,7 +17,7 @@
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-2">
                     <svg class="w-5 h-5" fill="#D97706" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-                    <span class="text-sm font-medium" style="color: #92400E;">{{ $hiddenCount }} élément(s) masqué(s) - limite du forfait {{ $currentPlanName }} atteinte</span>
+                    <span class="text-sm font-medium" style="color: #92400E;">{{ $hiddenCount }} section(s) masquée(s) — votre forfait {{ $currentPlanName }} ne les inclut pas</span>
                 </div>
                 <a href="{{ route('subscription.plans') }}" class="text-sm font-medium px-3 py-1 rounded-lg transition-colors" style="background: #F59E0B; color: white;" onmouseover="this.style.background='#D97706'" onmouseout="this.style.background='#F59E0B'">
                     Passer à {{ $planName }}
@@ -81,7 +81,7 @@
                                 @endif
                             </span>
                             @if($isHidden)
-                                <span class="text-xs" style="color: #EF4444;">Masqué - Passez à {{ $upgradePlanName }} pour débloquer</span>
+                                <span class="text-xs" style="color: #EF4444;">Masqué — Disponible avec le forfait {{ $upgradePlanName }}</span>
                             @endif
                         </div>
                     </div>
@@ -116,7 +116,7 @@
         <div class="mt-3">
             <button wire:click="openAddBandModal" class="w-full py-3 border-2 border-dashed rounded-lg font-medium text-sm text-center transition-all duration-200 flex items-center justify-center space-x-2" style="font-family: 'Manrope', sans-serif; border-color: #D1D5DB; color: #4B5563;" onmouseover="this.style.borderColor='#42B574'; this.style.color='#42B574'" onmouseout="this.style.borderColor='#D1D5DB'; this.style.color='#4B5563'">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-                <span>Ajouter une bande</span>
+                <span>Ajouter une section</span>
             </button>
         </div>
     </div>

@@ -10,7 +10,7 @@ class PlanLimitsService
     public const LIMITS = [
         'free' => [
             'profiles' => 1,
-            'social_links' => 2,
+            'social_links' => 3,
             'images' => 2,
             'text_blocks' => 1,
         ],

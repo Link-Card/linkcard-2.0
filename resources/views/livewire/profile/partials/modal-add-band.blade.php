@@ -7,7 +7,7 @@
             @if(!$newBandType)
                 <!-- SÉLECTION TYPE -->
                 <div class="mb-5">
-                    <h3 class="text-lg font-semibold" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">Ajouter une bande</h3>
+                    <h3 class="text-lg font-semibold" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">Ajouter une section</h3>
                     <p class="text-sm mt-1" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Choisissez le type de contenu</p>
                 </div>
                 <div class="space-y-3">
@@ -50,7 +50,7 @@
                                 </span>
                                 <div>
                                     <p class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">Image(s)</p>
-                                    <p class="text-xs" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">{{ $availableTypes['image']['remaining'] }} restante(s) · max 2 par bande</p>
+                                    <p class="text-xs" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">{{ $availableTypes['image']['remaining'] }} restante(s) · max 2 par section</p>
                                 </div>
                             </div>
                         </button>
@@ -64,7 +64,7 @@
                                     <svg class="w-5 h-5" fill="#6B7280" viewBox="0 0 24 24"><path d="M3 18h12v-2H3v2zM3 6v2h18V6H3zm0 7h18v-2H3v2z"/></svg>
                                 </span>
                                 <div>
-                                    <p class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">Bloc de texte</p>
+                                    <p class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">Texte</p>
                                     <p class="text-xs" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">{{ $availableTypes['text_block']['remaining'] }} restant(s)</p>
                                 </div>
                             </div>
@@ -73,8 +73,8 @@
 
                     @if(!$availableTypes['contact_button']['available'] && !$availableTypes['social_link']['available'] && !$availableTypes['image']['available'] && !$availableTypes['text_block']['available'])
                         <div class="text-center py-4">
-                            <p class="text-sm" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Toutes les limites atteintes.</p>
-                            <p class="text-xs mt-1" style="font-family: 'Manrope', sans-serif; color: #42B574;">Passez au plan supérieur →</p>
+                            <p class="text-sm" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Vous avez utilisé toutes vos sections disponibles.</p>
+                            <p class="text-xs mt-1" style="font-family: 'Manrope', sans-serif; color: #42B574;">Passez au forfait supérieur pour en ajouter →</p>
                         </div>
                     @endif
 

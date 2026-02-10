@@ -55,7 +55,7 @@
                             </div>
                         </div>
                         <p class="text-xs mt-3" style="color: #EF4444;">
-                            Tout sera supprimé : profils, bandes de contenu, cartes, commandes, images.
+                            Tout sera supprimé : profils, sections de contenu, cartes, commandes, images.
                         </p>
                     </div>
 

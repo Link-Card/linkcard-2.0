@@ -21,7 +21,7 @@
             @else
                 <button disabled class="inline-flex items-center px-5 py-2.5 text-sm font-medium rounded-lg cursor-not-allowed"
                         style="font-family: 'Manrope', sans-serif; background: #E5E7EB; color: #9CA3AF;">
-                    Limite atteinte
+                    Maximum de profils atteint
                 </button>
             @endif
         </div>

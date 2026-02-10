@@ -19,7 +19,7 @@ class Create extends Component
         }
 
         if ($profilesCount >= $maxProfiles) {
-            session()->flash('error', 'Vous avez atteint la limite de profils pour votre plan.');
+            session()->flash('error', 'Vous avez atteint le maximum de profils pour votre forfait.');
             return redirect()->route('profile.index');
         }
 

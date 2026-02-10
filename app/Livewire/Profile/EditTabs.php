@@ -155,7 +155,7 @@ class EditTabs extends Component
         };
 
         if ($currentLinksCount >= $maxLinks) {
-            session()->flash('link-error', 'Limite de liens atteinte pour votre plan.');
+            session()->flash('link-error', 'Vous avez utilisé tous vos liens sociaux. Passez au forfait supérieur pour en ajouter.');
             return;
         }
 
@@ -199,7 +199,7 @@ class EditTabs extends Component
         };
 
         if ($currentBandsCount >= $maxBands) {
-            session()->flash('link-error', 'Limite de bandes atteinte pour votre plan.');
+            session()->flash('link-error', 'Vous avez utilisé toutes vos sections disponibles. Passez au forfait supérieur.');
             return;
         }
 
@@ -210,7 +210,7 @@ class EditTabs extends Component
         ]);
 
         $this->loadData();
-        session()->flash('link-success', 'Bande ajoutée avec succès!');
+        session()->flash('link-success', 'Section ajoutée !');
     }
 
     public function saveBand()

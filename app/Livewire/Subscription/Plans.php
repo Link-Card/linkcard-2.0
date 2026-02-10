@@ -113,7 +113,7 @@ class Plans extends Component
                 $usage = \App\Services\PlanLimitsService::getCurrentUsage($profile);
                 $excess = $usage['social_links'] - $targetLimits['social_links'];
                 if ($excess > 0) {
-                    $losses[] = $excess . ' lien(s) sociaux masqué(s) (limite : ' . $targetLimits['social_links'] . ')';
+                    $losses[] = $excess . ' lien(s) sociaux seront masqués (max ' . $targetLimits['social_links'] . ' avec ce forfait)';
                     break;
                 }
             }
@@ -125,7 +125,7 @@ class Plans extends Component
                 $usage = \App\Services\PlanLimitsService::getCurrentUsage($profile);
                 $excess = $usage['images'] - $targetLimits['images'];
                 if ($excess > 0) {
-                    $losses[] = $excess . ' image(s) masquée(s) (limite : ' . $targetLimits['images'] . ')';
+                    $losses[] = $excess . ' image(s) seront masquées (max ' . $targetLimits['images'] . ' avec ce forfait)';
                     break;
                 }
             }
@@ -137,7 +137,7 @@ class Plans extends Component
                 $usage = \App\Services\PlanLimitsService::getCurrentUsage($profile);
                 $excess = $usage['text_blocks'] - $targetLimits['text_blocks'];
                 if ($excess > 0) {
-                    $losses[] = $excess . ' bloc(s) texte masqué(s) (limite : ' . $targetLimits['text_blocks'] . ')';
+                    $losses[] = $excess . ' section(s) texte seront masquées (max ' . $targetLimits['text_blocks'] . ' avec ce forfait)';
                     break;
                 }
             }
@@ -169,7 +169,7 @@ class Plans extends Component
                     'Username personnalisé obligatoire',
                     '10 liens sociaux',
                     '10 images avec liens',
-                    '5 blocs texte',
+                    '5 sections texte',
                     'QR Code popup',
                 ],
             ],
@@ -182,7 +182,7 @@ class Plans extends Component
                     'Username personnalisé',
                     '5 liens sociaux',
                     '5 images avec liens',
-                    '2 blocs texte',
+                    '2 sections texte',
                     'QR Code popup',
                 ],
             ],
@@ -193,9 +193,9 @@ class Plans extends Component
                 'features' => [
                     '1 profil',
                     'Code 8 caractères aléatoire',
-                    '2 liens sociaux',
+                    '3 liens sociaux',
                     '2 images (sans liens)',
-                    '1 bloc texte',
+                    '1 section texte',
                 ],
             ],
         ];
