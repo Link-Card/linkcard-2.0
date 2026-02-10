@@ -212,22 +212,32 @@
         @endif
     @endif
 
-    {{-- Search & Sort --}}
-    <div class="p-4 flex flex-col sm:flex-row gap-3" style="border-bottom: 1px solid #E5E7EB;">
-        <div class="flex-1 relative">
+    {{-- Search --}}
+    <div class="p-4" style="border-bottom: 1px solid #E5E7EB;">
+        <div class="relative">
             <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2" style="color: #9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             <input type="text" wire:model.live.debounce.300ms="userSearch" placeholder="Rechercher par nom, email ou URL profil..." class="w-full pl-10 pr-4 py-2 text-sm rounded-lg" style="border: 1.5px solid #D1D5DB; font-family: 'Manrope', sans-serif;" onfocus="this.style.borderColor='#42B574'" onblur="this.style.borderColor='#D1D5DB'">
         </div>
-        <select wire:model.live="userSort" class="px-3 py-2 text-sm rounded-lg" style="border: 1.5px solid #D1D5DB; font-family: 'Manrope', sans-serif; color: #4B5563;">
-            <option value="newest">Plus récent</option>
-            <option value="oldest">Plus ancien</option>
-            <option value="most_views">Plus de vues</option>
-            <option value="least_views">Moins de vues</option>
-        </select>
     </div>
 
-    {{-- Mobile: Cards --}}
-    <div class="md:hidden divide-y" style="border-color: #E5E7EB;">
+    {{-- Mobile: Sort + Cards --}}
+    <div class="md:hidden">
+        <div class="px-4 py-2 flex items-center gap-2" style="border-bottom: 1px solid #E5E7EB;">
+            <span class="text-xs" style="color: #9CA3AF; font-family: 'Manrope', sans-serif;">Trier :</span>
+            <div class="flex flex-wrap gap-1.5">
+                @foreach(['created_at' => 'Date', 'name' => 'Nom', 'plan' => 'Plan', 'total_views' => 'Vues'] as $f => $l)
+                    <button wire:click="sortUsers('{{ $f }}')"
+                            class="px-2 py-1 text-[10px] rounded font-medium transition-all"
+                            style="{{ $userSortField === $f ? 'background: #F0F9F4; color: #42B574; border: 1px solid #42B574;' : 'background: #F3F4F6; color: #4B5563; border: 1px solid #E5E7EB;' }}">
+                        {{ $l }}
+                        @if($userSortField === $f)
+                            {{ $userSortDirection === 'asc' ? '▲' : '▼' }}
+                        @endif
+                    </button>
+                @endforeach
+            </div>
+        </div>
+        <div class="divide-y" style="border-color: #E5E7EB;">
         @foreach($users as $user)
             <div class="p-4">
                 <div class="flex items-center justify-between mb-2">
@@ -313,22 +323,49 @@
             </div>
         @endforeach
     </div>
+    </div>
 
     {{-- Desktop: Table --}}
     <div class="hidden md:block overflow-x-auto">
         <table class="w-full">
             <thead>
                 <tr style="background-color: #F7F8F4;">
-                    <th class="text-left px-4 py-3 text-xs font-medium" style="color: #4B5563;">ID</th>
-                    <th class="text-left px-4 py-3 text-xs font-medium" style="color: #4B5563;">Nom</th>
-                    <th class="text-left px-4 py-3 text-xs font-medium" style="color: #4B5563;">Email</th>
-                    <th class="text-left px-4 py-3 text-xs font-medium" style="color: #4B5563;">Plan</th>
-                    <th class="text-left px-4 py-3 text-xs font-medium" style="color: #4B5563;">Rôle</th>
-                    <th class="text-left px-4 py-3 text-xs font-medium" style="color: #4B5563;">Profils</th>
-                    <th class="text-left px-4 py-3 text-xs font-medium" style="color: #4B5563;">Cartes</th>
-                    <th class="text-left px-4 py-3 text-xs font-medium" style="color: #4B5563;">Commandes</th>
-                    <th class="text-left px-4 py-3 text-xs font-medium" style="color: #4B5563;">Vues</th>
-                    <th class="text-left px-4 py-3 text-xs font-medium" style="color: #4B5563;">Inscrit le</th>
+                    @php
+                        $cols = [
+                            ['field' => 'id', 'label' => 'ID', 'align' => 'left'],
+                            ['field' => 'name', 'label' => 'Nom', 'align' => 'left'],
+                            ['field' => 'email', 'label' => 'Email', 'align' => 'left'],
+                            ['field' => 'plan', 'label' => 'Plan', 'align' => 'left'],
+                            ['field' => 'role', 'label' => 'Rôle', 'align' => 'left'],
+                            ['field' => 'profiles_count', 'label' => 'Profils', 'align' => 'left'],
+                            ['field' => 'cards_count', 'label' => 'Cartes', 'align' => 'left'],
+                            ['field' => 'card_orders_count', 'label' => 'Cmd', 'align' => 'left'],
+                            ['field' => 'total_views', 'label' => 'Vues', 'align' => 'left'],
+                            ['field' => 'created_at', 'label' => 'Inscrit le', 'align' => 'left'],
+                        ];
+                    @endphp
+                    @foreach($cols as $col)
+                        <th wire:click="sortUsers('{{ $col['field'] }}')"
+                            class="text-{{ $col['align'] }} px-4 py-3 text-xs font-medium cursor-pointer select-none transition-colors"
+                            style="color: {{ $userSortField === $col['field'] ? '#42B574' : '#4B5563' }};"
+                            onmouseover="this.style.color='#42B574'"
+                            onmouseout="this.style.color='{{ $userSortField === $col['field'] ? '#42B574' : '#4B5563' }}'">
+                            <span class="inline-flex items-center gap-1">
+                                {{ $col['label'] }}
+                                @if($userSortField === $col['field'])
+                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                                        @if($userSortDirection === 'asc')
+                                            <path d="M7 14l5-5 5 5H7z"/>
+                                        @else
+                                            <path d="M7 10l5 5 5-5H7z"/>
+                                        @endif
+                                    </svg>
+                                @else
+                                    <svg class="w-3 h-3 opacity-30" fill="currentColor" viewBox="0 0 24 24"><path d="M7 10l5-5 5 5H7zm0 4l5 5 5-5H7z"/></svg>
+                                @endif
+                            </span>
+                        </th>
+                    @endforeach
                     <th class="text-right px-4 py-3 text-xs font-medium" style="color: #4B5563;">Actions</th>
                 </tr>
             </thead>

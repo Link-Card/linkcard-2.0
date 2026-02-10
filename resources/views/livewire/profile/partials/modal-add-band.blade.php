@@ -261,13 +261,25 @@
                             <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="font-family: 'Manrope', sans-serif; color: #4B5563;">
                                 {{ $editingBandId ? 'Remplacer les images' : 'Images (1 ou 2)' }}
                             </label>
-                            <input type="file" wire:model="newImages" accept="image/*" multiple class="w-full text-sm rounded-lg" style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; padding: 8px 12px;">
-                            <p class="text-xs mt-1" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">
-                                Max 2 images · 50 MB par image · {{ $availableTypes['image']['remaining'] }} restante(s)
-                            </p>
-                            <div wire:loading wire:target="newImages" class="flex items-center space-x-1 mt-1">
-                                <svg class="animate-spin h-3 w-3" style="color: #42B574;" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" opacity="0.25"/><path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-                                <span class="text-xs" style="color: #9CA3AF;">Upload...</span>
+                            <div x-data="{ imgProgress: 0, imgUploading: false }"
+                                 x-on:livewire-upload-start="imgUploading = true; imgProgress = 0"
+                                 x-on:livewire-upload-finish="imgUploading = false; imgProgress = 100"
+                                 x-on:livewire-upload-cancel="imgUploading = false; imgProgress = 0"
+                                 x-on:livewire-upload-error="imgUploading = false; imgProgress = 0"
+                                 x-on:livewire-upload-progress="imgProgress = $event.detail.progress">
+                                <input type="file" wire:model="newImages" accept="image/*" multiple class="w-full text-sm rounded-lg" style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; padding: 8px 12px;">
+                                <p class="text-xs mt-1" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">
+                                    Max 2 images · 50 MB par image · {{ $availableTypes['image']['remaining'] }} restante(s)
+                                </p>
+                                <div x-show="imgUploading" x-cloak class="mt-2">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="text-xs font-medium" style="color: #42B574; font-family: 'Manrope', sans-serif;">Upload en cours...</span>
+                                        <span class="text-xs font-medium" style="color: #42B574; font-family: 'Manrope', sans-serif;" x-text="Math.round(imgProgress) + '%'"></span>
+                                    </div>
+                                    <div class="w-full h-2 rounded-full overflow-hidden" style="background: #E5E7EB;">
+                                        <div class="h-full rounded-full transition-all duration-300" style="background: #42B574;" :style="'width: ' + imgProgress + '%'"></div>
+                                    </div>
+                                </div>
                             </div>
                             @error('newImages') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ $message }}</span> @enderror
                             @error('newImages.*') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ $message }}</span> @enderror
@@ -343,11 +355,23 @@
                             <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="font-family: 'Manrope', sans-serif; color: #4B5563;">
                                 {{ $editingBandId ? 'Ajouter des images' : 'Images (2-12)' }}
                             </label>
-                            <input type="file" wire:model="newCarouselImages" accept="image/*" multiple class="w-full text-sm rounded-lg" style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; padding: 8px 12px;">
-                            <p class="text-xs mt-1" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Min 2, max 12 images · 20 MB chacune</p>
-                            <div wire:loading wire:target="newCarouselImages" class="flex items-center space-x-1 mt-1">
-                                <svg class="animate-spin h-3 w-3" style="color: #42B574;" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" opacity="0.25"/><path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-                                <span class="text-xs" style="color: #9CA3AF;">Upload...</span>
+                            <div x-data="{ carouselProgress: 0, carouselUploading: false }"
+                                 x-on:livewire-upload-start="carouselUploading = true; carouselProgress = 0"
+                                 x-on:livewire-upload-finish="carouselUploading = false; carouselProgress = 100"
+                                 x-on:livewire-upload-cancel="carouselUploading = false; carouselProgress = 0"
+                                 x-on:livewire-upload-error="carouselUploading = false; carouselProgress = 0"
+                                 x-on:livewire-upload-progress="carouselProgress = $event.detail.progress">
+                                <input type="file" wire:model="newCarouselImages" accept="image/*" multiple class="w-full text-sm rounded-lg" style="font-family: 'Manrope', sans-serif; border: 1.5px solid #D1D5DB; padding: 8px 12px;">
+                                <p class="text-xs mt-1" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Min 2, max 12 images · 20 MB chacune</p>
+                                <div x-show="carouselUploading" x-cloak class="mt-2">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="text-xs font-medium" style="color: #42B574; font-family: 'Manrope', sans-serif;">Upload en cours...</span>
+                                        <span class="text-xs font-medium" style="color: #42B574; font-family: 'Manrope', sans-serif;" x-text="Math.round(carouselProgress) + '%'"></span>
+                                    </div>
+                                    <div class="w-full h-2 rounded-full overflow-hidden" style="background: #E5E7EB;">
+                                        <div class="h-full rounded-full transition-all duration-300" style="background: #42B574;" :style="'width: ' + carouselProgress + '%'"></div>
+                                    </div>
+                                </div>
                             </div>
                             @error('newCarouselImages') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ $message }}</span> @enderror
                             @error('newCarouselImages.*') <span class="text-xs mt-1 block" style="color: #EF4444;">{{ $message }}</span> @enderror

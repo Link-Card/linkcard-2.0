@@ -36,6 +36,8 @@ class TrackingController extends Controller
                 $platform = null;
                 if ($band->type === 'social_link') {
                     $platform = $band->data['platform'] ?? null;
+                } elseif ($request->url === 'vcard_download') {
+                    $platform = 'vcard_download';
                 }
 
                 LinkClick::create([

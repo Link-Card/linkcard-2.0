@@ -15,7 +15,8 @@ class Dashboard extends Component
 {
     public string $activeTab = 'orders';
     public string $userSearch = '';
-    public string $userSort = 'newest';
+    public string $userSortField = 'created_at';
+    public string $userSortDirection = 'desc';
 
     // Order editing
     public ?int $editingOrderId = null;
@@ -37,6 +38,16 @@ class Dashboard extends Component
     public function setTab($tab)
     {
         $this->activeTab = $tab;
+    }
+
+    public function sortUsers($field)
+    {
+        if ($this->userSortField === $field) {
+            $this->userSortDirection = $this->userSortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->userSortField = $field;
+            $this->userSortDirection = $field === 'created_at' ? 'desc' : 'asc';
+        }
     }
 
     public function startEdit($orderId)
@@ -461,13 +472,23 @@ class Dashboard extends Component
             });
         }
 
-        // Sort
-        $usersQuery = match ($this->userSort) {
-            'oldest' => $usersQuery->orderBy('created_at', 'asc'),
-            'most_views' => $usersQuery->withSum('profiles as total_views', 'view_count')->orderByDesc('total_views'),
-            'least_views' => $usersQuery->withSum('profiles as total_views', 'view_count')->orderBy('total_views'),
-            default => $usersQuery->orderByDesc('created_at'),
-        };
+        // Sort by column
+        $sortField = $this->userSortField;
+        $sortDir = $this->userSortDirection;
+
+        if (in_array($sortField, ['id', 'name', 'email', 'plan', 'role', 'created_at'])) {
+            $usersQuery->orderBy($sortField, $sortDir);
+        } elseif ($sortField === 'profiles_count') {
+            $usersQuery->orderBy('profiles_count', $sortDir);
+        } elseif ($sortField === 'cards_count') {
+            $usersQuery->orderBy('cards_count', $sortDir);
+        } elseif ($sortField === 'card_orders_count') {
+            $usersQuery->orderBy('card_orders_count', $sortDir);
+        } elseif ($sortField === 'total_views') {
+            $usersQuery->withSum('profiles as total_views', 'view_count')->orderBy('total_views', $sortDir);
+        } else {
+            $usersQuery->orderByDesc('created_at');
+        }
 
         $users = $usersQuery->get();
 

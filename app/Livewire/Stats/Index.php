@@ -174,24 +174,48 @@ class Index extends Component
                 // Clics par bande (avec info)
                 $data['clicksByBand'] = LinkClick::where('link_clicks.profile_id', $profile->id)
                     ->where('clicked_at', '>=', $startDate)
-                    ->join('content_bands', 'link_clicks.content_band_id', '=', 'content_bands.id')
+                    ->leftJoin('content_bands', 'link_clicks.content_band_id', '=', 'content_bands.id')
                     ->select(
                         'content_bands.id',
                         'content_bands.type',
                         'content_bands.data',
+                        'link_clicks.platform as click_platform',
                         DB::raw('COUNT(*) as count')
                     )
-                    ->groupBy('content_bands.id', 'content_bands.type', 'content_bands.data')
+                    ->groupBy('content_bands.id', 'content_bands.type', 'content_bands.data', 'link_clicks.platform')
                     ->orderByDesc('count')
                     ->limit(10)
                     ->get()
                     ->map(function ($item) {
-                        $data = is_string($item->data) ? json_decode($item->data, true) : $item->data;
+                        $data = is_string($item->data) ? json_decode($item->data, true) : ($item->data ?? []);
+                        $type = $item->type ?? $item->click_platform ?? 'unknown';
+
+                        // Déterminer le label selon le type
+                        $label = match($type) {
+                            'social_link' => ucfirst($data['platform'] ?? 'Lien'),
+                            'contact_button' => 'Ajouter au contact',
+                            'cta_button' => $data['label'] ?? 'Bouton',
+                            'image' => $data['images'][0]['link'] ?? 'Image',
+                            'video_embed' => 'Vidéo ' . ucfirst($data['platform'] ?? ''),
+                            'image_carousel' => 'Carrousel',
+                            'vcard_download' => 'Téléchargement vCard',
+                            default => $item->click_platform === 'vcard_download' ? 'Téléchargement vCard' : ($data['label'] ?? ucfirst($type ?? 'Lien')),
+                        };
+
+                        // Déterminer l'icône type pour le template
+                        $iconType = match($type) {
+                            'social_link' => 'social',
+                            'contact_button', 'vcard_download' => 'contact',
+                            'cta_button' => 'button',
+                            'video_embed' => 'video',
+                            'image_carousel' => 'carousel',
+                            default => $item->click_platform === 'vcard_download' ? 'contact' : 'default',
+                        };
+
                         return [
-                            'type' => $item->type,
-                            'label' => $item->type === 'social_link'
-                                ? ucfirst($data['platform'] ?? 'Lien')
-                                : ($data['images'][0]['link'] ?? 'Image'),
+                            'type' => $type,
+                            'icon_type' => $iconType,
+                            'label' => $label,
                             'count' => $item->count,
                         ];
                     })

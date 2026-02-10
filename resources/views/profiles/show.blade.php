@@ -537,7 +537,10 @@
             
             <div class="space-y-2">
                 <!-- Option 1: Télécharger la vCard -->
-                <a href="{{ route('profile.vcard', $profile) }}" class="w-full flex items-center gap-3 p-3.5 rounded-xl transition-all duration-200" style="border: 1px solid #E5E7EB; background: white;" onmouseover="this.style.background='#F9FAFB'; this.style.borderColor='#D1D5DB'" onmouseout="this.style.background='white'; this.style.borderColor='#E5E7EB'">
+                @php $contactBand = $profile->contentBands->firstWhere('type', 'contact_button'); @endphp
+                <a href="{{ route('profile.vcard', $profile) }}"
+                   onclick="if({{ $contactBand ? $contactBand->id : 0 }}) { fetch('/api/track-click', { method: 'POST', headers: {'Content-Type': 'application/json', 'Accept': 'application/json'}, body: JSON.stringify({ band_id: {{ $contactBand ? $contactBand->id : 0 }}, url: 'vcard_download' }), keepalive: true }).catch(() => {}); }"
+                   class="w-full flex items-center gap-3 p-3.5 rounded-xl transition-all duration-200" style="border: 1px solid #E5E7EB; background: white;" onmouseover="this.style.background='#F9FAFB'; this.style.borderColor='#D1D5DB'" onmouseout="this.style.background='white'; this.style.borderColor='#E5E7EB'">
                     <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: #F3F4F6;">
                         <svg class="w-5 h-5" fill="#2C2A27" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
                     </div>
