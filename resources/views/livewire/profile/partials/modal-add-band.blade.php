@@ -338,9 +338,9 @@
 
                 <!-- IMAGE CAROUSEL -->
                 @if($newBandType === 'image_carousel')
-                    <div class="space-y-4" x-data="{ carouselProgress: 0, carouselUploading: false, carouselError: false }"
-                         x-on:livewire-upload-start="carouselUploading = true; carouselProgress = 0; carouselError = false"
-                         x-on:livewire-upload-finish="carouselUploading = false; carouselProgress = 100"
+                    <div class="space-y-4" x-data="{ carouselProgress: 0, carouselUploading: false, carouselError: false, carouselReady: false }"
+                         x-on:livewire-upload-start="carouselUploading = true; carouselProgress = 0; carouselError = false; carouselReady = false"
+                         x-on:livewire-upload-finish="carouselUploading = false; carouselReady = true"
                          x-on:livewire-upload-cancel="carouselUploading = false; carouselProgress = 0"
                          x-on:livewire-upload-error="carouselUploading = false; carouselProgress = 0; carouselError = true"
                          x-on:livewire-upload-progress="carouselProgress = $event.detail.progress">
@@ -369,7 +369,8 @@
                                 <div x-show="carouselError" x-cloak class="mt-2 p-2 rounded-lg text-xs" style="background: #FEF2F2; color: #EF4444; font-family: 'Manrope', sans-serif;">
                                     ⚠️ Échec de l'upload. Essayez avec moins d'images ou des fichiers plus petits.
                                 </div>
-                                <div x-show="carouselUploading" x-cloak class="mt-2">
+                                {{-- Upload en cours (0-99%) --}}
+                                <div x-show="carouselUploading && carouselProgress < 100" x-cloak class="mt-2">
                                     <div class="flex items-center justify-between mb-1">
                                         <span class="text-xs font-medium" style="color: #42B574; font-family: 'Manrope', sans-serif;">Upload en cours...</span>
                                         <span class="text-xs font-medium" style="color: #42B574; font-family: 'Manrope', sans-serif;" x-text="Math.round(carouselProgress) + '%'"></span>
@@ -378,7 +379,18 @@
                                         <div class="h-full rounded-full transition-all duration-300" :style="'background: #42B574; width: ' + carouselProgress + '%'"></div>
                                     </div>
                                 </div>
-                                <div x-show="!carouselUploading && carouselProgress === 100" x-cloak class="mt-2 p-2 rounded-lg text-xs flex items-center space-x-1" style="background: #F0F9F4; color: #42B574; font-family: 'Manrope', sans-serif;">
+                                {{-- Traitement serveur (100% mais pas encore finish) --}}
+                                <div x-show="carouselUploading && carouselProgress >= 100" x-cloak class="mt-2">
+                                    <div class="flex items-center space-x-2 mb-1">
+                                        <svg class="w-4 h-4 animate-spin flex-shrink-0" fill="none" viewBox="0 0 24 24" style="color: #42B574;"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                                        <span class="text-xs font-medium" style="color: #42B574; font-family: 'Manrope', sans-serif;">Finalisation en cours...</span>
+                                    </div>
+                                    <div class="w-full h-2 rounded-full overflow-hidden" style="background: #E5E7EB;">
+                                        <div class="h-full rounded-full" style="background: #42B574; width: 100%; animation: pulse 1.5s ease-in-out infinite;"></div>
+                                    </div>
+                                </div>
+                                {{-- Prêt --}}
+                                <div x-show="carouselReady" x-cloak class="mt-2 p-2 rounded-lg text-xs flex items-center space-x-1" style="background: #F0F9F4; color: #42B574; font-family: 'Manrope', sans-serif;">
                                     <svg class="w-4 h-4 flex-shrink-0" fill="#42B574" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
                                     <span>Images prêtes — cliquez Ajouter</span>
                                 </div>
@@ -397,8 +409,11 @@
                             x-bind:disabled="carouselUploading"
                             class="w-full py-2.5 text-white rounded-lg font-medium text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed" style="font-family: 'Manrope', sans-serif; background: #42B574;" onmouseover="if(!this.disabled)this.style.background='#3DA367'" onmouseout="this.style.background='#42B574'">
                             <span wire:loading.remove wire:target="addImageCarousel">
-                                <template x-if="carouselUploading">
+                                <template x-if="carouselUploading && carouselProgress < 100">
                                     <span>⏳ Upload en cours...</span>
+                                </template>
+                                <template x-if="carouselUploading && carouselProgress >= 100">
+                                    <span>⏳ Finalisation...</span>
                                 </template>
                                 <template x-if="!carouselUploading">
                                     <span>{{ $editingBandId ? 'Enregistrer' : 'Ajouter' }}</span>
