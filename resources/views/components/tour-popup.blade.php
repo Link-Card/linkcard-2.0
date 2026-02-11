@@ -1,6 +1,6 @@
 @php
     $tourStep = (int) request()->query('tour', 0);
-    if ($tourStep < 1 || $tourStep > 5) return;
+    if ($tourStep < 1 || $tourStep > 4) return;
 
     $user = auth()->user();
     $profile = $user?->profiles()->first();
@@ -47,20 +47,10 @@
             'icon_border' => '#DDD6FE',
             'badge_bg' => '#8B5CF6',
             'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>',
-            'next_url' => route('dashboard', ['tour' => 5]),
-            'next_label' => 'Terminer',
-            'step_label' => '4/4',
-        ],
-        5 => [
-            'title' => 'Vous êtes prêt!',
-            'description' => 'Votre tour est terminé. Complétez les étapes ci-dessous pour tirer le maximum de Link-Card.',
-            'icon_bg' => '#F0F9F4',
-            'icon_border' => '#D1FAE5',
-            'badge_bg' => '#42B574',
-            'icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>',
-            'next_url' => route('dashboard'),
+            'next_url' => route('subscription.plans'),
             'next_label' => 'C\'est parti!',
-            'step_label' => null,
+            'step_label' => '4/4',
+            'is_last' => true,
         ],
     ];
 
@@ -79,7 +69,7 @@
      x-transition:leave-start="opacity-100"
      x-transition:leave-end="opacity-0"
      class="fixed inset-0 z-[60] flex items-center justify-center p-4"
-     style="background: rgba(0,0,0,0.4); backdrop-filter: blur(3px);">
+     style="background: rgba(0,0,0,0.25); backdrop-filter: blur(1px);">
 
     <div class="bg-white rounded-2xl w-full max-w-sm overflow-hidden relative"
          style="box-shadow: 0 25px 50px rgba(0,0,0,0.15);"
@@ -130,12 +120,10 @@
 
             {{-- Action --}}
             <a href="{{ $current['next_url'] }}" class="block w-full py-3 px-6 rounded-xl text-white font-medium text-sm text-center transition-all duration-200" style="font-family: 'Manrope', sans-serif; background: {{ $current['badge_bg'] }};" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-                @if($tourStep < 4)
-                    Suivant : {{ $current['next_label'] }} →
-                @elseif($tourStep === 4)
-                    Terminer le tour →
-                @else
+                @if($current['is_last'] ?? false)
                     {{ $current['next_label'] }}
+                @else
+                    Suivant : {{ $current['next_label'] }} →
                 @endif
             </a>
         </div>
