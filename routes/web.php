@@ -6,6 +6,9 @@ use App\Http\Controllers\WebhookController;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
     return view('welcome');
 });
 
@@ -176,6 +179,14 @@ Route::post('/c/{cardCode}/confirm', [CardController::class, 'confirmReception']
 
 // Click tracking API
 Route::post('/api/track-click', [App\Http\Controllers\TrackingController::class, 'trackClick'])->name('track.click');
+
+// Pages publiques (AVANT le catch-all /{username})
+Route::get('/fonctionnalites', fn() => view('pages.fonctionnalites'))->name('pages.fonctionnalites');
+Route::get('/carte-nfc', fn() => view('pages.carte-nfc'))->name('pages.carte-nfc');
+Route::get('/forfaits', fn() => view('pages.forfaits'))->name('pages.forfaits');
+Route::get('/faq', fn() => view('pages.faq'))->name('pages.faq');
+Route::get('/contact', fn() => view('pages.contact'))->name('pages.contact');
+Route::get('/a-propos', fn() => view('pages.a-propos'))->name('pages.a-propos');
 
 // Profile public (DOIT RESTER EN DERNIER)
 Route::get('/{username}', [ProfileController::class, 'show'])->name('profile.public');
