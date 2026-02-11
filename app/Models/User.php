@@ -31,6 +31,8 @@ class User extends Authenticatable
         'suspension_reason',
         'suspended_at',
         'suspended_by',
+        'onboarding_completed_at',
+        'onboarding_dismissed_at',
     ];
 
     protected $hidden = [
@@ -47,6 +49,8 @@ class User extends Authenticatable
             'accepted_terms_at' => 'datetime',
             'suspended_at' => 'datetime',
             'is_suspended' => 'boolean',
+            'onboarding_completed_at' => 'datetime',
+            'onboarding_dismissed_at' => 'datetime',
             'password' => 'hashed',
         ];
     }

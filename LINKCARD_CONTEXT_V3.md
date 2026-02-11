@@ -12,7 +12,7 @@
 - **Analyse personas (Phases 1-5):** 100% ✅ (Quick fixes UI, contact rapide, email bienvenue, sécurité, UX)
 - **Phase 6 (Post-MVP):** En cours
   - ✅ Landing page + 7 pages publiques complétées
-  - ⏳ Onboarding guidé
+  - ✅ Onboarding guidé (modal 3 slides + checklist persistante)
   - ⏳ Analytics par plan
   - ⏳ Tests automatisés
   - ⏳ Build Tailwind production
@@ -168,8 +168,17 @@ Document complet: `PHASE_6_POST_MVP.md` dans le repo.
 - Forfaits page : bundles EN PREMIER, standards EN DEUXIÈME
 - Forfaits standards : style identique au dashboard (Gratuit → Pro → Premium)
 
+### Onboarding guidé (11 fév 2026) ✅
+- Modal bienvenue 3 slides (Alpine.js) — première connexion seulement
+- Checklist persistante 5 étapes: compte, email, photo, lien social, partage
+- OnboardingService.php (getSteps, getProgress, shouldShowModal, etc.)
+- Migration: onboarding_completed_at + onboarding_dismissed_at sur users
+- Skip automatique du modal pour utilisateurs existants avec photo
+- Auto-complete quand toutes les étapes sont faites
+- Bouton "Masquer" pour dismiss temporaire
+
 ### Ordre d'exécution restant:
-Onboarding → Analytics → Tests → Storage cleanup → Tailwind build → **BETA**
+Analytics → Tests → Storage cleanup → Tailwind build → **BETA**
 
 ## Pages légales
 - ✅ Conditions d'utilisation (route: legal.terms)
