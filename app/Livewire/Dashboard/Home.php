@@ -18,11 +18,29 @@ class Home extends Component
     }
 
     /**
-     * Close the welcome modal (mark as seen).
+     * Close the welcome modal (mark as seen — persists).
      */
     public function closeModal()
     {
         $this->showOnboardingModal = false;
+        // Persist so it doesn't show again
+        $user = auth()->user();
+        $user->update(['onboarding_dismissed_at' => now()]);
+    }
+
+    /**
+     * Start the guided tour — close modal then redirect.
+     */
+    public function startTour()
+    {
+        $this->showOnboardingModal = false;
+        $user = auth()->user();
+        $user->update(['onboarding_dismissed_at' => now()]);
+
+        $profile = $user->profiles()->first();
+        $url = $profile ? route('profile.edit', $profile, false) . '?tour=1' : route('dashboard', [], false) . '?tour=1';
+
+        return redirect($url);
     }
 
     /**
