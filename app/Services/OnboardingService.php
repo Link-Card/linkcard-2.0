@@ -115,8 +115,9 @@ class OnboardingService
      */
     public static function shouldShowModal(User $user): bool
     {
-        // Only for users created after the tour feature launch
-        if ($user->created_at && $user->created_at->lt(now()->startOfDay())) {
+        // Only for users created after the tour feature launch (Feb 11 2026)
+        $cutoffDate = '2026-02-11 00:00:00';
+        if ($user->created_at && $user->created_at->lt($cutoffDate)) {
             return false;
         }
 
@@ -133,8 +134,9 @@ class OnboardingService
      */
     public static function shouldShowChecklist(User $user): bool
     {
-        // Only for users created after the tour feature launch
-        if ($user->created_at && $user->created_at->lt(now()->startOfDay())) {
+        // Only for users created after the tour feature launch (Feb 11 2026)
+        $cutoffDate = '2026-02-11 00:00:00';
+        if ($user->created_at && $user->created_at->lt($cutoffDate)) {
             return false;
         }
 
