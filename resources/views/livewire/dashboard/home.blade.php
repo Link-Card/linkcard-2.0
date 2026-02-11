@@ -8,11 +8,11 @@
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0"
          x-transition:enter-end="opacity-100"
-         class="fixed inset-0 z-[60] flex items-center justify-center p-4"
+         class="fixed inset-0 z-[9999] flex items-center justify-center p-4"
          style="background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);">
 
-        <div class="bg-white rounded-2xl w-full max-w-sm overflow-hidden relative"
-             style="box-shadow: 0 25px 50px rgba(0,0,0,0.15);">
+        <div class="bg-white rounded-2xl w-full max-w-sm overflow-hidden relative mx-2"
+             style="box-shadow: 0 25px 50px rgba(0,0,0,0.15); max-height: 90vh;">
 
             {{-- Close --}}
             <button @click="show = false; $wire.closeModal()" class="absolute top-4 right-4 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-colors" style="background: #F3F4F6;" onmouseover="this.style.background='#E5E7EB'" onmouseout="this.style.background='#F3F4F6'">

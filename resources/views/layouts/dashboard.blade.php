@@ -261,11 +261,6 @@
 
             {{ $slot }}
 
-            {{-- Tour guidé multi-pages --}}
-            @if(request()->query('tour'))
-                <x-tour-popup />
-            @endif
-
             {{-- Footer légal --}}
             <footer class="mt-8 py-6 px-4">
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-2 text-xs" style="color: #9CA3AF;">
@@ -282,6 +277,11 @@
     </div>
 
     @livewireScripts
+
+    {{-- Tour guidé multi-pages (hors du flux, au-dessus de tout) --}}
+    @if(request()->query('tour'))
+        <x-tour-popup />
+    @endif
 
     @if(session('impersonating_from'))
     <script>
