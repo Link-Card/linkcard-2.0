@@ -38,23 +38,21 @@
             </div>
         </div>
 
-        {{-- Plans: Premium → Pro → Gratuit --}}
+        {{-- Plans: Gratuit → Pro → Premium --}}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {{-- PREMIUM --}}
-            <div class="plan-card plan-popular fade-up">
-                <div style="position: absolute; top: 16px; right: 16px; background-color: #F0F9F4; color: #42B574; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">Recommandé</div>
-                <h3 class="text-xl font-bold" style="color: #2C2A27;">Premium</h3>
-                <p class="text-sm mt-1 mb-5" style="color: #9CA3AF;">Pour les professionnels exigeants</p>
-                <div class="mb-6">
-                    <span class="text-4xl font-bold" style="color: #2C2A27;" id="price-premium">8$</span>
-                    <span class="text-sm" style="color: #9CA3AF;" id="period-premium">/mois</span>
+            {{-- GRATUIT --}}
+            <div class="plan-card fade-up">
+                <h3 class="text-xl font-bold" style="color: #2C2A27;">Gratuit</h3>
+                <div class="mb-6 mt-4">
+                    <span class="text-4xl font-bold" style="color: #2C2A27;">0$</span>
+                    <span class="text-sm" style="color: #9CA3AF;">/mois</span>
                 </div>
-                <a href="{{ route('register') }}" class="btn btn-primary w-full mb-6" style="border-radius: 10px;">Commencer</a>
+                <a href="{{ route('register') }}" class="btn btn-secondary w-full mb-6" style="border-radius: 10px;">Créer mon profil</a>
                 <div class="space-y-3">
                     @php
-                    $premiumFeatures = ['1 profil (+8$/mois par extra)', 'URL personnalisée', '10 liens sociaux', '10 images avec liens', '5 sections texte', 'QR Code', '13 templates (tous)', 'Vidéo embed + Carrousel', 'Statistiques complètes', 'Carte NFC à 37,49$ (-25%)'];
+                    $freeFeatures = ['1 profil', 'Code 8 caractères aléatoire', '3 liens sociaux', '2 images (sans liens)', '1 section texte'];
                     @endphp
-                    @foreach($premiumFeatures as $f)
+                    @foreach($freeFeatures as $f)
                     <div class="flex items-start gap-2">
                         <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="#42B574" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
                         <span class="text-sm" style="color: #4B5563;">{{ $f }}</span>
@@ -66,15 +64,14 @@
             {{-- PRO --}}
             <div class="plan-card fade-up" style="transition-delay: 0.1s;">
                 <h3 class="text-xl font-bold" style="color: #2C2A27;">Pro</h3>
-                <p class="text-sm mt-1 mb-5" style="color: #9CA3AF;">Pour bien commencer</p>
-                <div class="mb-6">
+                <div class="mb-6 mt-4">
                     <span class="text-4xl font-bold" style="color: #2C2A27;" id="price-pro">5$</span>
                     <span class="text-sm" style="color: #9CA3AF;" id="period-pro">/mois</span>
                 </div>
                 <a href="{{ route('register') }}" class="btn btn-secondary w-full mb-6" style="border-radius: 10px;">Commencer</a>
                 <div class="space-y-3">
                     @php
-                    $proFeatures = ['1 profil (+5$/mois par extra)', 'URL personnalisée', '5 liens sociaux', '5 images avec liens', '2 sections texte', 'QR Code', '7 templates', 'Statistiques de base', 'Carte NFC à 49,99$'];
+                    $proFeatures = ['1 profil (+5$/mois par extra)', 'Username personnalisé', '5 liens sociaux', '5 images avec liens', '2 sections texte', 'QR Code popup'];
                     @endphp
                     @foreach($proFeatures as $f)
                     <div class="flex items-start gap-2">
@@ -85,20 +82,20 @@
                 </div>
             </div>
 
-            {{-- GRATUIT --}}
-            <div class="plan-card fade-up" style="transition-delay: 0.2s;">
-                <h3 class="text-xl font-bold" style="color: #2C2A27;">Gratuit</h3>
-                <p class="text-sm mt-1 mb-5" style="color: #9CA3AF;">Pour découvrir</p>
-                <div class="mb-6">
-                    <span class="text-4xl font-bold" style="color: #2C2A27;">0$</span>
-                    <span class="text-sm" style="color: #9CA3AF;">/toujours</span>
+            {{-- PREMIUM --}}
+            <div class="plan-card plan-popular fade-up" style="transition-delay: 0.2s;">
+                <div style="position: absolute; top: 16px; right: 16px; background-color: #F0F9F4; color: #42B574; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">Recommandé</div>
+                <h3 class="text-xl font-bold" style="color: #2C2A27;">Premium</h3>
+                <div class="mb-6 mt-4">
+                    <span class="text-4xl font-bold" style="color: #2C2A27;" id="price-premium">8$</span>
+                    <span class="text-sm" style="color: #9CA3AF;" id="period-premium">/mois</span>
                 </div>
-                <a href="{{ route('register') }}" class="btn btn-secondary w-full mb-6" style="border-radius: 10px;">Créer mon profil</a>
+                <a href="{{ route('register') }}" class="btn btn-primary w-full mb-6" style="border-radius: 10px;">Commencer</a>
                 <div class="space-y-3">
                     @php
-                    $freeFeatures = ['1 profil', 'Code aléatoire (8 caractères)', '3 liens sociaux', '2 images (sans liens)', '1 section texte', '3 templates gratuits', 'Connexions illimitées', 'Carte NFC à 49,99$'];
+                    $premiumFeatures = ['1 profil (+8$/mois par extra)', 'Username personnalisé obligatoire', '10 liens sociaux', '10 images avec liens', '5 sections texte', 'QR Code popup'];
                     @endphp
-                    @foreach($freeFeatures as $f)
+                    @foreach($premiumFeatures as $f)
                     <div class="flex items-start gap-2">
                         <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="#42B574" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
                         <span class="text-sm" style="color: #4B5563;">{{ $f }}</span>
