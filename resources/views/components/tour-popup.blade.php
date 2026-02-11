@@ -125,25 +125,26 @@
      x-transition:leave="transition ease-in duration-200"
      x-transition:leave-start="translate-y-0"
      x-transition:leave-end="translate-y-full"
-     class="fixed bottom-0 left-0 right-0 z-[9999] lg:hidden">
+     class="fixed bottom-0 left-0 right-0 z-[9999] lg:hidden"
+     style="padding-bottom: env(safe-area-inset-bottom, 0px);">
 
     <div class="bg-white rounded-t-2xl w-full overflow-hidden"
-         style="box-shadow: 0 -8px 30px rgba(0,0,0,0.15);">
+         style="box-shadow: 0 -8px 30px rgba(0,0,0,0.15); border-top: 1px solid #E5E7EB;">
 
         {{-- Drag handle --}}
-        <div class="flex justify-center pt-3 pb-1">
+        <div class="flex justify-center pt-2.5 pb-1">
             <div class="w-10 h-1 rounded-full" style="background: #D1D5DB;"></div>
         </div>
 
-        <div class="px-5 pb-5 pt-1">
+        <div class="px-4 pb-4 pt-1">
             {{-- Header: icon + title + step + skip --}}
-            <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center space-x-3">
-                    <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background: {{ $current['badge_bg'] }};">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center space-x-2.5">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background: {{ $current['badge_bg'] }};">
                         <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">{!! $current['icon'] !!}</svg>
                     </div>
                     <div>
-                        <span class="font-semibold text-sm block" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">{{ $current['title'] }}</span>
+                        <span class="font-semibold text-[13px] block leading-tight" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">{{ $current['title'] }}</span>
                         <span class="text-[10px]" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">{{ $current['step_label'] }}</span>
                     </div>
                 </div>
@@ -153,7 +154,7 @@
             </div>
 
             {{-- Description --}}
-            <p class="text-xs leading-relaxed mb-4" style="font-family: 'Manrope', sans-serif; color: #4B5563;">{{ $current['description'] }}</p>
+            <p class="text-xs leading-relaxed mb-3" style="font-family: 'Manrope', sans-serif; color: #4B5563;">{{ $current['description'] }}</p>
 
             {{-- Progress dots + button --}}
             <div class="flex items-center justify-between">
@@ -172,5 +173,8 @@
                 </a>
             </div>
         </div>
+
+        {{-- Extra safe area spacer for phones with gesture bar --}}
+        <div style="height: env(safe-area-inset-bottom, 8px); min-height: 8px; background: white;"></div>
     </div>
 </div>
