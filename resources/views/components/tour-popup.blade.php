@@ -125,14 +125,14 @@
      x-transition:leave="transition ease-in duration-200"
      x-transition:leave-start="translate-y-0"
      x-transition:leave-end="translate-y-full"
-     class="fixed bottom-0 left-0 right-0 z-[9999] lg:hidden"
-     style="padding-bottom: env(safe-area-inset-bottom, 0px);">
+     class="fixed left-0 right-0 z-[9999] lg:hidden"
+     style="bottom: 0;">
 
-    <div class="bg-white rounded-t-2xl w-full overflow-hidden"
-         style="box-shadow: 0 -8px 30px rgba(0,0,0,0.15); border-top: 1px solid #E5E7EB;">
+    <div class="bg-white rounded-t-2xl w-full"
+         style="box-shadow: 0 -4px 20px rgba(0,0,0,0.12); border-top: 1px solid #E5E7EB;">
 
         {{-- Drag handle --}}
-        <div class="flex justify-center pt-2.5 pb-1">
+        <div class="flex justify-center pt-2 pb-1">
             <div class="w-10 h-1 rounded-full" style="background: #D1D5DB;"></div>
         </div>
 
@@ -173,8 +173,5 @@
                 </a>
             </div>
         </div>
-
-        {{-- Extra safe area spacer for phones with gesture bar --}}
-        <div style="height: env(safe-area-inset-bottom, 8px); min-height: 8px; background: white;"></div>
     </div>
 </div>
