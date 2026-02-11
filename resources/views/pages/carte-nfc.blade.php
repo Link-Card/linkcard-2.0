@@ -53,12 +53,12 @@
                         <div class="pulse-ring"></div>
                     </div>
                     {{-- Card --}}
-                    <div class="float-card" style="width: 300px; height: 190px; background: linear-gradient(135deg, #2C2A27 0%, #3a3835 100%); border-radius: 16px; box-shadow: 0 25px 60px rgba(0,0,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1); position: relative; overflow: hidden; z-index: 5;">
-                        <div style="position: absolute; top: 0; right: 0; width: 120px; height: 120px; background: radial-gradient(circle at top right, rgba(66,181,116,0.2), transparent 70%);"></div>
+                    <div class="float-card" style="width: 300px; height: 190px; background: linear-gradient(135deg, #FFFFFF 0%, #F7F8F4 100%); border-radius: 16px; box-shadow: 0 25px 60px rgba(0,0,0,0.25); display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #E5E7EB; position: relative; overflow: hidden; z-index: 5;">
+                        <div style="position: absolute; top: 0; right: 0; width: 120px; height: 120px; background: radial-gradient(circle at top right, rgba(66,181,116,0.1), transparent 70%);"></div>
                         <svg viewBox="0 0 40 40" fill="none" style="width: 52px; height: 52px;"><path d="M12 20c0-4.4 3.6-8 8-8" stroke="#42B574" stroke-width="3" stroke-linecap="round"/><path d="M28 20c0 4.4-3.6 8-8 8" stroke="#42B574" stroke-width="3" stroke-linecap="round"/><circle cx="16" cy="20" r="4" fill="#42B574" opacity="0.3"/><circle cx="24" cy="20" r="4" fill="#42B574" opacity="0.3"/></svg>
-                        <div style="margin-top: 8px; font-size: 20px; font-weight: 700; letter-spacing: -0.02em;"><span style="color: #42B574;">LINK</span><span style="color: #FFFFFF;">CARD</span></div>
+                        <div style="margin-top: 8px; font-size: 20px; font-weight: 700; letter-spacing: -0.02em;"><span style="color: #42B574;">LINK</span><span style="color: #2C2A27;">CARD</span></div>
                         <div style="position: absolute; bottom: 14px; right: 16px;">
-                            <svg class="w-5 h-5" fill="none" stroke="rgba(255,255,255,0.25)" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0"/><circle cx="12" cy="18.75" r="0.75" fill="rgba(255,255,255,0.25)"/></svg>
+                            <svg class="w-5 h-5" fill="none" stroke="rgba(44,42,39,0.2)" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0"/><circle cx="12" cy="18.75" r="0.75" fill="rgba(44,42,39,0.2)"/></svg>
                         </div>
                     </div>
                 </div>

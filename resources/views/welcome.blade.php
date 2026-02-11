@@ -124,7 +124,8 @@
         overflow: hidden;
     }
     .nfc-card-dark {
-        background: linear-gradient(135deg, #2C2A27 0%, #1A1918 100%);
+        background: linear-gradient(135deg, #FFFFFF 0%, #F7F8F4 100%);
+        border: 1px solid #E5E7EB;
     }
     .nfc-card-dark::before {
         content: '';
@@ -133,7 +134,7 @@
         right: 0;
         width: 80px;
         height: 80px;
-        background: radial-gradient(circle at top right, rgba(66,181,116,0.15), transparent 70%);
+        background: radial-gradient(circle at top right, rgba(66,181,116,0.1), transparent 70%);
     }
     .nfc-card-text {
         font-size: 14px;
@@ -141,7 +142,7 @@
         letter-spacing: -0.02em;
     }
     .nfc-card-dark .nfc-card-text span:first-child { color: #42B574; }
-    .nfc-card-dark .nfc-card-text span:last-child { color: #FFFFFF; }
+    .nfc-card-dark .nfc-card-text span:last-child { color: #2C2A27; }
 
     /* Hero floating card */
     .hero-card {
@@ -749,7 +750,7 @@
         <div class="fade-up" style="background: linear-gradient(135deg, #F0F9F4 0%, #EFF6FF 100%); border-radius: 16px; padding: 24px 28px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center; text-align: center;">
             <span class="text-2xl">🎁</span>
             <p class="text-sm sm:text-base font-medium" style="color: #2C2A27;">
-                <strong>Offre de lancement :</strong> 2e profil offert pour les 250 premiers inscrits
+                <strong>Offre de lancement :</strong> 2e profil offert avec chaque bundle
             </p>
             <a href="{{ route('register') }}" class="btn btn-primary btn-sm" style="border-radius: 8px;">En profiter</a>
         </div>

@@ -83,11 +83,11 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div class="order-2 lg:order-1 fade-up">
-                <div style="background: linear-gradient(135deg, #2C2A27, #1A1918); border-radius: 20px; padding: 40px; text-align: center;">
-                    <div style="width: 260px; height: 164px; background: linear-gradient(135deg, #2C2A27 0%, #3a3835 100%); border-radius: 14px; margin: 0 auto; box-shadow: 0 15px 40px rgba(0,0,0,0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.08); position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: 0; right: 0; width: 100px; height: 100px; background: radial-gradient(circle at top right, rgba(66,181,116,0.2), transparent 70%);"></div>
+                <div style="background: linear-gradient(135deg, #F0F9F4, #EFF6FF); border-radius: 20px; padding: 40px; text-align: center;">
+                    <div style="width: 260px; height: 164px; background: linear-gradient(135deg, #FFFFFF 0%, #F7F8F4 100%); border-radius: 14px; margin: 0 auto; box-shadow: 0 15px 40px rgba(0,0,0,0.12); display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #E5E7EB; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: 0; right: 0; width: 100px; height: 100px; background: radial-gradient(circle at top right, rgba(66,181,116,0.1), transparent 70%);"></div>
                         <svg viewBox="0 0 40 40" fill="none" style="width: 44px; height: 44px;"><path d="M12 20c0-4.4 3.6-8 8-8" stroke="#42B574" stroke-width="3" stroke-linecap="round"/><path d="M28 20c0 4.4-3.6 8-8 8" stroke="#42B574" stroke-width="3" stroke-linecap="round"/><circle cx="16" cy="20" r="4" fill="#42B574" opacity="0.3"/><circle cx="24" cy="20" r="4" fill="#42B574" opacity="0.3"/></svg>
-                        <div style="margin-top: 6px; font-size: 16px; font-weight: 700; letter-spacing: -0.02em;"><span style="color: #42B574;">LINK</span><span style="color: #FFFFFF;">CARD</span></div>
+                        <div style="margin-top: 6px; font-size: 16px; font-weight: 700; letter-spacing: -0.02em;"><span style="color: #42B574;">LINK</span><span style="color: #2C2A27;">CARD</span></div>
                     </div>
                 </div>
             </div>
