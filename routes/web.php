@@ -12,6 +12,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Landing preview (temporaire — pour tester connecté)
+Route::get('/landing', fn() => view('welcome'))->name('landing.preview');
+
 // Legal pages
 Route::get('/conditions', fn() => view('legal.terms'))->name('legal.terms');
 Route::get('/confidentialite', fn() => view('legal.privacy'))->name('legal.privacy');
