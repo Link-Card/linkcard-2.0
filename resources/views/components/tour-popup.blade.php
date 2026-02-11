@@ -4,7 +4,6 @@
 
     $user = auth()->user();
     $profile = $user?->profiles()->first();
-    $profileEditUrl = $profile ? route('profile.edit', $profile) : route('profile.create');
 
     $steps = [
         1 => [
@@ -57,10 +56,10 @@
     $current = $steps[$tourStep] ?? null;
     if (!$current) return;
 
-    // Build clean dismiss URL (current page without tour param)
     $dismissUrl = route('dashboard');
 @endphp
 
+{{-- Desktop: centered popup with light overlay --}}
 <div x-data="{ show: true }" x-show="show" x-cloak
      x-transition:enter="transition ease-out duration-300"
      x-transition:enter-start="opacity-0"
@@ -68,16 +67,12 @@
      x-transition:leave="transition ease-in duration-200"
      x-transition:leave-start="opacity-100"
      x-transition:leave-end="opacity-0"
-     class="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+     class="fixed inset-0 z-[9999] hidden lg:flex items-center justify-center p-4"
      style="background: rgba(0,0,0,0.25); backdrop-filter: blur(1px);">
 
-    <div class="bg-white rounded-2xl w-full max-w-sm overflow-hidden relative mx-4"
-         style="box-shadow: 0 25px 50px rgba(0,0,0,0.15); max-height: 90vh;"
-         x-transition:enter="transition ease-out duration-300 delay-100"
-         x-transition:enter-start="opacity-0 scale-95 translate-y-4"
-         x-transition:enter-end="opacity-100 scale-100 translate-y-0">
+    <div class="bg-white rounded-2xl w-full max-w-sm overflow-hidden relative"
+         style="box-shadow: 0 25px 50px rgba(0,0,0,0.15);">
 
-        {{-- Step indicator --}}
         @if($current['step_label'])
         <div class="absolute top-4 left-5">
             <span class="text-xs font-medium px-2.5 py-1 rounded-full" style="font-family: 'Manrope', sans-serif; background: #F3F4F6; color: #4B5563;">
@@ -86,20 +81,16 @@
         </div>
         @endif
 
-        {{-- Skip tour --}}
         <a href="{{ $dismissUrl }}" class="absolute top-4 right-4 text-xs px-2.5 py-1 rounded-full transition-colors" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;" onmouseover="this.style.background='#F3F4F6'" onmouseout="this.style.background='transparent'">
             Passer ✕
         </a>
 
-        <div class="pt-10 pb-5 px-5 sm:px-6 text-center">
-
-            {{-- Icon --}}
-            <div class="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 rounded-xl sm:rounded-2xl flex items-center justify-center" style="background: {{ $current['icon_bg'] }};">
-                <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="{{ $current['badge_bg'] }}" stroke-width="1.5" viewBox="0 0 24 24">{!! $current['icon'] !!}</svg>
+        <div class="pt-10 pb-5 px-6 text-center">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style="background: {{ $current['icon_bg'] }};">
+                <svg class="w-8 h-8" fill="none" stroke="{{ $current['badge_bg'] }}" stroke-width="1.5" viewBox="0 0 24 24">{!! $current['icon'] !!}</svg>
             </div>
 
-            {{-- Content card --}}
-            <div class="p-3 sm:p-4 rounded-xl text-left mb-4" style="background: {{ $current['icon_bg'] }}; border: 1px solid {{ $current['icon_border'] }};">
+            <div class="p-4 rounded-xl text-left mb-4" style="background: {{ $current['icon_bg'] }}; border: 1px solid {{ $current['icon_border'] }};">
                 <div class="flex items-center space-x-2.5 mb-1.5">
                     <div class="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0" style="background: {{ $current['badge_bg'] }};">
                         <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">{!! $current['icon'] !!}</svg>
@@ -109,23 +100,77 @@
                 <p class="text-xs leading-relaxed" style="font-family: 'Manrope', sans-serif; color: #4B5563;">{{ $current['description'] }}</p>
             </div>
 
-            {{-- Progress dots (steps 1-4) --}}
-            @if($tourStep <= 4)
             <div class="flex items-center justify-center space-x-2 mb-4">
                 @for($i = 1; $i <= 4; $i++)
                     <div class="rounded-full {{ $i === $tourStep ? 'w-2.5 h-2.5' : 'w-2 h-2' }}" style="background: {{ $i === $tourStep ? '#42B574' : ($i < $tourStep ? '#42B574' : '#D1D5DB') }}; {{ $i < $tourStep ? 'opacity: 0.5;' : '' }}"></div>
                 @endfor
             </div>
-            @endif
 
-            {{-- Action --}}
-            <a href="{{ $current['next_url'] }}" class="block w-full py-2.5 sm:py-3 px-6 rounded-xl text-white font-medium text-sm text-center transition-all duration-200" style="font-family: 'Manrope', sans-serif; background: {{ $current['badge_bg'] }};" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+            <a href="{{ $current['next_url'] }}" class="block w-full py-3 px-6 rounded-xl text-white font-medium text-sm text-center transition-all duration-200" style="font-family: 'Manrope', sans-serif; background: {{ $current['badge_bg'] }};" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
                 @if($current['is_last'] ?? false)
                     {{ $current['next_label'] }}
                 @else
                     Suivant : {{ $current['next_label'] }} →
                 @endif
             </a>
+        </div>
+    </div>
+</div>
+
+{{-- Mobile: bottom sheet, no overlay --}}
+<div x-data="{ show: true }" x-show="show" x-cloak
+     x-transition:enter="transition ease-out duration-300"
+     x-transition:enter-start="translate-y-full"
+     x-transition:enter-end="translate-y-0"
+     x-transition:leave="transition ease-in duration-200"
+     x-transition:leave-start="translate-y-0"
+     x-transition:leave-end="translate-y-full"
+     class="fixed bottom-0 left-0 right-0 z-[9999] lg:hidden">
+
+    <div class="bg-white rounded-t-2xl w-full overflow-hidden"
+         style="box-shadow: 0 -8px 30px rgba(0,0,0,0.15);">
+
+        {{-- Drag handle --}}
+        <div class="flex justify-center pt-3 pb-1">
+            <div class="w-10 h-1 rounded-full" style="background: #D1D5DB;"></div>
+        </div>
+
+        <div class="px-5 pb-5 pt-1">
+            {{-- Header: icon + title + step + skip --}}
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background: {{ $current['badge_bg'] }};">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">{!! $current['icon'] !!}</svg>
+                    </div>
+                    <div>
+                        <span class="font-semibold text-sm block" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">{{ $current['title'] }}</span>
+                        <span class="text-[10px]" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">{{ $current['step_label'] }}</span>
+                    </div>
+                </div>
+                <a href="{{ $dismissUrl }}" class="text-xs px-2 py-1 rounded-full" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">
+                    Passer ✕
+                </a>
+            </div>
+
+            {{-- Description --}}
+            <p class="text-xs leading-relaxed mb-4" style="font-family: 'Manrope', sans-serif; color: #4B5563;">{{ $current['description'] }}</p>
+
+            {{-- Progress dots + button --}}
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-1.5">
+                    @for($i = 1; $i <= 4; $i++)
+                        <div class="rounded-full {{ $i === $tourStep ? 'w-2 h-2' : 'w-1.5 h-1.5' }}" style="background: {{ $i === $tourStep ? '#42B574' : ($i < $tourStep ? '#42B574' : '#D1D5DB') }}; {{ $i < $tourStep ? 'opacity: 0.5;' : '' }}"></div>
+                    @endfor
+                </div>
+
+                <a href="{{ $current['next_url'] }}" class="py-2.5 px-5 rounded-xl text-white font-medium text-sm text-center transition-all duration-200" style="font-family: 'Manrope', sans-serif; background: {{ $current['badge_bg'] }};">
+                    @if($current['is_last'] ?? false)
+                        {{ $current['next_label'] }}
+                    @else
+                        Suivant →
+                    @endif
+                </a>
+            </div>
         </div>
     </div>
 </div>
