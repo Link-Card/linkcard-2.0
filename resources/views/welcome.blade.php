@@ -109,12 +109,12 @@
     .phone-cta-btn { background: #42B574; color: white; justify-content: center; font-weight: 600; }
 
     /* ============================================
-       NFC CARD MOCKUP
+       NFC CARD MOCKUP (VERTICAL)
        ============================================ */
     .nfc-card {
-        width: 200px;
-        height: 126px;
-        border-radius: 12px;
+        width: 140px;
+        height: 220px;
+        border-radius: 14px;
         box-shadow: 0 15px 40px rgba(0,0,0,0.12), 0 5px 15px rgba(0,0,0,0.08);
         display: flex;
         flex-direction: column;
@@ -122,39 +122,40 @@
         justify-content: center;
         position: relative;
         overflow: hidden;
-    }
-    .nfc-card-dark {
-        background: linear-gradient(135deg, #FFFFFF 0%, #F7F8F4 100%);
+        background: linear-gradient(180deg, #FFFFFF 0%, #F9FAF7 100%);
         border: 1px solid #E5E7EB;
     }
-    .nfc-card-dark::before {
+    .nfc-card::before {
         content: '';
         position: absolute;
-        top: 0;
+        bottom: 0;
+        left: 0;
         right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #42B574, #4A7FBF);
+    }
+    .nfc-card img.nfc-logo {
         width: 80px;
-        height: 80px;
-        background: radial-gradient(circle at top right, rgba(66,181,116,0.1), transparent 70%);
+        height: auto;
+        object-fit: contain;
     }
-    .nfc-card-text {
-        font-size: 14px;
-        font-weight: 700;
-        letter-spacing: -0.02em;
+    .nfc-card .nfc-icon {
+        position: absolute;
+        bottom: 14px;
+        right: 12px;
     }
-    .nfc-card-dark .nfc-card-text span:first-child { color: #42B574; }
-    .nfc-card-dark .nfc-card-text span:last-child { color: #2C2A27; }
 
     /* Hero floating card */
     .hero-card {
         position: absolute;
-        bottom: 40px;
-        left: -60px;
-        transform: rotate(-12deg);
+        bottom: 20px;
+        left: -50px;
+        transform: rotate(-8deg);
         animation: floatCard 6s ease-in-out infinite;
     }
     @keyframes floatCard {
-        0%, 100% { transform: rotate(-12deg) translateY(0); }
-        50% { transform: rotate(-12deg) translateY(-10px); }
+        0%, 100% { transform: rotate(-8deg) translateY(0); }
+        50% { transform: rotate(-8deg) translateY(-10px); }
     }
 
     /* ============================================
@@ -294,9 +295,9 @@
             bottom: auto;
             left: auto;
             transform: rotate(-6deg);
-            margin-top: -20px;
+            margin-top: -30px;
         }
-        .nfc-card { width: 170px; height: 107px; }
+        .nfc-card { width: 120px; height: 190px; }
     }
 </style>
 @endsection
@@ -365,18 +366,11 @@
                         </div>
                     </div>
                 </div>
-                {{-- Floating NFC Card --}}
+                {{-- Floating NFC Card (vertical) --}}
                 <div class="hero-card">
-                    <div class="nfc-card-dark nfc-card">
-                        <svg viewBox="0 0 40 40" fill="none" style="width: 36px; height: 36px;">
-                            <path d="M12 20c0-4.4 3.6-8 8-8" stroke="#42B574" stroke-width="3" stroke-linecap="round"/>
-                            <path d="M28 20c0 4.4-3.6 8-8 8" stroke="#42B574" stroke-width="3" stroke-linecap="round"/>
-                            <circle cx="16" cy="20" r="4" fill="#42B574" opacity="0.3"/>
-                            <circle cx="24" cy="20" r="4" fill="#42B574" opacity="0.3"/>
-                        </svg>
-                        <div class="nfc-card-text mt-1">
-                            <span>LINK</span><span>CARD</span>
-                        </div>
+                    <div class="nfc-card">
+                        <img src="{{ asset('images/logo-noir.png') }}" alt="LinkCard" class="nfc-logo">
+                        <svg class="nfc-icon" width="16" height="16" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0"/><circle cx="12" cy="18.75" r="0.75" fill="#9CA3AF"/></svg>
                     </div>
                 </div>
             </div>
@@ -476,16 +470,9 @@
                         <div class="tap-ring"></div>
                         <div class="tap-ring"></div>
                         <div class="tap-ring"></div>
-                        <div class="nfc-card-dark nfc-card" style="width: 160px; height: 100px; position: relative; z-index: 5;">
-                            <svg viewBox="0 0 40 40" fill="none" style="width: 28px; height: 28px;">
-                                <path d="M12 20c0-4.4 3.6-8 8-8" stroke="#42B574" stroke-width="3" stroke-linecap="round"/>
-                                <path d="M28 20c0 4.4-3.6 8-8 8" stroke="#42B574" stroke-width="3" stroke-linecap="round"/>
-                                <circle cx="16" cy="20" r="4" fill="#42B574" opacity="0.3"/>
-                                <circle cx="24" cy="20" r="4" fill="#42B574" opacity="0.3"/>
-                            </svg>
-                            <div class="nfc-card-text" style="font-size: 11px;">
-                                <span>LINK</span><span>CARD</span>
-                            </div>
+                        <div class="nfc-card" style="width: 120px; height: 190px; position: relative; z-index: 5;">
+                            <img src="{{ asset('images/logo-noir.png') }}" alt="LinkCard" class="nfc-logo" style="width: 65px;">
+                            <svg class="nfc-icon" width="14" height="14" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0"/><circle cx="12" cy="18.75" r="0.75" fill="#9CA3AF"/></svg>
                         </div>
                     </div>
                 </div>
