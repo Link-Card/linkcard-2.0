@@ -1,5 +1,5 @@
 # LINKCARD 2.0 — CONTEXTE PROJET
-**Mise à jour:** 10 février 2026
+**Mise à jour:** 11 février 2026
 
 ## État actuel
 - **Sprint 1 (Auth):** 100% ✅
@@ -10,11 +10,17 @@
 - **Sprint 6 (Stats + URLs custom):** 100% ✅
 - **Sprint 7 (Templates):** ~80% (Phase 1-4 done, Phase 5 Custom TODO, formulaires nouvelles bandes TODO)
 - **Analyse personas (Phases 1-5):** 100% ✅ (Quick fixes UI, contact rapide, email bienvenue, sécurité, UX)
-- **Phase 6 (Post-MVP):** Planification complétée, document PHASE_6_POST_MVP.md créé
+- **Phase 6 (Post-MVP):** En cours
+  - ✅ Landing page + 7 pages publiques complétées
+  - ⏳ Onboarding guidé
+  - ⏳ Analytics par plan
+  - ⏳ Tests automatisés
+  - ⏳ Build Tailwind production
+  - ⏳ Nettoyage Storage
 - **Legal:** 100% ✅ (Conditions, Confidentialité, Remboursement — conformes Québec/Canada)
 - **Branding:** 95%
 - **Mobile responsive:** 90%
-- **Progression globale:** ~87% MVP
+- **Progression globale:** ~90% MVP
 
 ## Stack technique
 - **Backend:** Laravel 11 + Livewire 3 + Alpine.js
@@ -119,29 +125,51 @@
 - Page forfaits: features mises à jour
 - Fichier orphelin "," supprimé de la racine du repo
 
-## Phase 6 — Post-MVP (PLANIFIÉ)
+## Phase 6 — Post-MVP (EN COURS)
 
 Document complet: `PHASE_6_POST_MVP.md` dans le repo.
 
-### 6 chantiers planifiés:
-1. **Landing page + pages publiques** (accueil, fonctionnalités, carte NFC, forfaits + bundles, FAQ, contact, à propos)
-2. **Build Tailwind production** (compilation CSS, remplace CDN)
-3. **Tests automatisés** (webhooks Stripe, PlanLimits, auth, cartes NFC)
-4. **Onboarding guidé** (modal bienvenue + checklist persistante)
-5. **Analytics par plan** (sources, géo, appareils — segmenté Gratuit/Pro/Premium)
-6. **Nettoyage Storage** (commande artisan dry-run + déplacement sécuritaire)
+### 6 chantiers:
+1. ✅ **Landing page + pages publiques** — COMPLÉTÉ 11 fév 2026
+2. ⏳ **Onboarding guidé** (modal bienvenue + checklist persistante)
+3. ⏳ **Analytics par plan** (sources, géo, appareils — segmenté Gratuit/Pro/Premium)
+4. ⏳ **Tests automatisés** (webhooks Stripe, PlanLimits, auth, cartes NFC)
+5. ⏳ **Nettoyage Storage** (commande artisan dry-run + déplacement sécuritaire)
+6. ⏳ **Build Tailwind production** (compilation CSS, remplace CDN — en dernier)
 
-### Bundles de lancement prévus:
-| Bundle | Contenu | Prix |
+### Pages publiques créées (layouts.public):
+| Route | Fichier | Description |
 |---|---|---|
-| Découverte | 1 carte NFC + 3 mois Premium | 59.99$ |
-| Pro | 1 carte NFC + 1 profil extra + 6 mois Premium | 99.99$ |
-| Duo | 2 cartes NFC + 2 profils + 6 mois Premium | 149.99$ |
+| / | welcome.blade.php | Landing page (hero, 3 piliers, NFC demo, bundles, CTA) |
+| /fonctionnalites | pages/fonctionnalites.blade.php | 6 features détaillées |
+| /carte-nfc | pages/carte-nfc.blade.php | Page dédiée carte NFC + comparaison |
+| /forfaits | pages/forfaits.blade.php | Bundles + forfaits standards |
+| /faq | pages/faq.blade.php | 22 questions, 5 catégories, accordion JS |
+| /contact | pages/contact.blade.php | Formulaire (pas encore fonctionnel) |
+| /a-propos | pages/a-propos.blade.php | Mission, valeurs, Québec |
+| /landing | welcome (temporaire) | Preview sans déconnexion |
 
-+ 2e profil offert pour tous les premiers inscrits au lancement
+### Bundles de lancement confirmés:
+| Bundle | Cartes | Profils | Abo inclus | Prix |
+|---|---|---|---|---|
+| Découverte | 1 | 1 + 🎁1 offert = 2 | 3 mois Pro | 59,99$ |
+| Duo ⭐ | 2 | 1 + 🎁1 offert = 2 | 6 mois Pro | 99,99$ |
+| Trio | 3 | 2 + 🎁1 offert = 3 | 6 mois Premium | 149,99$ |
 
-### Ordre d'exécution:
-Landing page → Onboarding → Analytics → Tests → Storage cleanup → Tailwind build → **BETA**
+- 🎁 +1 profil offert **uniquement avec les bundles** (pas pour tous)
+- Après la période incluse : abonnement continue au tarif standard, annulable
+
+### Décisions design Phase 6:
+- Cartes NFC mockup **toujours verticales** (concept tap)
+- Cartes **blanches seulement** (impression monochrome, clients comprennent mieux)
+- Vrai logo (logo-noir.png) sur les mockups de carte
+- Barre accent gradient vert→bleu en bas de carte
+- Icône NFC subtile grise en bas-droite
+- Forfaits page : bundles EN PREMIER, standards EN DEUXIÈME
+- Forfaits standards : style identique au dashboard (Gratuit → Pro → Premium)
+
+### Ordre d'exécution restant:
+Onboarding → Analytics → Tests → Storage cleanup → Tailwind build → **BETA**
 
 ## Pages légales
 - ✅ Conditions d'utilisation (route: legal.terms)
@@ -205,6 +233,10 @@ Landing page → Onboarding → Analytics → Tests → Storage cleanup → Tail
 11. Terminologie: "section" (pas "bande"), "forfait" (pas "plan") côté utilisateur
 12. Forfait gratuit: 3 liens sociaux (pas 2)
 13. Couleurs profil: sanitization regex hex obligatoire
+14. Cartes NFC mockup: verticales, blanches seulement, vrai logo (logo-noir.png)
+15. Bundles: Découverte/Duo/Trio — 🎁 profil offert uniquement avec bundles
+16. Page forfaits: bundles EN PREMIER, forfaits standards EN DEUXIÈME
+17. Contact form: support@linkcard.ca (pas encore configuré Mailgun)
 
 ## Fichiers critiques — NE JAMAIS ÉCRASER
 - ProfileController.php : vCard + QR download
@@ -215,6 +247,8 @@ Landing page → Onboarding → Analytics → Tests → Storage cleanup → Tail
 - PlanLimitsService.php : Limites et masquage (3 liens gratuit)
 - TemplateService.php : 13 templates avec configs
 - Dashboard.php (Admin) : Pagination + withSum (pas de N+1)
+- welcome.blade.php : Landing page complète (~800 lignes)
+- layouts/public.blade.php : Layout pages publiques (nav, footer, fade-up)
 
 ## Roadmap révisée
 1. ~~Sprint 1: Auth~~ ✅
@@ -224,7 +258,7 @@ Landing page → Onboarding → Analytics → Tests → Storage cleanup → Tail
 5. ~~Sprint 5: Connexions~~ ✅
 6. ~~Sprint 6: Stats + URLs custom~~ ✅
 7. **Sprint 7: Templates** ← EN COURS (Phase 5 + formulaires)
-8. **Phase 6: Post-MVP** ← PLANIFIÉ (landing, onboarding, analytics, tests, Tailwind)
+8. **Phase 6: Post-MVP** ← EN COURS (landing ✅, onboarding, analytics, tests, Tailwind)
 9. Sprint Pré-launch: Légal ✅ + Branding final
 10. **BETA (10-20 users)**
 11. Sprint 8: Profils Entreprise
