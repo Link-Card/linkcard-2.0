@@ -148,10 +148,21 @@
     /* Hero floating card */
     .hero-card {
         position: absolute;
-        bottom: 20px;
-        left: -50px;
+        bottom: -10px;
+        left: -70px;
         transform: rotate(-8deg);
         animation: floatCard 6s ease-in-out infinite;
+    }
+    .hero-card .nfc-card {
+        width: 110px;
+        height: 170px;
+    }
+    .hero-card .nfc-logo {
+        width: 60px !important;
+    }
+    .hero-card .nfc-icon {
+        bottom: 10px !important;
+        right: 8px !important;
     }
     @keyframes floatCard {
         0%, 100% { transform: rotate(-8deg) translateY(0); }
@@ -297,6 +308,8 @@
             transform: rotate(-6deg);
             margin-top: -30px;
         }
+        .hero-card .nfc-card { width: 100px; height: 155px; }
+        .hero-card .nfc-logo { width: 52px !important; }
         .nfc-card { width: 120px; height: 190px; }
     }
 </style>
@@ -636,7 +649,7 @@
         </div>
         <div class="text-center mb-12 fade-up">
             <h2 class="text-3xl sm:text-4xl font-bold" style="color: #2C2A27;">Démarrez avec tout ce qu'il faut</h2>
-            <p class="mt-4 text-lg max-w-2xl mx-auto" style="color: #4B5563;">Carte NFC + abonnement Premium. Tout est inclus pour faire une première impression mémorable.</p>
+            <p class="mt-4 text-lg max-w-2xl mx-auto" style="color: #4B5563;">Carte NFC + abonnement + profil bonus. Tout est inclus pour faire une première impression mémorable.</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {{-- Découverte --}}
@@ -646,9 +659,9 @@
                 <div class="mb-5">
                     <div class="flex items-baseline gap-2">
                         <span class="text-3xl font-bold" style="color: #2C2A27;">59,99$</span>
-                        <span class="text-sm line-through" style="color: #9CA3AF;">74$</span>
+                        <span class="text-sm line-through" style="color: #9CA3AF;">75$</span>
                     </div>
-                    <span class="text-xs font-medium" style="color: #42B574;">Économisez 19%</span>
+                    <span class="text-xs font-medium" style="color: #42B574;">Économisez 20%</span>
                 </div>
                 <ul class="space-y-3 mb-6">
                     <li class="flex items-center gap-2 text-sm" style="color: #4B5563;">
@@ -657,50 +670,26 @@
                     </li>
                     <li class="flex items-center gap-2 text-sm" style="color: #4B5563;">
                         <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="#42B574" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-                        3 mois Premium
+                        3 mois Pro inclus
+                    </li>
+                    <li class="flex items-center gap-2 text-sm font-medium" style="color: #42B574;">
+                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="#42B574" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                        🎁 +1 profil offert
                     </li>
                 </ul>
                 <a href="{{ route('register') }}" class="btn btn-secondary w-full" style="border-radius: 10px;">Choisir</a>
             </div>
-            {{-- Pro (populaire) --}}
+            {{-- Duo (populaire) --}}
             <div class="bundle-card bundle-popular fade-up" style="transition-delay: 0.1s;">
                 <div class="bundle-badge" style="background-color: #F0F9F4; color: #42B574;">Populaire ⭐</div>
-                <h3 class="text-lg font-bold mb-1" style="color: #2C2A27;">Pro</h3>
-                <p class="text-sm mb-5" style="color: #9CA3AF;">Le choix des professionnels</p>
+                <h3 class="text-lg font-bold mb-1" style="color: #2C2A27;">Duo</h3>
+                <p class="text-sm mb-5" style="color: #9CA3AF;">2 cartes, 2 profils</p>
                 <div class="mb-5">
                     <div class="flex items-baseline gap-2">
                         <span class="text-3xl font-bold" style="color: #2C2A27;">99,99$</span>
-                        <span class="text-sm line-through" style="color: #9CA3AF;">128$</span>
+                        <span class="text-sm line-through" style="color: #9CA3AF;">130$</span>
                     </div>
-                    <span class="text-xs font-medium" style="color: #42B574;">Économisez 22%</span>
-                </div>
-                <ul class="space-y-3 mb-6">
-                    <li class="flex items-center gap-2 text-sm" style="color: #4B5563;">
-                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="#42B574" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-                        1 carte NFC
-                    </li>
-                    <li class="flex items-center gap-2 text-sm" style="color: #4B5563;">
-                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="#42B574" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-                        1 profil supplémentaire
-                    </li>
-                    <li class="flex items-center gap-2 text-sm" style="color: #4B5563;">
-                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="#42B574" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-                        6 mois Premium
-                    </li>
-                </ul>
-                <a href="{{ route('register') }}" class="btn btn-primary w-full" style="border-radius: 10px;">Choisir</a>
-            </div>
-            {{-- Duo --}}
-            <div class="bundle-card fade-up" style="transition-delay: 0.2s;">
-                <div class="bundle-badge" style="background-color: #FEF3C7; color: #92400E;">Meilleur deal</div>
-                <h3 class="text-lg font-bold mb-1" style="color: #2C2A27;">Duo</h3>
-                <p class="text-sm mb-5" style="color: #9CA3AF;">Pour ceux qui veulent tout</p>
-                <div class="mb-5">
-                    <div class="flex items-baseline gap-2">
-                        <span class="text-3xl font-bold" style="color: #2C2A27;">149,99$</span>
-                        <span class="text-sm line-through" style="color: #9CA3AF;">208$</span>
-                    </div>
-                    <span class="text-xs font-medium" style="color: #42B574;">Économisez 28%</span>
+                    <span class="text-xs font-medium" style="color: #42B574;">Économisez 23%</span>
                 </div>
                 <ul class="space-y-3 mb-6">
                     <li class="flex items-center gap-2 text-sm" style="color: #4B5563;">
@@ -709,18 +698,50 @@
                     </li>
                     <li class="flex items-center gap-2 text-sm" style="color: #4B5563;">
                         <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="#42B574" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-                        2 profils
+                        6 mois Pro inclus
+                    </li>
+                    <li class="flex items-center gap-2 text-sm font-medium" style="color: #42B574;">
+                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="#42B574" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                        🎁 +1 profil offert
+                    </li>
+                </ul>
+                <a href="{{ route('register') }}" class="btn btn-primary w-full" style="border-radius: 10px;">Choisir</a>
+            </div>
+            {{-- Trio --}}
+            <div class="bundle-card fade-up" style="transition-delay: 0.2s;">
+                <div class="bundle-badge" style="background-color: #FEF3C7; color: #92400E;">Meilleur deal</div>
+                <h3 class="text-lg font-bold mb-1" style="color: #2C2A27;">Trio</h3>
+                <p class="text-sm mb-5" style="color: #9CA3AF;">3 cartes, 3 profils</p>
+                <div class="mb-5">
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-3xl font-bold" style="color: #2C2A27;">149,99$</span>
+                        <span class="text-sm line-through" style="color: #9CA3AF;">210$</span>
+                    </div>
+                    <span class="text-xs font-medium" style="color: #42B574;">Économisez 29%</span>
+                </div>
+                <ul class="space-y-3 mb-6">
+                    <li class="flex items-center gap-2 text-sm" style="color: #4B5563;">
+                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="#42B574" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                        3 cartes NFC
                     </li>
                     <li class="flex items-center gap-2 text-sm" style="color: #4B5563;">
                         <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="#42B574" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-                        6 mois Premium
+                        2 profils inclus
+                    </li>
+                    <li class="flex items-center gap-2 text-sm" style="color: #4B5563;">
+                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="#42B574" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                        6 mois Premium inclus
+                    </li>
+                    <li class="flex items-center gap-2 text-sm font-medium" style="color: #42B574;">
+                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="#42B574" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                        🎁 +1 profil offert
                     </li>
                 </ul>
                 <a href="{{ route('register') }}" class="btn btn-secondary w-full" style="border-radius: 10px;">Choisir</a>
             </div>
         </div>
         <div class="text-center mt-8 fade-up">
-            <p class="text-sm" style="color: #9CA3AF;">Après la période incluse : Premium continue à 8$/mois, annulable en tout temps.</p>
+            <p class="text-sm" style="color: #9CA3AF;">Après la période incluse : l'abonnement continue au tarif standard, annulable en tout temps.</p>
             <a href="{{ url('/forfaits') }}" class="inline-flex items-center text-sm font-medium mt-2" style="color: #42B574;">
                 Voir tous les forfaits
                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
