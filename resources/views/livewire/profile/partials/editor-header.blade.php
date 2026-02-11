@@ -1,4 +1,5 @@
-<div x-data="{ open: false }" x-cloak
+<div id="section-photo" x-data="{ open: new URLSearchParams(window.location.search).get('focus') === 'photo' }" x-cloak
+     x-init="if(open) { $nextTick(() => $el.scrollIntoView({ behavior: 'smooth', block: 'center' })) }"
      class="bg-white rounded-xl overflow-hidden"
      style="border: 1px solid #E5E7EB; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
     <button @click="open = !open"

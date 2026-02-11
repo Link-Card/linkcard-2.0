@@ -8,46 +8,74 @@ class OnboardingService
 {
     /**
      * Get all onboarding steps with completion status.
+     * Only returns steps that are relevant (no pre-completed fluff).
      */
     public static function getSteps(User $user): array
     {
         $profile = $user->profiles()->first();
+        $steps = [];
 
-        return [
-            [
-                'key' => 'account',
-                'label' => 'Créer votre compte',
-                'completed' => true,
-                'action' => null,
-            ],
-            [
+        // Step: Verify email — ONLY if not verified
+        if ($user->email_verified_at === null) {
+            $steps[] = [
                 'key' => 'email_verified',
                 'label' => 'Vérifier votre email',
-                'completed' => $user->email_verified_at !== null,
+                'completed' => false,
                 'action' => route('verification.notice'),
-            ],
-            [
-                'key' => 'photo',
-                'label' => 'Ajouter votre photo',
-                'completed' => $profile && $profile->photo_path !== null,
-                'action' => $profile ? route('profile.edit', $profile) : route('profile.create'),
-            ],
-            [
-                'key' => 'social_link',
-                'label' => 'Ajouter un lien social',
-                'completed' => $profile && $profile->contentBands()
-                    ->where('type', 'social_link')
-                    ->where('is_hidden', false)
-                    ->exists(),
-                'action' => $profile ? route('profile.edit', $profile) : route('profile.create'),
-            ],
-            [
-                'key' => 'shared',
-                'label' => 'Partager votre profil',
-                'completed' => $profile && $profile->view_count > 0,
-                'action' => $profile ? route('profile.public', $profile->username) : null,
-            ],
+                'icon' => 'email',
+                'dismissable' => false,
+            ];
+        }
+
+        // Step: Add photo
+        $steps[] = [
+            'key' => 'photo',
+            'label' => 'Ajouter votre photo',
+            'completed' => $profile && $profile->photo_path !== null,
+            'action' => $profile ? route('profile.edit', $profile) . '?focus=photo' : route('profile.create'),
+            'icon' => 'photo',
+            'dismissable' => false,
         ];
+
+        // Step: Add social link
+        $steps[] = [
+            'key' => 'social_link',
+            'label' => 'Ajouter un lien social',
+            'completed' => $profile && $profile->contentBands()
+                ->where('type', 'social_link')
+                ->where('is_hidden', false)
+                ->exists(),
+            'action' => $profile ? route('profile.edit', $profile) : route('profile.create'),
+            'icon' => 'link',
+            'dismissable' => false,
+        ];
+
+        // Step: Share profile (require 2+ views to avoid self-view counting)
+        $steps[] = [
+            'key' => 'shared',
+            'label' => 'Partager votre profil',
+            'completed' => $profile && $profile->view_count >= 2,
+            'action' => $profile ? route('profile.public', $profile->username) : null,
+            'icon' => 'share',
+            'dismissable' => false,
+        ];
+
+        // Step: Order NFC card — show only for first 7 days AND if no cards
+        $hasCards = $user->cards()->exists();
+        $accountAge = $user->created_at ? $user->created_at->diffInDays(now()) : 0;
+
+        if (!$hasCards && $accountAge <= 7) {
+            $steps[] = [
+                'key' => 'order_card',
+                'label' => 'Commander votre première carte NFC',
+                'completed' => $user->cardOrders()->exists(),
+                'action' => route('cards.order'),
+                'icon' => 'card',
+                'dismissable' => true,
+            ];
+        }
+
+        return $steps;
     }
 
     /**
@@ -56,6 +84,8 @@ class OnboardingService
     public static function getProgress(User $user): int
     {
         $steps = self::getSteps($user);
+        if (empty($steps)) return 100;
+
         $completed = collect($steps)->where('completed', true)->count();
         return (int) round(($completed / count($steps)) * 100);
     }
@@ -65,7 +95,9 @@ class OnboardingService
      */
     public static function isComplete(User $user): bool
     {
-        return self::getProgress($user) === 100;
+        $steps = self::getSteps($user);
+        if (empty($steps)) return true;
+        return collect($steps)->where('completed', false)->isEmpty();
     }
 
     /**
@@ -98,13 +130,11 @@ class OnboardingService
             return false;
         }
 
-        // Don't show if completed onboarding already
+        // Don't show if marked complete
         if ($user->onboarding_completed_at !== null) {
             return false;
         }
 
-        // Show even if dismissed (it comes back next login)
-        // But don't show if dismissed in this session
         return true;
     }
 

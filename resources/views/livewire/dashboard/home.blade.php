@@ -24,62 +24,36 @@
             {{-- Slide 1: Bienvenue --}}
             <div x-show="slide === 1" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0">
                 <div class="pt-10 pb-6 px-8 text-center">
-                    {{-- Logo --}}
                     <div class="w-20 h-20 mx-auto mb-6 rounded-2xl flex items-center justify-center" style="background: linear-gradient(135deg, #42B574, #4A7FBF);">
                         <img src="{{ asset('images/logo-blanc.png') }}" alt="Link-Card" class="h-12 w-auto">
                     </div>
-
-                    <h2 class="text-2xl font-semibold mb-3" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">
-                        Bienvenue sur Link-Card!
-                    </h2>
-                    <p class="text-sm leading-relaxed mb-8" style="font-family: 'Manrope', sans-serif; color: #4B5563;">
-                        Votre profil digital professionnel est prêt à être créé. On vous guide en <strong>3 étapes simples</strong>.
-                    </p>
-
-                    {{-- Dots --}}
+                    <h2 class="text-2xl font-semibold mb-3" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">Bienvenue sur Link-Card!</h2>
+                    <p class="text-sm leading-relaxed mb-8" style="font-family: 'Manrope', sans-serif; color: #4B5563;">Votre profil digital professionnel est prêt à être créé. On vous guide en <strong>3 étapes simples</strong>.</p>
                     <div class="flex items-center justify-center space-x-2 mb-6">
                         <div class="w-2.5 h-2.5 rounded-full" style="background: #42B574;"></div>
                         <div class="w-2 h-2 rounded-full" style="background: #D1D5DB;"></div>
                         <div class="w-2 h-2 rounded-full" style="background: #D1D5DB;"></div>
                     </div>
-
-                    <button @click="slide = 2" class="w-full py-3 px-6 rounded-xl text-white font-medium text-sm transition-all duration-200" style="font-family: 'Manrope', sans-serif; background: #42B574;" onmouseover="this.style.background='#3DA367'" onmouseout="this.style.background='#42B574'">
-                        Suivant →
-                    </button>
+                    <button @click="slide = 2" class="w-full py-3 px-6 rounded-xl text-white font-medium text-sm transition-all duration-200" style="font-family: 'Manrope', sans-serif; background: #42B574;" onmouseover="this.style.background='#3DA367'" onmouseout="this.style.background='#42B574'">Suivant →</button>
                 </div>
             </div>
 
             {{-- Slide 2: Personnalisez --}}
             <div x-show="slide === 2" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0">
                 <div class="pt-10 pb-6 px-8 text-center">
-                    {{-- Icon --}}
                     <div class="w-20 h-20 mx-auto mb-6 rounded-2xl flex items-center justify-center" style="background: #F0F9F4;">
-                        <svg class="w-10 h-10" fill="none" stroke="#42B574" stroke-width="1.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/>
-                        </svg>
+                        <svg class="w-10 h-10" fill="none" stroke="#42B574" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/></svg>
                     </div>
-
-                    <h2 class="text-2xl font-semibold mb-3" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">
-                        Personnalisez votre profil
-                    </h2>
-                    <p class="text-sm leading-relaxed mb-8" style="font-family: 'Manrope', sans-serif; color: #4B5563;">
-                        Ajoutez votre photo, vos infos et vos liens sociaux. Choisissez un template qui vous ressemble parmi <strong>13 designs</strong> disponibles.
-                    </p>
-
-                    {{-- Dots --}}
+                    <h2 class="text-2xl font-semibold mb-3" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">Personnalisez votre profil</h2>
+                    <p class="text-sm leading-relaxed mb-8" style="font-family: 'Manrope', sans-serif; color: #4B5563;">Ajoutez votre photo, vos infos et vos liens sociaux. Choisissez un template qui vous ressemble parmi <strong>13 designs</strong> disponibles.</p>
                     <div class="flex items-center justify-center space-x-2 mb-6">
                         <div class="w-2 h-2 rounded-full" style="background: #D1D5DB;"></div>
                         <div class="w-2.5 h-2.5 rounded-full" style="background: #42B574;"></div>
                         <div class="w-2 h-2 rounded-full" style="background: #D1D5DB;"></div>
                     </div>
-
                     <div class="flex items-center space-x-3">
-                        <button @click="slide = 1" class="flex-1 py-3 px-6 rounded-xl font-medium text-sm transition-all duration-200 border" style="font-family: 'Manrope', sans-serif; color: #4B5563; border-color: #D1D5DB;" onmouseover="this.style.background='#F3F4F6'" onmouseout="this.style.background='transparent'">
-                            ← Retour
-                        </button>
-                        <button @click="slide = 3" class="flex-1 py-3 px-6 rounded-xl text-white font-medium text-sm transition-all duration-200" style="font-family: 'Manrope', sans-serif; background: #42B574;" onmouseover="this.style.background='#3DA367'" onmouseout="this.style.background='#42B574'">
-                            Suivant →
-                        </button>
+                        <button @click="slide = 1" class="flex-1 py-3 px-6 rounded-xl font-medium text-sm transition-all duration-200 border" style="font-family: 'Manrope', sans-serif; color: #4B5563; border-color: #D1D5DB;" onmouseover="this.style.background='#F3F4F6'" onmouseout="this.style.background='transparent'">← Retour</button>
+                        <button @click="slide = 3" class="flex-1 py-3 px-6 rounded-xl text-white font-medium text-sm transition-all duration-200" style="font-family: 'Manrope', sans-serif; background: #42B574;" onmouseover="this.style.background='#3DA367'" onmouseout="this.style.background='#42B574'">Suivant →</button>
                     </div>
                 </div>
             </div>
@@ -87,34 +61,19 @@
             {{-- Slide 3: Connectez --}}
             <div x-show="slide === 3" x-cloak x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0">
                 <div class="pt-10 pb-6 px-8 text-center">
-                    {{-- Icon --}}
                     <div class="w-20 h-20 mx-auto mb-6 rounded-2xl flex items-center justify-center" style="background: #EFF6FF;">
-                        <svg class="w-10 h-10" fill="none" stroke="#4A7FBF" stroke-width="1.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/>
-                        </svg>
+                        <svg class="w-10 h-10" fill="none" stroke="#4A7FBF" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>
                     </div>
-
-                    <h2 class="text-2xl font-semibold mb-3" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">
-                        Connectez en personne
-                    </h2>
-                    <p class="text-sm leading-relaxed mb-8" style="font-family: 'Manrope', sans-serif; color: #4B5563;">
-                        Commandez votre carte NFC et partagez votre profil d'un <strong>simple geste</strong>. Votre réseau professionnel se construit naturellement.
-                    </p>
-
-                    {{-- Dots --}}
+                    <h2 class="text-2xl font-semibold mb-3" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">Connectez en personne</h2>
+                    <p class="text-sm leading-relaxed mb-8" style="font-family: 'Manrope', sans-serif; color: #4B5563;">Commandez votre carte NFC et partagez votre profil d'un <strong>simple geste</strong>. Votre réseau professionnel se construit naturellement.</p>
                     <div class="flex items-center justify-center space-x-2 mb-6">
                         <div class="w-2 h-2 rounded-full" style="background: #D1D5DB;"></div>
                         <div class="w-2 h-2 rounded-full" style="background: #D1D5DB;"></div>
                         <div class="w-2.5 h-2.5 rounded-full" style="background: #42B574;"></div>
                     </div>
-
                     <div class="flex items-center space-x-3">
-                        <button @click="slide = 2" class="flex-1 py-3 px-6 rounded-xl font-medium text-sm transition-all duration-200 border" style="font-family: 'Manrope', sans-serif; color: #4B5563; border-color: #D1D5DB;" onmouseover="this.style.background='#F3F4F6'" onmouseout="this.style.background='transparent'">
-                            ← Retour
-                        </button>
-                        <button @click="$wire.closeModal()" class="flex-1 py-3 px-6 rounded-xl text-white font-medium text-sm transition-all duration-200" style="font-family: 'Manrope', sans-serif; background: #42B574;" onmouseover="this.style.background='#3DA367'" onmouseout="this.style.background='#42B574'">
-                            Commencer!
-                        </button>
+                        <button @click="slide = 2" class="flex-1 py-3 px-6 rounded-xl font-medium text-sm transition-all duration-200 border" style="font-family: 'Manrope', sans-serif; color: #4B5563; border-color: #D1D5DB;" onmouseover="this.style.background='#F3F4F6'" onmouseout="this.style.background='transparent'">← Retour</button>
+                        <button @click="$wire.closeModal()" class="flex-1 py-3 px-6 rounded-xl text-white font-medium text-sm transition-all duration-200" style="font-family: 'Manrope', sans-serif; background: #42B574;" onmouseover="this.style.background='#3DA367'" onmouseout="this.style.background='#42B574'">Commencer!</button>
                     </div>
                 </div>
             </div>
@@ -156,9 +115,9 @@
                 </div>
 
                 {{-- Steps --}}
-                <div class="space-y-2">
+                <div class="space-y-1.5">
                     @foreach($onboardingSteps as $step)
-                        <div class="flex items-center justify-between py-2 px-3 rounded-lg {{ $step['completed'] ? '' : 'cursor-pointer' }}"
+                        <div class="flex items-center justify-between py-2.5 px-3 rounded-lg {{ $step['completed'] ? '' : 'cursor-pointer' }}"
                              style="{{ $step['completed'] ? 'background: #F0F9F4;' : '' }}"
                              @if(!$step['completed'] && $step['action'])
                                  onclick="window.location.href='{{ $step['action'] }}'"
@@ -172,7 +131,36 @@
                                         <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                                     </div>
                                 @else
-                                    <div class="w-6 h-6 rounded-full border-2 flex-shrink-0" style="border-color: #D1D5DB;"></div>
+                                    {{-- Step-specific icons --}}
+                                    @switch($step['icon'] ?? '')
+                                        @case('email')
+                                            <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0" style="border-color: #F59E0B; background: #FEF3C7;">
+                                                <svg class="w-3 h-3" fill="none" stroke="#F59E0B" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0l-9.75 6.093L2.25 6.75"/></svg>
+                                            </div>
+                                        @break
+                                        @case('photo')
+                                            <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0" style="border-color: #D1D5DB;">
+                                                <svg class="w-3 h-3" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/></svg>
+                                            </div>
+                                        @break
+                                        @case('link')
+                                            <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0" style="border-color: #D1D5DB;">
+                                                <svg class="w-3 h-3" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-2.56a4.5 4.5 0 00-1.242-7.244l-4.5-4.5a4.5 4.5 0 00-6.364 6.364L4.34 8.374"/></svg>
+                                            </div>
+                                        @break
+                                        @case('share')
+                                            <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0" style="border-color: #D1D5DB;">
+                                                <svg class="w-3 h-3" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z"/></svg>
+                                            </div>
+                                        @break
+                                        @case('card')
+                                            <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0" style="border-color: #4A7FBF; background: #EFF6FF;">
+                                                <svg class="w-3 h-3" fill="none" stroke="#4A7FBF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/></svg>
+                                            </div>
+                                        @break
+                                        @default
+                                            <div class="w-6 h-6 rounded-full border-2 flex-shrink-0" style="border-color: #D1D5DB;"></div>
+                                    @endswitch
                                 @endif
                                 <span class="text-sm {{ $step['completed'] ? 'line-through' : '' }}" style="font-family: 'Manrope', sans-serif; color: {{ $step['completed'] ? '#9CA3AF' : '#2C2A27' }};">
                                     {{ $step['label'] }}
@@ -207,7 +195,7 @@
         <!-- Stats Cards (EN SECOND sur mobile, EN PREMIER sur desktop) -->
         <div class="grid gap-3 sm:gap-6 mb-6 sm:mb-8 grid-cols-2 xl:grid-cols-4 order-last lg:order-first">
 
-            <!-- Plan Actuel -->
+            <!-- Forfait -->
             <div class="bg-white rounded-xl border p-4 sm:p-6 transition-all duration-200"
                  style="border-color: #E5E7EB; box-shadow: 0 1px 3px rgba(0,0,0,0.05);"
                  onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'; this.style.transform='translateY(-2px)'"
@@ -281,7 +269,6 @@
                 @endphp
 
                 @if($profileCount === 0)
-                    <!-- Aucun profil - Créer -->
                     <a href="{{ route('profile.create') }}"
                        class="flex items-center space-x-4 p-4 rounded-lg border-2 border-dashed transition-all duration-200"
                        style="border-color: #D1D5DB;"
@@ -296,7 +283,6 @@
                         </div>
                     </a>
                 @elseif($profileCount === 1)
-                    <!-- Un seul profil - Modifier directement -->
                     <a href="{{ route('profile.edit', $firstProfile) }}"
                        class="flex items-center space-x-4 p-4 rounded-lg border-2 border-dashed transition-all duration-200"
                        style="border-color: #D1D5DB;"
@@ -311,7 +297,6 @@
                         </div>
                     </a>
                 @else
-                    <!-- Plusieurs profils - Voir la liste -->
                     <a href="{{ route('profile.index') }}"
                        class="flex items-center space-x-4 p-4 rounded-lg border-2 border-dashed transition-all duration-200"
                        style="border-color: #D1D5DB;"
