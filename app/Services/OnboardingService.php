@@ -37,16 +37,15 @@ class OnboardingService
             'dismissable' => false,
         ];
 
-        // Step: Add social link
+        // Step: Add a section (any content band)
         $steps[] = [
-            'key' => 'social_link',
-            'label' => 'Ajouter un lien social',
+            'key' => 'add_section',
+            'label' => 'Ajouter une section',
             'completed' => $profile && $profile->contentBands()
-                ->where('type', 'social_link')
                 ->where('is_hidden', false)
                 ->exists(),
             'action' => $profile ? route('profile.edit', $profile) : route('profile.create'),
-            'icon' => 'link',
+            'icon' => 'section',
             'dismissable' => false,
         ];
 
