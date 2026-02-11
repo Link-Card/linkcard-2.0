@@ -105,14 +105,13 @@ class OnboardingService
      */
     public static function shouldShowModal(User $user): bool
     {
-        // Already seen or dismissed
-        if ($user->onboarding_completed_at !== null || $user->onboarding_dismissed_at !== null) {
+        // Only for users created after the tour feature launch
+        if ($user->created_at && $user->created_at->lt(now()->startOfDay())) {
             return false;
         }
 
-        // Existing user with a profile already set up — skip modal
-        $profile = $user->profiles()->first();
-        if ($profile && $profile->photo_path !== null) {
+        // Already seen or dismissed
+        if ($user->onboarding_completed_at !== null || $user->onboarding_dismissed_at !== null) {
             return false;
         }
 
@@ -124,6 +123,11 @@ class OnboardingService
      */
     public static function shouldShowChecklist(User $user): bool
     {
+        // Only for users created after the tour feature launch
+        if ($user->created_at && $user->created_at->lt(now()->startOfDay())) {
+            return false;
+        }
+
         // Don't show if all complete
         if (self::isComplete($user)) {
             return false;
