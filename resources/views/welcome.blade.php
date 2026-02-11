@@ -315,7 +315,7 @@
                     <span style="color: #42B574;">Repensée.</span>
                 </h1>
                 <p class="mt-6 text-lg sm:text-xl leading-relaxed max-w-lg mx-auto lg:mx-0" style="color: #4B5563;">
-                    La carte NFC qui connecte votre monde professionnel en un geste. Créez votre profil digital et partagez-le instantanément.
+                    Un geste simple. Une connexion claire. Votre contact, directement dans le téléphone de votre interlocuteur.
                 </p>
                 <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
                     <a href="{{ route('register') }}" class="btn btn-primary" style="padding: 14px 28px; font-size: 16px; border-radius: 12px;">
@@ -326,7 +326,7 @@
                         Voir la carte
                     </a>
                 </div>
-                <p class="mt-4 text-sm" style="color: #9CA3AF;">Gratuit pour toujours · Aucune carte de crédit requise</p>
+                <p class="mt-4 text-sm" style="color: #9CA3AF;">Gratuit pour toujours · Aucune carte de crédit requise · Prêt en 2 minutes</p>
             </div>
 
             {{-- Phone + Card mockup --}}
@@ -389,8 +389,8 @@
 <section class="py-16 sm:py-24" style="background-color: #FFFFFF;">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="text-center mb-14 fade-up">
-            <h2 class="text-3xl sm:text-4xl font-bold" style="color: #2C2A27;">Tout ce qu'il faut pour connecter</h2>
-            <p class="mt-4 text-lg max-w-2xl mx-auto" style="color: #4B5563;">Un profil professionnel, une carte intelligente, un réseau qui grandit.</p>
+            <h2 class="text-3xl sm:text-4xl font-bold" style="color: #2C2A27;">La simplicité qui fait <span style="color: #42B574;">la différence</span></h2>
+            <p class="mt-4 text-lg max-w-2xl mx-auto" style="color: #4B5563;">La technologie au service de la relation. Un profil professionnel, une carte intelligente, un réseau qui grandit.</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             <div class="pillar-card fade-up">
@@ -419,9 +419,54 @@
 </section>
 
 {{-- ============================================
-     DÉMO NFC
+     LE PROBLÈME / LA SOLUTION
      ============================================ --}}
 <section class="py-16 sm:py-24" style="background-color: #F7F8F4;">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            {{-- Le problème --}}
+            <div class="fade-up">
+                <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium mb-6" style="background-color: #FEF2F2; color: #EF4444;">
+                    <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+                    Le constat
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-bold mb-6" style="color: #2C2A27;">
+                    Les rencontres ne manquent pas.<br>
+                    <span style="color: #9CA3AF;">Les connexions durables, oui.</span>
+                </h2>
+                <p class="text-lg leading-relaxed mb-4" style="color: #4B5563;">
+                    La majorité des professionnels distribuent des cartes d'affaires chaque semaine. Pourtant, très peu de ces cartes mènent à une vraie relation.
+                </p>
+                <p class="text-lg leading-relaxed" style="color: #4B5563;">
+                    Une carte oubliée dans une poche, un tiroir ou une voiture, c'est une opportunité perdue. Le problème n'est pas le réseautage — c'est ce qui se passe <strong style="color: #2C2A27;">après</strong>.
+                </p>
+            </div>
+
+            {{-- La solution --}}
+            <div class="fade-up" style="transition-delay: 0.15s;">
+                <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium mb-6" style="background-color: #F0F9F4; color: #42B574;">
+                    <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+                    La solution
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-bold mb-6" style="color: #2C2A27;">
+                    Chaque rencontre mérite<br>
+                    <span style="color: #42B574;">une continuité.</span>
+                </h2>
+                <p class="text-lg leading-relaxed mb-4" style="color: #4B5563;">
+                    LinkCard remplace la carte d'affaires traditionnelle par une solution simple et moderne. Au lieu de remettre un morceau de papier, vous partagez directement votre profil professionnel.
+                </p>
+                <p class="text-lg leading-relaxed" style="color: #4B5563;">
+                    Votre contact est enregistré dans le téléphone de votre interlocuteur, prêt à être utilisé. La relation peut commencer immédiatement, <strong style="color: #2C2A27;">sans étape supplémentaire</strong>.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- ============================================
+     DÉMO NFC
+     ============================================ --}}
+<section class="py-16 sm:py-24" style="background-color: #FFFFFF;">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
             <div class="flex-1 flex justify-center fade-up">
@@ -453,7 +498,7 @@
                     Touchez. Connectez.<br><span style="color: #42B574;">C'est tout.</span>
                 </h2>
                 <p class="text-lg leading-relaxed mb-8" style="color: #4B5563;">
-                    Approchez votre carte du téléphone de votre interlocuteur. Votre profil s'ouvre instantanément — sans application, sans QR Code.
+                    La technologie devrait simplifier les choses, pas les compliquer. Approchez votre carte du téléphone de votre interlocuteur. Votre profil s'ouvre instantanément — sans application, sans friction.
                 </p>
                 <div class="space-y-5">
                     <div class="flex items-start gap-4">
@@ -486,10 +531,11 @@
 {{-- ============================================
      COMPARAISON
      ============================================ --}}
-<section class="py-16 sm:py-24" style="background-color: #FFFFFF;">
+<section class="py-16 sm:py-24" style="background-color: #F7F8F4;">
     <div class="max-w-4xl mx-auto px-4 sm:px-6">
         <div class="text-center mb-14 fade-up">
             <h2 class="text-3xl sm:text-4xl font-bold" style="color: #2C2A27;">La dernière carte de visite<br>que vous aurez à imprimer</h2>
+            <p class="mt-4 text-lg max-w-xl mx-auto" style="color: #4B5563;">Une seule carte, toujours à jour. Vos coordonnées et vos liens professionnels dans un profil accessible et modifiable à tout moment.</p>
         </div>
         <div class="fade-up" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 16px; overflow: hidden;">
             <div class="grid grid-cols-3 text-center text-sm font-semibold" style="background-color: #F7F8F4; border-bottom: 1px solid #E5E7EB;">
@@ -524,9 +570,76 @@
 </section>
 
 {{-- ============================================
-     BUNDLES DE LANCEMENT
+     POUR QUI
+     ============================================ --}}
+<section class="py-16 sm:py-24" style="background-color: #FFFFFF;">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="text-center mb-14 fade-up">
+            <h2 class="text-3xl sm:text-4xl font-bold" style="color: #2C2A27;">Conçue pour ceux qui<br><span style="color: #42B574;">créent des liens</span></h2>
+            <p class="mt-4 text-lg max-w-2xl mx-auto" style="color: #4B5563;">Tous ont un point commun : ils veulent que leurs rencontres mènent à de vraies relations.</p>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6 fade-up">
+            @php
+            $personas = [
+                ['icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0"/>', 'label' => 'Entrepreneurs'],
+                ['icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z"/>', 'label' => 'Courtiers'],
+                ['icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"/>', 'label' => 'Coachs'],
+                ['icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016A3.001 3.001 0 0021 9.349m-18 0a2.995 2.995 0 001.612-1.932l.833-3.331A1.5 1.5 0 016.89 3h10.22a1.5 1.5 0 011.445 1.086l.833 3.33A2.996 2.996 0 0021 9.35"/>', 'label' => 'Commerçants'],
+                ['icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605"/>', 'label' => 'Représentants'],
+                ['icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z"/>', 'label' => 'Autonomes'],
+            ];
+            @endphp
+            @foreach($personas as $persona)
+            <div class="text-center" style="transition-delay: {{ $loop->index * 0.05 }}s;">
+                <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-3 mx-auto" style="background-color: #F0F9F4;">
+                    <svg class="w-6 h-6" fill="none" stroke="#42B574" viewBox="0 0 24 24" stroke-width="1.5">{!! $persona['icon'] !!}</svg>
+                </div>
+                <p class="text-sm font-medium" style="color: #2C2A27;">{{ $persona['label'] }}</p>
+            </div>
+            @endforeach
+        </div>
+        <div class="text-center mt-10 fade-up">
+            <p class="text-base leading-relaxed max-w-xl mx-auto" style="color: #4B5563;">
+                LinkCard est conçue pour les professionnels qui rencontrent des gens chaque semaine et veulent sécuriser ce lien.
+            </p>
+        </div>
+    </div>
+</section>
+
+{{-- ============================================
+     CONTINUITÉ + ÉCOLOGIE
      ============================================ --}}
 <section class="py-16 sm:py-24" style="background-color: #F7F8F4;">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+            {{-- Continuité --}}
+            <div class="fade-up" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 16px; padding: 32px 28px;">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl mb-5" style="background-color: #EFF6FF;">
+                    <svg class="w-6 h-6" fill="none" stroke="#4A7FBF" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3" style="color: #2C2A27;">La continuité crée la confiance</h3>
+                <p class="text-sm leading-relaxed" style="color: #4B5563;">
+                    Avec LinkCard, vos informations restent accessibles dans le temps. Que ce soit le lendemain, dans six mois ou dans quatre ans, votre contact est toujours là. La continuité crée la confiance — et la confiance crée les relations durables.
+                </p>
+            </div>
+            {{-- Écologie --}}
+            <div class="fade-up" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 16px; padding: 32px 28px; transition-delay: 0.1s;">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl mb-5" style="background-color: #F0F9F4;">
+                    <svg class="w-6 h-6" fill="none" stroke="#42B574" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12.75 3.03v.568c0 .334.148.65.405.864l1.068.89c.442.369.535 1.01.216 1.49l-.51.766a2.25 2.25 0 01-1.161.886l-.143.048a1.107 1.107 0 00-.57 1.664c.369.555.169 1.307-.427 1.605L9 13.125l.423 1.059a.956.956 0 01-1.652.928l-.679-.906a1.125 1.125 0 00-1.906.172L4.5 15.75l-.612.153M12.75 3.031a9 9 0 00-8.862 12.872M12.75 3.031a9 9 0 016.69 14.036m0 0l-.177-.529A2.25 2.25 0 0017.128 15H16.5l-.324-.324a1.453 1.453 0 00-2.328.377l-.036.073a1.586 1.586 0 01-.982.816l-.99.282c-.55.157-.894.702-.8 1.267l.073.438c.081.488-.14.979-.564 1.235l-.164.1"/></svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3" style="color: #2C2A27;">Moins de papier, plus de liens</h3>
+                <p class="text-sm leading-relaxed" style="color: #4B5563;">
+                    Chaque année, des millions de cartes d'affaires sont imprimées… puis jetées. LinkCard propose une alternative durable. Une seule carte suffit pour des centaines de connexions. Moins de gaspillage, une solution adaptée à la réalité d'aujourd'hui.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- ============================================
+     BUNDLES DE LANCEMENT
+     ============================================ --}}
+<section class="py-16 sm:py-24" style="background-color: #FFFFFF;">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
         <div class="text-center mb-6 fade-up">
             <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold" style="background: linear-gradient(135deg, #42B574, #3DA367); color: white;">
@@ -650,9 +763,9 @@
     <div class="max-w-3xl mx-auto px-4 sm:px-6 text-center relative z-10">
         <div class="fade-up">
             <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight">
-                Prêt à faire une première<br>impression <span style="color: #42B574;">durable</span>?
+                Une rencontre peut changer<br>une trajectoire <span style="color: #42B574;">professionnelle</span>.
             </h2>
-            <p class="mt-6 text-lg" style="color: #9CA3AF;">Rejoignez les professionnels qui ont déjà repensé leur façon de se connecter.</p>
+            <p class="mt-6 text-lg" style="color: #9CA3AF;">Mais seulement si le contact reste accessible. Ne laissez pas une bonne rencontre disparaître.</p>
             <div class="mt-8">
                 <a href="{{ route('register') }}" class="btn btn-primary" style="padding: 16px 32px; font-size: 16px; border-radius: 12px;">
                     Créer mon profil gratuitement
