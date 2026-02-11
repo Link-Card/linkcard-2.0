@@ -125,19 +125,18 @@
      x-transition:leave="transition ease-in duration-200"
      x-transition:leave-start="translate-y-0"
      x-transition:leave-end="translate-y-full"
-     class="fixed left-0 right-0 z-[9999] lg:hidden"
-     style="bottom: 0;">
+     class="fixed left-0 right-0 z-[9999] lg:hidden px-3"
+     style="bottom: 12px;">
 
-    <div class="bg-white rounded-t-2xl w-full"
-         style="box-shadow: 0 -4px 20px rgba(0,0,0,0.12); border-top: 1px solid #E5E7EB;">
+    <div class="bg-white rounded-2xl w-full"
+         style="box-shadow: 0 4px 20px rgba(0,0,0,0.15); border: 1px solid #E5E7EB;">
 
         {{-- Drag handle --}}
         <div class="flex justify-center pt-2 pb-1">
             <div class="w-10 h-1 rounded-full" style="background: #D1D5DB;"></div>
         </div>
 
-        <div class="px-4 pb-4 pt-1">
-            {{-- Header: icon + title + step + skip --}}
+        <div class="px-4 pb-6 pt-1">            {{-- Header: icon + title + step + skip --}}
             <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center space-x-2.5">
                     <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background: {{ $current['badge_bg'] }};">
