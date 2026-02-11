@@ -87,6 +87,11 @@
                                     </div>
                                 @else
                                     @switch($step['icon'] ?? '')
+                                        @case('account')
+                                            <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0" style="border-color: #D1D5DB;">
+                                                <svg class="w-3 h-3" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/></svg>
+                                            </div>
+                                        @break
                                         @case('email')
                                             <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0" style="border-color: #F59E0B; background: #FEF3C7;">
                                                 <svg class="w-3 h-3" fill="none" stroke="#F59E0B" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0l-9.75 6.093L2.25 6.75"/></svg>

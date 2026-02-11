@@ -15,6 +15,16 @@ class OnboardingService
         $profile = $user->profiles()->first();
         $steps = [];
 
+        // Step: Account created — always completed (gives sense of progress)
+        $steps[] = [
+            'key' => 'account',
+            'label' => 'Créer votre compte',
+            'completed' => true,
+            'action' => null,
+            'icon' => 'account',
+            'dismissable' => false,
+        ];
+
         // Step: Verify email — ONLY if not verified
         if ($user->email_verified_at === null) {
             $steps[] = [
@@ -27,10 +37,10 @@ class OnboardingService
             ];
         }
 
-        // Step: Add photo
+        // Step: Add profile photo
         $steps[] = [
             'key' => 'photo',
-            'label' => 'Ajouter votre photo',
+            'label' => 'Ajouter votre photo de profil',
             'completed' => $profile && $profile->photo_path !== null,
             'action' => $profile ? route('profile.edit', $profile) . '?focus=photo' : route('profile.create'),
             'icon' => 'photo',

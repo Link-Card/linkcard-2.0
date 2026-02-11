@@ -9,7 +9,7 @@
     $steps = [
         1 => [
             'title' => 'Votre éditeur de profil',
-            'description' => 'C\'est ici que vous personnalisez votre carte de visite digitale : photo, infos, liens sociaux, template et couleurs.',
+            'description' => 'C\'est ici que vous personnalisez votre carte Link-Card : photo, infos, liens sociaux, template et couleurs.',
             'icon_bg' => '#F0F9F4',
             'icon_border' => '#D1FAE5',
             'badge_bg' => '#42B574',
@@ -71,8 +71,8 @@
      class="fixed inset-0 z-[60] flex items-center justify-center p-4"
      style="background: rgba(0,0,0,0.25); backdrop-filter: blur(1px);">
 
-    <div class="bg-white rounded-2xl w-full max-w-sm overflow-hidden relative"
-         style="box-shadow: 0 25px 50px rgba(0,0,0,0.15);"
+    <div class="bg-white rounded-2xl w-full max-w-sm overflow-hidden relative mx-4"
+         style="box-shadow: 0 25px 50px rgba(0,0,0,0.15); max-height: 90vh;"
          x-transition:enter="transition ease-out duration-300 delay-100"
          x-transition:enter-start="opacity-0 scale-95 translate-y-4"
          x-transition:enter-end="opacity-100 scale-100 translate-y-0">
@@ -91,18 +91,18 @@
             Passer ✕
         </a>
 
-        <div class="pt-12 pb-6 px-6 text-center">
+        <div class="pt-10 pb-5 px-5 sm:px-6 text-center">
 
             {{-- Icon --}}
-            <div class="w-16 h-16 mx-auto mb-5 rounded-2xl flex items-center justify-center" style="background: {{ $current['icon_bg'] }};">
-                <svg class="w-8 h-8" fill="none" stroke="{{ $current['badge_bg'] }}" stroke-width="1.5" viewBox="0 0 24 24">{!! $current['icon'] !!}</svg>
+            <div class="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 rounded-xl sm:rounded-2xl flex items-center justify-center" style="background: {{ $current['icon_bg'] }};">
+                <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="{{ $current['badge_bg'] }}" stroke-width="1.5" viewBox="0 0 24 24">{!! $current['icon'] !!}</svg>
             </div>
 
             {{-- Content card --}}
-            <div class="p-4 rounded-xl text-left mb-5" style="background: {{ $current['icon_bg'] }}; border: 1px solid {{ $current['icon_border'] }};">
-                <div class="flex items-center space-x-2.5 mb-2">
-                    <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style="background: {{ $current['badge_bg'] }};">
-                        <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">{!! $current['icon'] !!}</svg>
+            <div class="p-3 sm:p-4 rounded-xl text-left mb-4" style="background: {{ $current['icon_bg'] }}; border: 1px solid {{ $current['icon_border'] }};">
+                <div class="flex items-center space-x-2.5 mb-1.5">
+                    <div class="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0" style="background: {{ $current['badge_bg'] }};">
+                        <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">{!! $current['icon'] !!}</svg>
                     </div>
                     <span class="font-semibold text-sm" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">{{ $current['title'] }}</span>
                 </div>
@@ -111,7 +111,7 @@
 
             {{-- Progress dots (steps 1-4) --}}
             @if($tourStep <= 4)
-            <div class="flex items-center justify-center space-x-2 mb-5">
+            <div class="flex items-center justify-center space-x-2 mb-4">
                 @for($i = 1; $i <= 4; $i++)
                     <div class="rounded-full {{ $i === $tourStep ? 'w-2.5 h-2.5' : 'w-2 h-2' }}" style="background: {{ $i === $tourStep ? '#42B574' : ($i < $tourStep ? '#42B574' : '#D1D5DB') }}; {{ $i < $tourStep ? 'opacity: 0.5;' : '' }}"></div>
                 @endfor
@@ -119,7 +119,7 @@
             @endif
 
             {{-- Action --}}
-            <a href="{{ $current['next_url'] }}" class="block w-full py-3 px-6 rounded-xl text-white font-medium text-sm text-center transition-all duration-200" style="font-family: 'Manrope', sans-serif; background: {{ $current['badge_bg'] }};" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+            <a href="{{ $current['next_url'] }}" class="block w-full py-2.5 sm:py-3 px-6 rounded-xl text-white font-medium text-sm text-center transition-all duration-200" style="font-family: 'Manrope', sans-serif; background: {{ $current['badge_bg'] }};" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
                 @if($current['is_last'] ?? false)
                     {{ $current['next_label'] }}
                 @else
