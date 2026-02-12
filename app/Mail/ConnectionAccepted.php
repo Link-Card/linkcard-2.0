@@ -24,7 +24,8 @@ class ConnectionAccepted extends Mailable
 
     public function build()
     {
-        return $this->subject($this->accepter->name . ' a accepté votre demande — Link-Card')
+        $name = $this->accepterProfile->full_name ?? $this->accepter->name;
+        return $this->subject($name . ' a accepté votre demande — Link-Card')
                     ->view('emails.connection-accepted');
     }
 }

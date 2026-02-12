@@ -24,7 +24,8 @@ class ConnectionRequest extends Mailable
 
     public function build()
     {
-        return $this->subject($this->sender->name . ' veut se connecter — Link-Card')
+        $name = $this->senderProfile->full_name ?? $this->sender->name;
+        return $this->subject($name . ' veut se connecter — Link-Card')
                     ->view('emails.connection-request');
     }
 }

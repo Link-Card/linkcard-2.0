@@ -2,11 +2,11 @@
 
 @section('content')
     <h1 class="email-title">Nouvelle demande de connexion</h1>
-    <p class="email-subtitle">{{ $sender->name }} souhaite se connecter avec vous.</p>
+    <p class="email-subtitle">{{ $senderProfile->full_name ?? $sender->name }} souhaite se connecter avec vous.</p>
 
     @if($senderProfile)
         <div class="info-box">
-            <p class="info-value" style="font-size: 16px; margin-bottom: 4px;">{{ $sender->name }}</p>
+            <p class="info-value" style="font-size: 16px; margin-bottom: 4px;">{{ $senderProfile->full_name ?? $sender->name }}</p>
             @if($senderProfile->job_title)
                 <p class="email-text" style="margin: 0;">{{ $senderProfile->job_title }}{{ $senderProfile->company ? ' @ '.$senderProfile->company : '' }}</p>
             @endif
@@ -14,7 +14,7 @@
     @endif
 
     <p class="email-text">
-        Acceptez cette demande pour ajouter {{ $sender->name }} à vos contacts Link-Card.
+        Acceptez cette demande pour ajouter {{ $senderProfile->full_name ?? $sender->name }} à vos contacts Link-Card.
         Vous pourrez ainsi rester connectés facilement.
     </p>
 

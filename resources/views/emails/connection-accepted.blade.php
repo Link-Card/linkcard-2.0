@@ -2,11 +2,11 @@
 
 @section('content')
     <h1 class="email-title">Connexion acceptée! 🎉</h1>
-    <p class="email-subtitle">{{ $accepter->name }} a accepté votre demande de connexion.</p>
+    <p class="email-subtitle">{{ $accepterProfile->full_name ?? $accepter->name }} a accepté votre demande de connexion.</p>
 
     @if($accepterProfile)
         <div class="info-box">
-            <p class="info-value" style="font-size: 16px; margin-bottom: 4px;">{{ $accepter->name }}</p>
+            <p class="info-value" style="font-size: 16px; margin-bottom: 4px;">{{ $accepterProfile->full_name ?? $accepter->name }}</p>
             @if($accepterProfile->job_title)
                 <p class="email-text" style="margin: 0;">{{ $accepterProfile->job_title }}{{ $accepterProfile->company ? ' @ '.$accepterProfile->company : '' }}</p>
             @endif
@@ -15,7 +15,7 @@
 
     <p class="email-text">
         Vous êtes maintenant connectés sur Link-Card.
-        Retrouvez {{ $accepter->name }} dans vos contacts.
+        Retrouvez {{ $accepterProfile->full_name ?? $accepter->name }} dans vos contacts.
     </p>
 
     <div style="text-align: center; margin: 24px 0;">
