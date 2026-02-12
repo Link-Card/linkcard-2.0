@@ -35,6 +35,14 @@
             html {
                 overflow-x: hidden !important;
             }
+            /* Hide sidebar instantly on mobile before Alpine loads - no transition flash */
+            aside.sidebar-nav:not(.sidebar-open) {
+                transform: translateX(-100%) !important;
+            }
+            /* Disable transition until Alpine is ready */
+            aside.sidebar-nav.no-transition {
+                transition: none !important;
+            }
             .flex-wrapper-scroll { overflow: visible !important; flex: none !important; }
             #main-content { overflow: visible !important; }
         }
@@ -80,8 +88,9 @@
 
     <div class="flex flex-1 overflow-hidden flex-wrapper-scroll">
         {{-- Sidebar --}}
-        <aside class="fixed lg:static inset-y-0 left-0 z-50 w-64 flex flex-col transform transition-transform duration-200 ease-in-out lg:transform-none"
-               :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+        <aside class="sidebar-nav no-transition fixed lg:static inset-y-0 left-0 z-50 w-64 flex flex-col transition-transform duration-200 ease-in-out lg:transform-none"
+               x-init="setTimeout(() => $el.classList.remove('no-transition'), 50)"
+               :class="sidebarOpen ? 'sidebar-open translate-x-0' : '-translate-x-full lg:translate-x-0'"
                style="background-color: #2C2A27;">
             <div class="p-6 border-b" style="border-color: rgba(255,255,255,0.1);">
                 <div class="flex items-center space-x-3">
