@@ -36,7 +36,7 @@ class TemplateService
                 'header_style' => 'wave',
                 'transition' => 'double_wave',
                 'photo_style' => 'round_center',
-                'social_style' => 'circles',
+                'social_style' => 'pills',
                 'features' => [],
                 'default_colors' => ['primary' => '#42B574', 'secondary' => '#2D7A4F'],
             ],
