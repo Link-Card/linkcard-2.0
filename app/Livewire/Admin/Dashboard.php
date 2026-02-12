@@ -261,6 +261,63 @@ class Dashboard extends Component
         session()->flash('success', "Plan de {$userName}: {$oldLabel} → {$newLabel} ({$duration})");
     }
 
+    public function cancelOverride($userId)
+    {
+        $user = User::findOrFail($userId);
+        
+        $activeOverride = \App\Models\PlanOverride::where('user_id', $userId)
+            ->where('status', 'active')
+            ->where(function($q) { $q->whereNull('expires_at')->orWhere('expires_at', '>', now()); })
+            ->first();
+        
+        if (!$activeOverride) {
+            session()->flash('error', 'Aucune gratuité active pour cet utilisateur.');
+            return;
+        }
+        
+        $previousPlan = $activeOverride->previous_plan ?? 'free';
+        
+        // Cancel the override
+        $activeOverride->update(['status' => 'cancelled']);
+        
+        // Check if user has an active Stripe subscription
+        $stripeSubscription = $user->subscriptions()->where('stripe_status', 'active')->first();
+        if ($stripeSubscription) {
+            // Determine plan from Stripe price
+            $priceId = $stripeSubscription->stripe_price;
+            $stripePlan = $this->getPlanFromStripePrice($priceId);
+            if ($stripePlan) {
+                $previousPlan = $stripePlan;
+            }
+        }
+        
+        // Restore previous plan
+        $user->update(['plan' => $previousPlan]);
+        
+        $planOrder = ['free' => 0, 'pro' => 1, 'premium' => 2];
+        $currentOrder = $planOrder[$activeOverride->granted_plan] ?? 0;
+        $newOrder = $planOrder[$previousPlan] ?? 0;
+        
+        if ($newOrder < $currentOrder) {
+            \App\Services\PlanLimitsService::applyLimitsOnDowngrade($user);
+        }
+        
+        $planLabels = ['free' => 'Gratuit', 'pro' => 'Pro', 'premium' => 'Premium'];
+        $this->cancelChangePlan();
+        session()->flash('success', "Gratuité retirée pour {$user->name}. Forfait: {$planLabels[$previousPlan]}");
+    }
+    
+    private function getPlanFromStripePrice($priceId): ?string
+    {
+        $map = [
+            config('services.stripe.price_pro_monthly') => 'pro',
+            config('services.stripe.price_pro_yearly') => 'pro',
+            config('services.stripe.price_premium_monthly') => 'premium',
+            config('services.stripe.price_premium_yearly') => 'premium',
+        ];
+        return $map[$priceId] ?? null;
+    }
+
     // Impersonation
     public string $impersonateReason = '';
 

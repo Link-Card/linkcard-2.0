@@ -113,42 +113,57 @@
     @if($changingPlanUserId)
         @php $changingUser = $users->firstWhere('id', $changingPlanUserId); @endphp
         @if($changingUser)
+            @php $activeOverride = \App\Models\PlanOverride::where('user_id', $changingUser->id)->where('status', 'active')->where(function($q) { $q->whereNull('expires_at')->orWhere('expires_at', '>', now()); })->first(); @endphp
             <div class="fixed inset-0 z-50 flex items-center justify-center" style="background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);">
                 <div class="bg-white rounded-2xl shadow-xl max-w-md w-full mx-4 p-6" style="animation: popupIn 0.2s ease-out;">
-                    <div class="flex items-center space-x-3 mb-4">
-                        <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background-color: #EFF6FF;">
-                            <svg class="w-5 h-5" style="color: #4A7FBF;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
-                            </svg>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background-color: #EFF6FF;">
+                                <svg class="w-5 h-5" style="color: #4A7FBF;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold" style="color: #2C2A27;">Changer le forfait</h3>
+                                <p class="text-sm" style="color: #9CA3AF;">{{ $changingUser->name }} ({{ $changingUser->email }})</p>
+                            </div>
                         </div>
-                        <div>
-                            <h3 class="text-lg font-semibold" style="color: #2C2A27;">Changer le forfait</h3>
-                            <p class="text-sm" style="color: #9CA3AF;">{{ $changingUser->name }} ({{ $changingUser->email }})</p>
-                        </div>
+                        <button wire:click="cancelChangePlan" class="p-2 rounded-lg" style="color: #9CA3AF;" onmouseover="this.style.background='#F3F4F6'" onmouseout="this.style.background='transparent'">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
                     </div>
 
-                    {{-- Active override info --}}
-                    @php $activeOverride = \App\Models\PlanOverride::where('user_id', $changingUser->id)->where('status', 'active')->where(function($q) { $q->whereNull('expires_at')->orWhere('expires_at', '>', now()); })->first(); @endphp
+                    {{-- Active override info + cancel button --}}
                     @if($activeOverride)
-                        <div class="rounded-lg p-3 mb-4 text-xs" style="background: #FEF3C7; color: #92400E;">
-                            Override actif: <strong>{{ ['free' => 'GRATUIT', 'pro' => 'PRO', 'premium' => 'PREMIUM'][$activeOverride->granted_plan] ?? strtoupper($activeOverride->granted_plan) }}</strong>
-                            — {{ $activeOverride->reasonLabel() }}
-                            @if($activeOverride->expires_at)
-                                — expire {{ $activeOverride->expires_at->format('d/m/Y') }} ({{ $activeOverride->daysRemaining() }}j)
-                            @else
-                                — permanent
-                            @endif
+                        <div class="rounded-xl p-3 mb-4 flex items-center justify-between" style="background: #FEF3C7; border: 1px solid #FDE68A;">
+                            <div class="text-xs" style="color: #92400E;">
+                                <strong>Gratuité active :</strong> {{ ['free' => 'GRATUIT', 'pro' => 'PRO', 'premium' => 'PREMIUM'][$activeOverride->granted_plan] ?? strtoupper($activeOverride->granted_plan) }}
+                                @if($activeOverride->expires_at)
+                                    — expire {{ $activeOverride->expires_at->format('d/m/Y') }} ({{ $activeOverride->daysRemaining() }}j)
+                                @else
+                                    — permanent
+                                @endif
+                                <br><span style="color: #B45309;">Retour prévu → {{ ['free' => 'Gratuit', 'pro' => 'Pro', 'premium' => 'Premium'][$activeOverride->previous_plan] ?? 'Gratuit' }}</span>
+                            </div>
+                            <button wire:click="cancelOverride({{ $changingUser->id }})"
+                                    class="ml-3 px-3 py-1.5 text-xs font-medium rounded-lg flex-shrink-0 transition-all"
+                                    style="color: #EF4444; border: 1px solid #EF4444;"
+                                    onmouseover="this.style.background='#FEF2F2'"
+                                    onmouseout="this.style.background='transparent'">
+                                Retirer
+                            </button>
                         </div>
                     @endif
 
-                    {{-- Plan --}}
-                    <div class="mb-3">
+                    {{-- Plan selection --}}
+                    <div class="mb-4" x-data="{ selected: @entangle('newPlan') }">
                         <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="color: #4B5563;">Forfait *</label>
                         <div class="grid grid-cols-3 gap-2">
                             @foreach(['free' => 'GRATUIT', 'pro' => 'PRO', 'premium' => 'PREMIUM'] as $planKey => $planLabel)
                                 <button wire:click="$set('newPlan', '{{ $planKey }}')"
-                                        class="py-2 px-3 rounded-lg text-xs font-medium border-2 transition-all"
-                                        style="{{ $newPlan === $planKey ? 'border-color: #42B574; background: #F0F9F4; color: #42B574;' : 'border-color: #E5E7EB; color: #4B5563;' }}">
+                                        @click="selected = '{{ $planKey }}'"
+                                        class="py-2.5 px-3 rounded-xl text-xs font-semibold border-2 transition-all"
+                                        :style="selected === '{{ $planKey }}' ? 'border-color: #42B574; background: #F0F9F4; color: #42B574; box-shadow: 0 0 0 1px #42B574;' : 'border-color: #E5E7EB; color: #4B5563;'">
                                     {{ $planLabel }}
                                     @if($changingUser->plan === $planKey)
                                         <span class="text-[10px] block" style="color: #9CA3AF;">actuel</span>
@@ -158,29 +173,27 @@
                         </div>
                     </div>
 
-                    {{-- Duration --}}
-                    <div class="mb-3">
+                    {{-- Duration selection --}}
+                    <div class="mb-4" x-data="{ dur: @entangle('planDuration') }">
                         <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="color: #4B5563;">Durée *</label>
-                        <div class="grid grid-cols-4 gap-1.5">
+                        <div class="grid grid-cols-6 gap-1.5">
                             @foreach(['7' => '7j', '14' => '14j', '30' => '30j', '60' => '60j', '90' => '90j', '0' => '∞'] as $dVal => $dLabel)
                                 <button wire:click="$set('planDuration', '{{ $dVal }}')"
-                                        class="py-1.5 px-2 rounded-lg text-xs font-medium border transition-all"
-                                        style="{{ $planDuration === $dVal ? 'border-color: #42B574; background: #F0F9F4; color: #42B574;' : 'border-color: #E5E7EB; color: #4B5563;' }}">
+                                        @click="dur = '{{ $dVal }}'"
+                                        class="py-2 px-1 rounded-lg text-xs font-medium border-2 transition-all text-center"
+                                        :style="dur === '{{ $dVal }}' ? 'border-color: #42B574; background: #F0F9F4; color: #42B574; box-shadow: 0 0 0 1px #42B574;' : 'border-color: #E5E7EB; color: #4B5563;'">
                                     {{ $dLabel }}
                                 </button>
                             @endforeach
                         </div>
-                        @if($planDuration !== '0')
-                            <p class="text-[10px] mt-1" style="color: #9CA3AF;">
-                                Expire le {{ now()->addDays((int)$planDuration)->format('d/m/Y') }}
-                                → retombe au plan Stripe actif ou GRATUIT
-                            </p>
-                        @else
-                            <p class="text-[10px] mt-1" style="color: #F59E0B;">Permanent (pas d'expiration)</p>
-                        @endif
+                        <div x-show="dur !== '0'" class="text-[10px] mt-1.5" style="color: #9CA3AF;">
+                            Expire le <span x-text="(() => { const d = new Date(); d.setDate(d.getDate() + parseInt(dur)); return d.toLocaleDateString('fr-CA'); })()"></span>
+                            → retombe au plan Stripe actif ou GRATUIT
+                        </div>
+                        <div x-show="dur === '0'" class="text-[10px] mt-1.5" style="color: #F59E0B;">Permanent (pas d'expiration)</div>
                     </div>
 
-                    {{-- Reason (pas pour super admin self-change) --}}
+                    {{-- Reason --}}
                     @if($changingUser->id !== auth()->id())
                         <div class="mb-3">
                             <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="color: #4B5563;">Raison</label>
@@ -190,12 +203,13 @@
                                 <option value="support">Support client</option>
                                 <option value="promo">Promotion</option>
                                 <option value="gift">Cadeau</option>
+                                <option value="ambassador">Ambassadeur</option>
                             </select>
                         </div>
 
                         <div class="mb-4">
                             <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="color: #4B5563;">Note (optionnel)</label>
-                            <input wire:model="planNote" type="text" class="w-full text-sm rounded-xl border px-3 py-2" style="border-color: #D1D5DB;" placeholder="Ex: Test beta 2 semaines">
+                            <input wire:model="planNote" type="text" class="w-full text-sm rounded-xl border px-3 py-2" style="border-color: #D1D5DB;" placeholder="Ex: Ami, ambassadeur lancement">
                         </div>
                     @endif
 
