@@ -159,6 +159,14 @@
         $templateConfig = $profile->getEffectiveTemplateConfig();
         $headerStyle = $templateConfig['header_style'] ?? 'classic';
         $templateTransition = $templateConfig['transition'] ?? 'wave';
+        $buttonStyle = $templateConfig['button_style'] ?? 'rounded';
+        
+        // Button CSS classes based on template button_style
+        $btnRadius = match($buttonStyle) {
+            'square', 'square_wide' => 'rounded-lg',
+            'outline_compact' => 'rounded-full',
+            default => 'rounded-xl',
+        };
         
         // Calculer si le texte doit être clair ou foncé
         $hex = ltrim($primaryColor, '#');
@@ -181,28 +189,47 @@
         @include('profiles.partials.headers.' . $headerPartial)
 
         <!-- CONTENT BANDS -->
-        <div class="bg-white min-h-[200px]">
+        @php
+            $isBoldTemplate = ($headerStyle === 'bold');
+            $bodyBg = $isBoldTemplate ? '#EDEBE8' : 'white';
+            $blockBg = $isBoldTemplate ? '#E4E2DF' : '#F9FAFB';
+            $blockBorder = $isBoldTemplate ? ($primaryColor . '40') : '#E5E7EB';
+        @endphp
+        <div class="min-h-[200px]" style="background: {{ $bodyBg }};">
             <div class="px-5 py-6 space-y-3">
 
                 @foreach($profile->contentBands as $band)
 
                     @if($band->type === 'contact_button')
                         <!-- Bouton Ajouter au contact → ouvre popup -->
-                        <button onclick="openContactPopup()"
-                           class="flex items-center justify-center space-x-2 w-full py-3.5 px-5 text-white text-center rounded-xl font-semibold text-sm shadow-md transition-all duration-200"
-                           style="background: {{ $secondaryColor }};"
-                           onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-1px)'"
-                           onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)'">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25s-1.01 2.25-2.25 2.25S9.75 10.24 9.75 9s1.01-2.25 2.25-2.25zM17 17H7v-1.5c0-1.67 3.33-2.5 5-2.5s5 .83 5 2.5V17z"/></svg>
-                            <span>Ajouter aux contacts</span>
-                        </button>
+                        @if($buttonStyle === 'outline_compact')
+                            <div class="text-center">
+                                <button onclick="openContactPopup()"
+                                   class="inline-flex items-center justify-center space-x-2 py-2.5 px-8 text-center rounded-full font-semibold text-sm transition-all duration-200"
+                                   style="background: transparent; color: {{ $secondaryColor }}; border: 2px solid {{ $secondaryColor }};"
+                                   onmouseover="this.style.background='{{ $secondaryColor }}'; this.style.color='white'"
+                                   onmouseout="this.style.background='transparent'; this.style.color='{{ $secondaryColor }}'">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25s-1.01 2.25-2.25 2.25S9.75 10.24 9.75 9s1.01-2.25 2.25-2.25zM17 17H7v-1.5c0-1.67 3.33-2.5 5-2.5s5 .83 5 2.5V17z"/></svg>
+                                    <span>Ajouter aux contacts</span>
+                                </button>
+                            </div>
+                        @else
+                            <button onclick="openContactPopup()"
+                               class="flex items-center justify-center space-x-2 w-full {{ $buttonStyle === 'square_wide' ? 'py-4 px-5' : 'py-3.5 px-5' }} text-white text-center {{ $btnRadius }} font-semibold {{ $buttonStyle === 'square_wide' ? 'text-base tracking-wide' : 'text-sm' }} shadow-md transition-all duration-200"
+                               style="background: {{ $secondaryColor }};"
+                               onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-1px)'"
+                               onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)'">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25s-1.01 2.25-2.25 2.25S9.75 10.24 9.75 9s1.01-2.25 2.25-2.25zM17 17H7v-1.5c0-1.67 3.33-2.5 5-2.5s5 .83 5 2.5V17z"/></svg>
+                                <span>Ajouter aux contacts</span>
+                            </button>
+                        @endif
 
                     @elseif($band->type === 'social_link')
                         <!-- Lien social -->
                         <a href="{{ $band->data['url'] }}" target="_blank" rel="noopener"
                            data-band-id="{{ $band->id }}" data-band-url="{{ $band->data['url'] }}"
-                           class="block p-3.5 rounded-xl transition-all duration-200 trackable-link"
-                           style="background: #F9FAFB; border: 1px solid #E5E7EB;"
+                           class="block p-3.5 {{ $btnRadius }} transition-all duration-200 trackable-link"
+                           style="background: {{ $blockBg }}; border: 1px solid {{ $blockBorder }};"
                            onmouseover="this.style.background='#F3F4F6'; this.style.borderColor='#D1D5DB'"
                            onmouseout="this.style.background='#F9FAFB'; this.style.borderColor='#E5E7EB'">
                             <div class="flex items-center space-x-3">
@@ -224,7 +251,7 @@
                         @endphp
                         
                         @if(count($images) === 1)
-                            <div class="rounded-xl overflow-hidden" style="border: 1px solid #E5E7EB;">
+                            <div class="{{ $btnRadius }} overflow-hidden" style="border: 1px solid #E5E7EB;">
                                 @if(!empty($images[0]['link']))
                                     <a href="{{ $images[0]['link'] }}" target="_blank" rel="noopener"
                                        data-band-id="{{ $band->id }}" data-band-url="{{ $images[0]['link'] }}"
@@ -242,7 +269,7 @@
                         @elseif(count($images) >= 2)
                             <div class="grid grid-cols-2 gap-2">
                                 @foreach(array_slice($images, 0, 2) as $img)
-                                    <div class="rounded-xl overflow-hidden" style="border: 1px solid #E5E7EB;">
+                                    <div class="{{ $btnRadius }} overflow-hidden" style="border: 1px solid #E5E7EB;">
                                         @if(!empty($img['link']))
                                             <a href="{{ $img['link'] }}" target="_blank" rel="noopener"
                                                data-band-id="{{ $band->id }}" data-band-url="{{ $img['link'] }}"
@@ -263,7 +290,7 @@
 
                     @elseif($band->type === 'text_block')
                         <!-- Bloc de texte -->
-                        <div class="p-4 rounded-xl" style="background: #F9FAFB; border: 1px solid #E5E7EB;">
+                        <div class="p-4 {{ $btnRadius }}" style="background: {{ $blockBg }}; border: 1px solid {{ $blockBorder }};">
                             <p class="whitespace-pre-line text-sm leading-relaxed" style="color: #4B5563;">{{ $band->data['text'] }}</p>
                         </div>
 
@@ -296,7 +323,7 @@
                         @endphp
                         
                         @if($platform === 'youtube' && $videoId)
-                            <div class="rounded-xl overflow-hidden" style="border: 1px solid #E5E7EB;">
+                            <div class="{{ $btnRadius }} overflow-hidden" style="border: 1px solid #E5E7EB;">
                                 <div style="position: relative; padding-bottom: 56.25%; height: 0;">
                                     <iframe src="https://www.youtube.com/embed/{{ $videoId }}?rel=0" 
                                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
@@ -304,13 +331,13 @@
                                 </div>
                             </div>
                         @elseif($platform === 'tiktok' && $videoId)
-                            <div class="rounded-xl overflow-hidden" style="border: 1px solid #E5E7EB;">
+                            <div class="{{ $btnRadius }} overflow-hidden" style="border: 1px solid #E5E7EB;">
                                 <blockquote class="tiktok-embed" cite="{{ $videoUrl }}" data-video-id="{{ $videoId }}" style="max-width: 100%;">
                                     <section><a target="_blank" href="{{ $videoUrl }}">Voir sur TikTok</a></section>
                                 </blockquote>
                             </div>
                         @elseif($platform === 'vimeo' && $videoId)
-                            <div class="rounded-xl overflow-hidden" style="border: 1px solid #E5E7EB;">
+                            <div class="{{ $btnRadius }} overflow-hidden" style="border: 1px solid #E5E7EB;">
                                 <div style="position: relative; padding-bottom: 56.25%; height: 0;">
                                     <iframe src="https://player.vimeo.com/video/{{ $videoId }}" 
                                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
@@ -320,8 +347,8 @@
                         @elseif($videoUrl)
                             {{-- Fallback: lien cliquable --}}
                             <a href="{{ $videoUrl }}" target="_blank" rel="noopener"
-                               class="flex items-center gap-3 p-3.5 rounded-xl transition-all duration-200"
-                               style="background: #F9FAFB; border: 1px solid #E5E7EB;">
+                               class="flex items-center gap-3 p-3.5 {{ $btnRadius }} transition-all duration-200"
+                               style="background: {{ $blockBg }}; border: 1px solid {{ $blockBorder }};">
                                 <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: #FEE2E2;">
                                     <svg class="w-5 h-5" fill="#EF4444" viewBox="0 0 24 24"><polygon points="9,6 19,12 9,18" /></svg>
                                 </div>
@@ -339,7 +366,7 @@
                         @endphp
                         
                         @if(count($carouselImages) > 0)
-                            <div class="rounded-xl overflow-hidden relative" style="border: 1px solid #E5E7EB;" id="{{ $carouselId }}" data-autoplay="{{ $autoplay ? '1' : '0' }}">
+                            <div class="{{ $btnRadius }} overflow-hidden relative" style="border: 1px solid #E5E7EB;" id="{{ $carouselId }}" data-autoplay="{{ $autoplay ? '1' : '0' }}">
                                 {{-- Images container --}}
                                 <div class="carousel-track flex transition-transform duration-500 ease-out" style="touch-action: pan-y;">
                                     @foreach($carouselImages as $idx => $img)
@@ -395,7 +422,7 @@
                         @endphp
                         <a href="{{ $band->data['url'] ?? '#' }}" target="_blank" rel="noopener"
                            data-band-id="{{ $band->id }}" data-band-url="{{ $band->data['url'] ?? '' }}"
-                           class="flex items-center justify-center space-x-2 w-full py-3.5 px-5 text-center rounded-xl font-semibold text-sm shadow-md transition-all duration-200 trackable-link"
+                           class="flex items-center justify-center space-x-2 w-full {{ $buttonStyle === 'square_wide' ? 'py-4 px-5' : 'py-3.5 px-5' }} text-center {{ $btnRadius }} font-semibold {{ $buttonStyle === 'square_wide' ? 'text-base tracking-wide' : 'text-sm' }} shadow-md transition-all duration-200 trackable-link"
                            style="background: {{ $btnBg }}; color: {{ $btnTextColor }};"
                            onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-1px)'"
                            onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)'">

@@ -92,7 +92,7 @@
                             style="font-family: 'Manrope', sans-serif;">Spécialisés</button>
                     <button @click="filter = 'custom'" class="flex-1 py-2 px-3 rounded-md text-xs font-semibold transition-all"
                             :style="filter === 'custom' ? 'background: #42B574; color: white;' : 'color: #4B5563;'"
-                            style="font-family: 'Manrope', sans-serif;">Custom</button>
+                            style="font-family: 'Manrope', sans-serif;">Mon Style</button>
                 </div>
 
                 {{-- Templates Grid --}}

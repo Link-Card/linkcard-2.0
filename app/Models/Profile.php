@@ -110,6 +110,15 @@ class Profile extends Model
     }
 
     /**
+     * Get the button style to use for rendering.
+     */
+    public function getButtonStyle(): string
+    {
+        $config = $this->getEffectiveTemplateConfig();
+        return $config['button_style'] ?? 'rounded';
+    }
+
+    /**
      * Check if this profile's template supports a specific feature.
      */
     public function templateHasFeature(string $feature): bool
