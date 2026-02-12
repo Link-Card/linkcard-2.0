@@ -125,27 +125,27 @@
 
     {{-- Tour bar --}}
     <div x-show="!confirm"
-         style="position: fixed; bottom: 16px; left: 8px; right: 8px; z-index: 9999; box-shadow: 0 2px 12px rgba(0,0,0,0.12); border: 1px solid #E5E7EB; border-radius: 14px; background: white; overflow: hidden;">
-        <div style="padding: 10px 12px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <div style="width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: {{ $current['badge_bg'] }};">
-                    <svg style="width: 16px; height: 16px; color: white;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">{!! $current['icon'] !!}</svg>
+         style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999; background: white; border-top: 1px solid #E5E7EB; box-shadow: 0 -4px 20px rgba(0,0,0,0.1); padding-bottom: env(safe-area-inset-bottom, 0px);">
+        <div style="padding: 14px 16px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: {{ $current['badge_bg'] }};">
+                    <svg style="width: 20px; height: 20px; color: white;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">{!! $current['icon'] !!}</svg>
                 </div>
                 <div style="flex: 1; min-width: 0;">
-                    <div style="font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 600; color: #2C2A27; line-height: 1.2;">{{ $current['title'] }} <span style="color: #9CA3AF; font-weight: 400;">{{ $current['step_label'] }}</span></div>
-                    <div style="font-family: 'Manrope', sans-serif; font-size: 11px; color: #4B5563; line-height: 1.3; margin-top: 1px;">{{ $current['description'] }}</div>
+                    <div style="font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 600; color: #2C2A27; line-height: 1.3;">{{ $current['title'] }} <span style="color: #9CA3AF; font-weight: 400; font-size: 12px;">{{ $current['step_label'] }}</span></div>
+                    <div style="font-family: 'Manrope', sans-serif; font-size: 13px; color: #4B5563; line-height: 1.4; margin-top: 2px;">{{ $current['description'] }}</div>
                 </div>
             </div>
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 8px;">
-                <div style="display: flex; align-items: center; gap: 6px;">
-                    <button @click="confirm = true" style="font-family: 'Manrope', sans-serif; font-size: 11px; color: #9CA3AF; background: none; border: none; padding: 4px 0; cursor: pointer;">Passer</button>
-                    <div style="display: flex; gap: 4px; margin-left: 4px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 12px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <button @click="confirm = true" style="font-family: 'Manrope', sans-serif; font-size: 13px; color: #9CA3AF; background: none; border: none; padding: 6px 0; cursor: pointer;">Passer</button>
+                    <div style="display: flex; gap: 5px; margin-left: 4px;">
                         @for($i = 1; $i <= 4; $i++)
-                            <div style="width: {{ $i === $tourStep ? '6px' : '5px' }}; height: {{ $i === $tourStep ? '6px' : '5px' }}; border-radius: 50%; background: {{ $i === $tourStep ? '#42B574' : ($i < $tourStep ? '#42B574' : '#D1D5DB') }};"></div>
+                            <div style="width: {{ $i === $tourStep ? '8px' : '6px' }}; height: {{ $i === $tourStep ? '8px' : '6px' }}; border-radius: 50%; background: {{ $i === $tourStep ? '#42B574' : ($i < $tourStep ? '#42B574' : '#D1D5DB') }};"></div>
                         @endfor
                     </div>
                 </div>
-                <a href="{{ $current['next_url'] }}" style="font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 500; color: white; background: {{ $current['badge_bg'] }}; padding: 7px 14px; border-radius: 8px; text-decoration: none; white-space: nowrap;">
+                <a href="{{ $current['next_url'] }}" style="font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 500; color: white; background: {{ $current['badge_bg'] }}; padding: 10px 20px; border-radius: 10px; text-decoration: none; white-space: nowrap;">
                     @if($current['is_last'] ?? false) {{ $current['next_label'] }} @else Suivant → @endif
                 </a>
             </div>

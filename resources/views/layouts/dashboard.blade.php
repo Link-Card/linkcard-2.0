@@ -13,7 +13,7 @@
         @keyframes wave-move { 0% { transform: translate3d(-90px,0,0); } 100% { transform: translate3d(85px,0,0); } }
     </style>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>{{ $title ?? 'Dashboard' }} - Link-Card</title>
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,8 +28,12 @@
         @media (max-width: 1023px) {
             body {
                 overflow-y: auto !important;
+                overflow-x: hidden !important;
                 height: auto !important;
                 min-height: 100dvh;
+            }
+            html {
+                overflow-x: hidden !important;
             }
             .flex-wrapper-scroll { overflow: visible !important; flex: none !important; }
             #main-content { overflow: visible !important; }
