@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'Carte NFC — LinkCard')
-@section('meta_description', 'Découvrez la carte NFC LinkCard. Un geste suffit pour partager votre profil professionnel. Compatible tous smartphones, PVC premium, fabriquée au Québec.')
+@section('title', 'Carte NFC — Link-Card')
+@section('meta_description', 'Découvrez la carte NFC Link-Card. Un geste suffit pour partager votre profil professionnel. Compatible tous smartphones, PVC premium, fabriquée au Québec.')
 
 @section('styles')
 <style>
@@ -34,7 +34,7 @@
                     Une seule carte. Des centaines de connexions possibles. Votre contact, directement dans le téléphone de votre interlocuteur.
                 </p>
                 <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-                    <a href="{{ route('register') }}" class="btn btn-primary" style="padding: 14px 28px; font-size: 16px; border-radius: 12px;">
+                    <a href="{{ route('pages.forfaits') }}" class="btn btn-primary" style="padding: 14px 28px; font-size: 16px; border-radius: 12px;">
                         Commander ma carte
                         <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                     </a>
@@ -55,7 +55,7 @@
                     {{-- Card vertical --}}
                     <div class="float-card" style="width: 200px; height: 310px; background: linear-gradient(180deg, #FFFFFF 0%, #F9FAF7 100%); border-radius: 18px; box-shadow: 0 25px 60px rgba(0,0,0,0.25); display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #E5E7EB; position: relative; overflow: hidden; z-index: 5;">
                         <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, #42B574, #4A7FBF);"></div>
-                        <img src="{{ asset('images/logo-noir.png') }}" alt="LinkCard" style="width: 110px; height: auto; object-fit: contain;">
+                        <img src="{{ asset('images/logo-noir.png') }}" alt="Link-Card" style="width: 110px; height: auto; object-fit: contain;">
                         <div style="position: absolute; bottom: 16px; right: 16px;">
                             <svg width="20" height="20" fill="none" stroke="rgba(156,163,175,0.6)" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0"/><circle cx="12" cy="18.75" r="0.75" fill="rgba(156,163,175,0.6)"/></svg>
                         </div>
@@ -106,7 +106,7 @@
                 ['icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>', 'title' => 'PVC premium', 'desc' => 'Résistante à l\'eau, aux égratignures et à l\'usure. Comme une carte bancaire, faite pour durer.'],
                 ['icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182"/>', 'title' => 'URL permanente', 'desc' => 'Changez de profil, de template ou d\'informations sans jamais changer votre carte physique.'],
                 ['icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42"/>', 'title' => 'Design personnalisable', 'desc' => 'Ajoutez votre logo pour un design unique. Standard ou custom, c\'est votre choix.'],
-                ['icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>', 'title' => 'Fabriquée au Québec', 'desc' => 'Imprimée et programmée localement, à Saint-Pierre-les-Becquets. Achat local, qualité garantie.'],
+                ['icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>', 'title' => 'Fabriquée au Québec', 'desc' => 'Imprimée et programmée localement, en Mauricie. Achat local, qualité garantie.'],
                 ['icon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>', 'title' => 'Aucune batterie', 'desc' => 'La carte fonctionne passivement — elle tire son énergie du téléphone qui la scanne. Aucune charge nécessaire.'],
             ];
             @endphp
@@ -127,13 +127,13 @@
 <section class="py-16 sm:py-24" style="background-color: #FFFFFF;">
     <div class="max-w-3xl mx-auto px-4 sm:px-6">
         <div class="text-center mb-14 fade-up">
-            <h2 class="text-3xl sm:text-4xl font-bold" style="color: #2C2A27;">Carte papier vs <span style="color: #42B574;">LinkCard</span></h2>
+            <h2 class="text-3xl sm:text-4xl font-bold" style="color: #2C2A27;">Carte papier vs <span style="color: #42B574;">Link-Card</span></h2>
         </div>
         <div class="fade-up" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 16px; overflow: hidden;">
             <div class="grid grid-cols-3 text-center text-sm font-semibold" style="background-color: #F7F8F4; border-bottom: 1px solid #E5E7EB;">
                 <div class="py-4 px-3"></div>
                 <div class="py-4 px-3" style="color: #9CA3AF;">Papier</div>
-                <div class="py-4 px-3" style="color: #42B574;">LinkCard</div>
+                <div class="py-4 px-3" style="color: #42B574;">Link-Card</div>
             </div>
             @php
             $rows = [
@@ -180,7 +180,7 @@
             </div>
         </div>
         <div class="mt-8 fade-up">
-            <a href="{{ route('register') }}" class="btn btn-primary" style="padding: 14px 28px; font-size: 16px; border-radius: 12px;">
+            <a href="{{ route('pages.forfaits') }}" class="btn btn-primary" style="padding: 14px 28px; font-size: 16px; border-radius: 12px;">
                 Commander ma carte
                 <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
             </a>

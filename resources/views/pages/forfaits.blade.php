@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'Forfaits — LinkCard')
-@section('meta_description', 'Choisissez le forfait LinkCard qui vous convient. Bundles de lancement avec carte NFC incluse, ou forfaits mensuels Gratuit, Pro et Premium.')
+@section('title', 'Forfaits — Link-Card')
+@section('meta_description', 'Choisissez le forfait Link-Card qui vous convient. Bundles de lancement avec carte NFC incluse, ou forfaits mensuels Gratuit, Pro et Premium.')
 
 @section('styles')
 <style>

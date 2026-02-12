@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'FAQ — LinkCard')
-@section('meta_description', 'Questions fréquentes sur LinkCard : carte NFC, profil digital, forfaits, paiement, confidentialité. Trouvez toutes les réponses ici.')
+@section('title', 'FAQ — Link-Card')
+@section('meta_description', 'Questions fréquentes sur Link-Card : carte NFC, profil digital, forfaits, paiement, confidentialité. Trouvez toutes les réponses ici.')
 
 @section('styles')
 <style>
@@ -30,13 +30,13 @@
         @php
         $categories = [
             ['title' => 'Général', 'questions' => [
-                ['q' => 'C\'est quoi LinkCard?', 'a' => 'LinkCard est votre carte de visite digitale. Créez un profil professionnel en ligne, partagez-le avec une carte NFC ou un QR Code, et bâtissez votre réseau de contacts.'],
+                ['q' => 'C\'est quoi Link-Card?', 'a' => 'Link-Card est votre carte de visite digitale. Créez un profil professionnel en ligne, partagez-le avec une carte NFC ou un QR Code, et bâtissez votre réseau de contacts.'],
                 ['q' => 'Est-ce que c\'est gratuit?', 'a' => 'Oui! Le forfait gratuit inclut 1 profil avec 3 liens sociaux, 2 images et 1 section texte. Les forfaits Pro (5$/mois) et Premium (8$/mois) débloquent plus de contenu et de fonctionnalités.'],
                 ['q' => 'Comment ça fonctionne?', 'a' => 'Créez votre compte → Personnalisez votre profil → Partagez-le via votre lien, QR Code ou carte NFC. C\'est aussi simple que ça.'],
                 ['q' => 'Est-ce que je peux annuler en tout temps?', 'a' => 'Absolument. Aucun engagement. Vous pouvez annuler votre abonnement à tout moment via votre tableau de bord. Votre compte reste actif en mode gratuit.'],
             ]],
             ['title' => 'Carte NFC', 'questions' => [
-                ['q' => 'C\'est quoi une carte NFC?', 'a' => 'C\'est une carte physique avec une puce intégrée. Quand quelqu\'un approche son téléphone de votre carte, votre profil LinkCard s\'ouvre automatiquement. Pas d\'application à installer, ça fonctionne nativement sur iPhone et Android.'],
+                ['q' => 'C\'est quoi une carte NFC?', 'a' => 'C\'est une carte physique avec une puce intégrée. Quand quelqu\'un approche son téléphone de votre carte, votre profil Link-Card s\'ouvre automatiquement. Pas d\'application à installer, ça fonctionne nativement sur iPhone et Android.'],
                 ['q' => 'Est-ce que ça fonctionne avec tous les téléphones?', 'a' => 'Oui, tous les iPhone depuis le 7 (2016) et la grande majorité des Android supportent le NFC. C\'est plus de 95% des téléphones en circulation.'],
                 ['q' => 'Combien de temps pour recevoir ma carte?', 'a' => '5 à 10 jours ouvrables après le paiement. Votre carte est imprimée et programmée localement au Québec.'],
                 ['q' => 'La carte fonctionne sans internet?', 'a' => 'La carte n\'a pas besoin de batterie ni d\'internet. Par contre, le téléphone qui la scanne a besoin d\'une connexion pour afficher votre profil.'],
@@ -49,14 +49,14 @@
                 ['q' => 'C\'est quoi le username personnalisé?', 'a' => 'Au lieu d\'un code aléatoire (ex: app.linkcard.ca/AB3KX92P), vous choisissez votre propre adresse (ex: app.linkcard.ca/jean-tremblay). Disponible avec Pro et Premium.'],
             ]],
             ['title' => 'Paiement & Abonnement', 'questions' => [
-                ['q' => 'Quels moyens de paiement?', 'a' => 'Cartes Visa, Mastercard et American Express via Stripe, notre partenaire de paiement sécurisé certifié PCI DSS niveau 1. LinkCard ne stocke jamais vos informations bancaires.'],
+                ['q' => 'Quels moyens de paiement?', 'a' => 'Cartes Visa, Mastercard et American Express via Stripe, notre partenaire de paiement sécurisé certifié PCI DSS niveau 1. Link-Card ne stocke jamais vos informations bancaires.'],
                 ['q' => 'Que se passe-t-il si j\'annule?', 'a' => 'Votre compte passe au forfait gratuit. Les sections excédentaires sont masquées (pas supprimées). Réabonnez-vous et tout revient!'],
-                ['q' => 'Politique de remboursement?', 'a' => 'Les abonnements sont remboursables au prorata durant les 30 premiers jours. Les cartes NFC ne sont pas remboursables une fois imprimées. Détails dans notre politique de remboursement.'],
-                ['q' => 'Les prix incluent les taxes?', 'a' => 'Les taxes applicables (TPS/TVQ) sont ajoutées au moment du paiement, conformément aux lois du Québec.'],
+                ['q' => 'Politique de remboursement?', 'a' => 'Aucun remboursement n\'est effectué sur les abonnements. Lorsque vous annulez, votre forfait reste actif jusqu\'à la fin de la période payée, puis votre compte passe automatiquement au forfait gratuit. Les cartes NFC ne sont pas remboursables une fois imprimées.'],
+                ['q' => 'Les prix incluent les taxes?', 'a' => 'Les prix affichés sont les prix finaux. Aucune taxe supplémentaire n\'est ajoutée au moment du paiement.'],
             ]],
             ['title' => 'Confidentialité & Sécurité', 'questions' => [
                 ['q' => 'Qu\'est-ce que vous faites avec mes données?', 'a' => 'Vos données vous appartiennent. On ne les vend pas, on ne les partage pas. Consultez notre politique de confidentialité pour tous les détails.'],
-                ['q' => 'LinkCard est conforme à la Loi 25?', 'a' => 'Oui. Conforme à la Loi 25 du Québec et à la LPRPDE fédérale. Vos données sont hébergées au Canada.'],
+                ['q' => 'Link-Card est conforme à la Loi 25?', 'a' => 'Oui. Conforme à la Loi 25 du Québec et à la LPRPDE fédérale. Vos données sont hébergées au Canada.'],
                 ['q' => 'Les gens qui scannent ma carte voient mes infos?', 'a' => 'Seulement ce que vous avez choisi de rendre visible sur votre profil. Vous contrôlez tout.'],
             ]],
         ];

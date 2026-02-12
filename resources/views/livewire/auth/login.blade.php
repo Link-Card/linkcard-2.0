@@ -27,7 +27,7 @@
 
             @if($action === 'connect' && $ref)
                 <div class="mb-6 p-4 rounded-lg text-sm font-medium" style="background: #F0F9F4; border: 1px solid #42B574; color: #2C2A27;">
-                    🔗 Connectez-vous pour ajouter <strong>{{ $ref }}</strong> à vos contacts LinkCard.
+                    🔗 Connectez-vous pour ajouter <strong>{{ $ref }}</strong> à vos contacts Link-Card.
                 </div>
             @endif
 

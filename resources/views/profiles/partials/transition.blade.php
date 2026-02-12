@@ -3,7 +3,7 @@
 @php $transition = $transition ?? 'wave'; @endphp
 
 @if($transition === 'wave')
-    {{-- Animated wave from LinkCard v1 --}}
+    {{-- Animated wave from Link-Card v1 --}}
     <div class="waves-container">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
              viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">

@@ -17,7 +17,7 @@
 <p>Vous devez avoir au moins 16 ans pour créer un compte. En vous inscrivant, vous déclarez avoir l'âge requis.</p>
 
 <h2>4. Forfaits et paiements</h2>
-<p>Link-Card offre des forfaits gratuits et payants (Pro, Premium). Les abonnements payants sont facturés mensuellement ou annuellement via Stripe. Les prix sont affichés en dollars canadiens (CAD) et sont sujets aux taxes applicables.</p>
+<p>Link-Card offre des forfaits gratuits et payants (Pro, Premium). Les abonnements payants sont facturés mensuellement ou annuellement via Stripe. Les prix sont affichés en dollars canadiens (CAD). Les prix affichés sont les prix finaux.</p>
 <p>Les abonnements se renouvellent automatiquement. Vous pouvez annuler à tout moment via votre portail d'abonnement. L'annulation prend effet à la fin de la période de facturation en cours.</p>
 
 <h2>5. Cartes NFC physiques</h2>

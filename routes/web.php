@@ -133,6 +133,13 @@ Route::post('/admin/stop-impersonation', function () {
         return redirect()->route('dashboard');
     }
     
+    // Revoke the impersonation access immediately
+    $currentUserId = auth()->id();
+    \App\Models\ImpersonationRequest::where('admin_id', $adminId)
+        ->where('user_id', $currentUserId)
+        ->where('status', 'approved')
+        ->update(['status' => 'revoked', 'expires_at' => now()]);
+    
     session()->forget('impersonating_from');
     auth()->login($admin);
     

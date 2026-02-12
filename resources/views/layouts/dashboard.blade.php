@@ -50,17 +50,23 @@
 
     {{-- Impersonation banner --}}
     @if(session('impersonating_from'))
-        <div id="impersonation-bar" class="w-full py-2 px-4 text-center text-sm font-medium text-white flex items-center justify-center space-x-3 flex-shrink-0" style="background: #F59E0B; z-index: 9999;">
-            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-            <span class="hidden sm:inline">Connecté en tant que <strong>{{ Auth::user()->name }}</strong> ({{ Auth::user()->email }})</span>
-            <span class="sm:hidden"><strong>{{ Auth::user()->name }}</strong></span>
-            <form action="{{ route('admin.stop-impersonation') }}" method="POST" class="inline">
+        <div id="impersonation-bar" class="w-full py-2.5 px-4 flex items-center justify-center space-x-3 flex-shrink-0" style="background: linear-gradient(135deg, #4A7FBF, #42B574); z-index: 9999;">
+            <div class="flex items-center space-x-2">
+                <div class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style="background: rgba(255,255,255,0.2);">
+                    <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                </div>
+                <span class="text-white text-sm font-medium hidden sm:inline">Support technique Link-Card — Session active sur le compte de <strong>{{ Auth::user()->name }}</strong></span>
+                <span class="text-white text-xs font-medium sm:hidden">Support Link-Card — <strong>{{ Auth::user()->name }}</strong></span>
+            </div>
+            <form id="stop-impersonation-form" action="{{ route('admin.stop-impersonation') }}" method="POST" class="inline">
                 @csrf
-                <button type="submit" class="ml-2 px-3 py-1 rounded-md text-xs font-bold text-white transition" style="background: rgba(255,255,255,0.25);" onmouseover="this.style.background='rgba(255,255,255,0.4)'" onmouseout="this.style.background='rgba(255,255,255,0.25)'">
-                    ← Quitter
+                <button type="submit" class="ml-2 px-4 py-1.5 rounded-lg text-xs font-bold text-white transition flex items-center space-x-1.5" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);" onmouseover="this.style.background='rgba(255,255,255,0.35)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                    <span>Quitter la session</span>
                 </button>
             </form>
         </div>
+        {{-- Auto-disconnect: session is revoked when admin clicks Quitter --}}
     @endif
 
     {{-- Mobile top bar --}}
@@ -207,34 +213,35 @@
                     ->first() : null;
             @endphp
             @if($pendingImpersonation)
-                <div class="mx-4 mt-4 p-4 rounded-xl" style="background: #FEF3C7; border: 1px solid #F59E0B;">
+                <div class="mx-4 mt-4 p-4 rounded-xl" style="background: #EFF6FF; border: 1px solid #4A7FBF;">
                     <div class="flex items-start space-x-3">
-                        <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background: #F59E0B;">
-                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background: linear-gradient(135deg, #4A7FBF, #42B574);">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                         </div>
                         <div class="flex-1">
-                            <p class="text-sm font-semibold" style="color: #92400E;">Demande d'accès administrateur</p>
-                            <p class="text-xs mt-1" style="color: #92400E;">
-                                <strong>{{ $pendingImpersonation->admin->name }}</strong> (administrateur Link-Card) demande à accéder temporairement à votre compte pour vous aider.
+                            <p class="text-sm font-semibold" style="color: #1E40AF;">Demande d'assistance technique</p>
+                            <p class="text-xs mt-1" style="color: #3B82F6;">
+                                Le <strong>support technique Link-Card</strong> souhaite accéder temporairement à votre compte pour vous aider.
                                 @if($pendingImpersonation->reason)
                                     <br>Raison : {{ $pendingImpersonation->reason }}
                                 @endif
                             </p>
-                            <p class="text-[10px] mt-1" style="color: #B45309;">L'accès sera limité à 24h et vous pourrez le révoquer à tout moment.</p>
+                            <p class="text-[10px] mt-1" style="color: #60A5FA;">L'accès sera automatiquement révoqué dès que le technicien quittera la session.</p>
                             <div class="flex items-center space-x-2 mt-3">
                                 <form action="{{ route('impersonation.respond') }}" method="POST" class="inline">
                                     @csrf
                                     <input type="hidden" name="request_id" value="{{ $pendingImpersonation->id }}">
                                     <input type="hidden" name="action" value="approve">
-                                    <button type="submit" class="px-4 py-1.5 text-xs font-medium rounded-lg text-white" style="background: #42B574;">
-                                        Autoriser (24h)
+                                    <button type="submit" class="px-4 py-2 text-xs font-medium rounded-lg text-white flex items-center space-x-1.5" style="background: #42B574;">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                        <span>Autoriser l'accès</span>
                                     </button>
                                 </form>
                                 <form action="{{ route('impersonation.respond') }}" method="POST" class="inline">
                                     @csrf
                                     <input type="hidden" name="request_id" value="{{ $pendingImpersonation->id }}">
                                     <input type="hidden" name="action" value="deny">
-                                    <button type="submit" class="px-4 py-1.5 text-xs font-medium rounded-lg" style="color: #EF4444; border: 1px solid #EF4444;">
+                                    <button type="submit" class="px-4 py-2 text-xs font-medium rounded-lg" style="color: #EF4444; border: 1px solid #EF4444;">
                                         Refuser
                                     </button>
                                 </form>
@@ -253,19 +260,20 @@
                     ->first() : null;
             @endphp
             @if($activeImpersonation && !session('impersonating_from'))
-                <div class="mx-4 mt-4 p-3 rounded-xl flex items-center justify-between" style="background: #EFF6FF; border: 1px solid #4A7FBF;">
+                <div class="mx-4 mt-4 p-3 rounded-xl flex items-center justify-between" style="background: #EFF6FF; border: 1px solid #93C5FD;">
                     <div class="flex items-center space-x-2">
-                        <svg class="w-4 h-4" style="color: #4A7FBF;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <div class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style="background: linear-gradient(135deg, #4A7FBF, #42B574);">
+                            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        </div>
                         <p class="text-xs" style="color: #1E40AF;">
-                            <strong>{{ $activeImpersonation->admin->name }}</strong> a un accès temporaire à votre compte
-                            (expire {{ $activeImpersonation->expires_at->diffForHumans() }})
+                            Le <strong>support technique Link-Card</strong> a un accès temporaire à votre compte
                         </p>
                     </div>
                     <form action="{{ route('impersonation.respond') }}" method="POST" class="inline">
                         @csrf
                         <input type="hidden" name="request_id" value="{{ $activeImpersonation->id }}">
                         <input type="hidden" name="action" value="revoke">
-                        <button type="submit" class="px-3 py-1 text-xs font-medium rounded-lg" style="color: #EF4444; border: 1px solid #EF4444;">
+                        <button type="submit" class="px-3 py-1.5 text-xs font-medium rounded-lg" style="color: #EF4444; border: 1px solid #EF4444;">
                             Révoquer l'accès
                         </button>
                     </form>

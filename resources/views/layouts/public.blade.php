@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'LinkCard — Votre carte de visite digitale')</title>
-    <meta name="description" content="@yield('meta_description', 'Créez votre carte de visite digitale professionnelle. Partagez votre profil en un geste avec la carte NFC LinkCard.')">
+    <title>@yield('title', 'Link-Card — Votre carte de visite digitale')</title>
+    <meta name="description" content="@yield('meta_description', 'Créez votre carte de visite digitale professionnelle. Partagez votre profil en un geste avec la carte NFC Link-Card.')">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="@yield('title', 'LinkCard — Votre carte de visite digitale')">
-    <meta property="og:description" content="@yield('meta_description', 'Créez votre carte de visite digitale professionnelle. Partagez votre profil en un geste avec la carte NFC LinkCard.')">
+    <meta property="og:title" content="@yield('title', 'Link-Card — Votre carte de visite digitale')">
+    <meta property="og:description" content="@yield('meta_description', 'Créez votre carte de visite digitale professionnelle. Partagez votre profil en un geste avec la carte NFC Link-Card.')">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:image" content="{{ asset('images/og-image.png') }}">
@@ -87,8 +87,8 @@
             <div class="flex items-center justify-between h-16 sm:h-20">
                 {{-- Logo --}}
                 <a href="/" class="flex items-center space-x-2 flex-shrink-0">
-                    <img src="{{ asset('images/logo-noir.png') }}" alt="LinkCard" class="h-7 sm:h-8 w-auto">
-                    <span class="font-semibold text-lg hidden sm:inline" style="color: #2C2A27;">LinkCard</span>
+                    <img src="{{ asset('images/logo-noir.png') }}" alt="Link-Card" class="h-7 sm:h-8 w-auto">
+                    <span class="font-semibold text-lg hidden sm:inline" style="color: #2C2A27;">Link-Card</span>
                 </a>
 
                 {{-- Desktop links --}}
@@ -161,8 +161,8 @@
                 {{-- Brand --}}
                 <div class="col-span-2 sm:col-span-1">
                     <div class="flex items-center space-x-2 mb-4">
-                        <img src="{{ asset('images/logo-blanc.png') }}" alt="LinkCard" class="h-7 w-auto">
-                        <span class="font-semibold text-lg text-white">LinkCard</span>
+                        <img src="{{ asset('images/logo-blanc.png') }}" alt="Link-Card" class="h-7 w-auto">
+                        <span class="font-semibold text-lg text-white">Link-Card</span>
                     </div>
                     <p class="text-sm leading-relaxed" style="color: #9CA3AF;">
                         Transformer chaque rencontre en connexion durable.
@@ -204,7 +204,7 @@
             {{-- Bottom bar --}}
             <div class="mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4" style="border-top: 1px solid rgba(255,255,255,0.1);">
                 <p class="text-xs" style="color: #6B7280;">
-                    © {{ date('Y') }} LinkCard · Saint-Pierre-les-Becquets, QC
+                    © {{ date('Y') }} Link-Card · Mauricie, QC
                 </p>
                 <div class="flex items-center space-x-4">
                     {{-- LinkedIn --}}

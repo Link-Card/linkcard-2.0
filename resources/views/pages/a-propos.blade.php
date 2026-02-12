@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'À propos — LinkCard')
-@section('meta_description', 'Découvrez l\'histoire de LinkCard. Basée au Québec, notre mission est de transformer chaque rencontre en connexion durable.')
+@section('title', 'À propos — Link-Card')
+@section('meta_description', 'Découvrez l\'histoire de Link-Card. Basée au Québec, notre mission est de transformer chaque rencontre en connexion durable.')
 
 @section('content')
 
@@ -23,7 +23,7 @@
         <div class="fade-up">
             <h2 class="text-2xl sm:text-3xl font-bold mb-6" style="color: #2C2A27;">Le constat</h2>
             <p class="text-lg leading-relaxed mb-6" style="color: #4B5563;">
-                LinkCard est née d'un constat simple : les rencontres professionnelles ne manquent pas, mais les connexions durables sont rares.
+                Link-Card est née d'un constat simple : les rencontres professionnelles ne manquent pas, mais les connexions durables sont rares.
             </p>
             <p class="text-lg leading-relaxed mb-6" style="color: #4B5563;">
                 Les cartes d'affaires se perdent. Les contacts s'oublient. Les opportunités disparaissent souvent pour une seule raison : le lien n'a pas été conservé.
@@ -41,10 +41,10 @@
         <div class="fade-up">
             <h2 class="text-2xl sm:text-3xl font-bold mb-6" style="color: #2C2A27;">Notre mission</h2>
             <p class="text-lg leading-relaxed mb-6" style="color: #4B5563;">
-                LinkCard existe pour une seule raison : ne pas laisser une bonne rencontre disparaître.
+                Link-Card existe pour une seule raison : ne pas laisser une bonne rencontre disparaître.
             </p>
             <p class="text-lg leading-relaxed mb-6" style="color: #4B5563;">
-                On croit que la technologie devrait simplifier les choses, pas les compliquer. C'est pour ça que LinkCard a été conçue autour d'un seul principe : <strong style="color: #2C2A27;">un geste simple, une connexion immédiate</strong>.
+                On croit que la technologie devrait simplifier les choses, pas les compliquer. C'est pour ça que Link-Card a été conçue autour d'un seul principe : <strong style="color: #2C2A27;">un geste simple, une connexion immédiate</strong>.
             </p>
             <p class="text-lg leading-relaxed" style="color: #4B5563;">
                 Pas d'application compliquée. Pas de processus long. Juste une expérience fluide qui respecte le moment de la rencontre.
@@ -93,7 +93,7 @@
         </div>
         <h2 class="text-2xl sm:text-3xl font-bold mb-4" style="color: #2C2A27;">Basé au Québec, fabriqué au Québec</h2>
         <p class="text-lg leading-relaxed max-w-xl mx-auto" style="color: #4B5563;">
-            LinkCard est conçue et opérée depuis Saint-Pierre-les-Becquets, au Québec. Nos cartes NFC sont imprimées et programmées localement. Vos données sont hébergées au Canada, conformément à la Loi 25.
+            Link-Card est conçue et opérée depuis la Mauricie, au Québec. Nos cartes NFC sont imprimées et programmées localement. Vos données sont hébergées au Canada, conformément à la Loi 25.
         </p>
     </div>
 </section>
@@ -105,7 +105,7 @@
         <h2 class="text-3xl sm:text-4xl font-bold text-white">Prêt à faire le <span style="color: #42B574;">premier geste</span>?</h2>
         <p class="mt-4 text-base" style="color: #9CA3AF;">Créez votre profil gratuitement et découvrez une nouvelle façon de connecter.</p>
         <div class="mt-8">
-            <a href="{{ route('register') }}" class="btn btn-primary" style="padding: 14px 28px; font-size: 16px; border-radius: 12px;">
+            <a href="{{ route('pages.forfaits') }}" class="btn btn-primary" style="padding: 14px 28px; font-size: 16px; border-radius: 12px;">
                 Commencer gratuitement
                 <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
             </a>

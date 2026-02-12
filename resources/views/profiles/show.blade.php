@@ -553,7 +553,7 @@
                     </div>
                 </a>
                 
-                <!-- Option 2: Ajouter sur LinkCard -->
+                <!-- Option 2: Ajouter sur Link-Card -->
                 @if($isOwnProfile)
                     {{-- C'est son propre profil --}}
                     <div class="w-full flex items-center gap-3 p-3.5 rounded-xl opacity-50" style="border: 1px solid #E5E7EB; background: #F9FAFB;">
@@ -571,7 +571,7 @@
                             <svg class="w-5 h-5" fill="#42B574" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                         </div>
                         <div class="text-left flex-1">
-                            <p class="font-semibold text-sm" style="color: #42B574;">Connecté sur LinkCard</p>
+                            <p class="font-semibold text-sm" style="color: #42B574;">Connecté sur Link-Card</p>
                             <p class="text-xs" style="color: #4B5563;">Vous êtes déjà connectés</p>
                         </div>
                     </div>
@@ -609,7 +609,7 @@
                                 <svg class="w-5 h-5" fill="#42B574" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
                             </div>
                             <div class="text-left flex-1">
-                                <p class="font-semibold text-sm" style="color: #2C2A27;">Ajouter sur LinkCard</p>
+                                <p class="font-semibold text-sm" style="color: #2C2A27;">Ajouter sur Link-Card</p>
                                 <p class="text-xs" style="color: #9CA3AF;">Se connecter mutuellement</p>
                             </div>
                         </button>
@@ -621,7 +621,7 @@
                             <svg class="w-5 h-5" fill="#42B574" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
                         </div>
                         <div class="text-left flex-1">
-                            <p class="font-semibold text-sm" style="color: #2C2A27;">Ajouter sur LinkCard</p>
+                            <p class="font-semibold text-sm" style="color: #2C2A27;">Ajouter sur Link-Card</p>
                             <p class="text-xs" style="color: #9CA3AF;">Connexion ou inscription requise</p>
                         </div>
                     </a>

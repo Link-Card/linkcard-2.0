@@ -177,7 +177,7 @@
                                 'social' => 'Réseaux sociaux',
                                 'search' => 'Recherche',
                                 'referral' => 'Référence',
-                                'internal' => 'LinkCard',
+                                'internal' => 'Link-Card',
                                 'nfc' => 'Carte NFC',
                             ];
                             $sourceColors = [

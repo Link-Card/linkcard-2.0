@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'Fonctionnalités — LinkCard')
-@section('meta_description', 'Découvrez toutes les fonctionnalités de LinkCard : profil digital, carte NFC, QR Code, connexions, statistiques et 13 templates professionnels.')
+@section('title', 'Fonctionnalités — Link-Card')
+@section('meta_description', 'Découvrez toutes les fonctionnalités de Link-Card : profil digital, carte NFC, QR Code, connexions, statistiques et 13 templates professionnels.')
 
 @section('content')
 
@@ -16,7 +16,7 @@
                 La carte professionnelle<br>pensée pour <span style="color: #42B574;">aujourd'hui</span>
             </h1>
             <p class="mt-6 text-lg max-w-2xl mx-auto leading-relaxed" style="color: #4B5563;">
-                LinkCard centralise vos coordonnées et vos liens professionnels dans un profil simple, accessible et modifiable à tout moment.
+                Link-Card centralise vos coordonnées et vos liens professionnels dans un profil simple, accessible et modifiable à tout moment.
             </p>
         </div>
     </div>
@@ -86,7 +86,7 @@
                 <div style="background: linear-gradient(135deg, #F0F9F4, #EFF6FF); border-radius: 20px; padding: 40px; text-align: center;">
                     <div style="width: 180px; height: 280px; background: linear-gradient(180deg, #FFFFFF 0%, #F9FAF7 100%); border-radius: 16px; margin: 0 auto; box-shadow: 0 15px 40px rgba(0,0,0,0.12); display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #E5E7EB; position: relative; overflow: hidden;">
                         <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #42B574, #4A7FBF);"></div>
-                        <img src="{{ asset('images/logo-noir.png') }}" alt="LinkCard" style="width: 95px; height: auto; object-fit: contain;">
+                        <img src="{{ asset('images/logo-noir.png') }}" alt="Link-Card" style="width: 95px; height: auto; object-fit: contain;">
                         <div style="position: absolute; bottom: 14px; right: 14px;">
                             <svg width="16" height="16" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0"/><circle cx="12" cy="18.75" r="0.75" fill="#9CA3AF"/></svg>
                         </div>
@@ -176,7 +176,7 @@
         <h2 class="text-3xl sm:text-4xl font-bold text-white">Créez votre profil en <span style="color: #42B574;">2 minutes</span></h2>
         <p class="mt-4 text-base" style="color: #9CA3AF;">Gratuit pour commencer. Sans engagement. Sans carte de crédit.</p>
         <div class="mt-8">
-            <a href="{{ route('register') }}" class="btn btn-primary" style="padding: 14px 28px; font-size: 16px; border-radius: 12px;">
+            <a href="{{ route('pages.forfaits') }}" class="btn btn-primary" style="padding: 14px 28px; font-size: 16px; border-radius: 12px;">
                 Commencer gratuitement
                 <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
             </a>

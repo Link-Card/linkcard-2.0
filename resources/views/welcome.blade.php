@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'LinkCard — Votre carte de visite. Repensée.')
-@section('meta_description', 'Créez votre carte de visite digitale professionnelle et partagez votre profil en un geste avec la carte NFC LinkCard. Gratuit pour commencer.')
+@section('title', 'Link-Card — Votre carte de visite. Repensée.')
+@section('meta_description', 'Créez votre carte de visite digitale professionnelle et partagez votre profil en un geste avec la carte NFC Link-Card. Gratuit pour commencer.')
 
 @section('styles')
 <style>
@@ -333,7 +333,7 @@
                     Un geste simple. Une connexion claire. Votre contact, directement dans le téléphone de votre interlocuteur.
                 </p>
                 <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-                    <a href="{{ route('register') }}" class="btn btn-primary" style="padding: 14px 28px; font-size: 16px; border-radius: 12px;">
+                    <a href="{{ route('pages.forfaits') }}" class="btn btn-primary" style="padding: 14px 28px; font-size: 16px; border-radius: 12px;">
                         Commencer gratuitement
                         <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                     </a>
@@ -382,7 +382,7 @@
                 {{-- Floating NFC Card (vertical) --}}
                 <div class="hero-card">
                     <div class="nfc-card">
-                        <img src="{{ asset('images/logo-noir.png') }}" alt="LinkCard" class="nfc-logo">
+                        <img src="{{ asset('images/logo-noir.png') }}" alt="Link-Card" class="nfc-logo">
                         <svg class="nfc-icon" width="16" height="16" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0"/><circle cx="12" cy="18.75" r="0.75" fill="#9CA3AF"/></svg>
                     </div>
                 </div>
@@ -461,7 +461,7 @@
                     <span style="color: #42B574;">une continuité.</span>
                 </h2>
                 <p class="text-lg leading-relaxed mb-4" style="color: #4B5563;">
-                    LinkCard remplace la carte d'affaires traditionnelle par une solution simple et moderne. Au lieu de remettre un morceau de papier, vous partagez directement votre profil professionnel.
+                    Link-Card remplace la carte d'affaires traditionnelle par une solution simple et moderne. Au lieu de remettre un morceau de papier, vous partagez directement votre profil professionnel.
                 </p>
                 <p class="text-lg leading-relaxed" style="color: #4B5563;">
                     Votre contact est enregistré dans le téléphone de votre interlocuteur, prêt à être utilisé. La relation peut commencer immédiatement, <strong style="color: #2C2A27;">sans étape supplémentaire</strong>.
@@ -484,7 +484,7 @@
                         <div class="tap-ring"></div>
                         <div class="tap-ring"></div>
                         <div class="nfc-card" style="width: 120px; height: 190px; position: relative; z-index: 5;">
-                            <img src="{{ asset('images/logo-noir.png') }}" alt="LinkCard" class="nfc-logo" style="width: 65px;">
+                            <img src="{{ asset('images/logo-noir.png') }}" alt="Link-Card" class="nfc-logo" style="width: 65px;">
                             <svg class="nfc-icon" width="14" height="14" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 017.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0"/><circle cx="12" cy="18.75" r="0.75" fill="#9CA3AF"/></svg>
                         </div>
                     </div>
@@ -542,7 +542,7 @@
             <div class="grid grid-cols-3 text-center text-sm font-semibold" style="background-color: #F7F8F4; border-bottom: 1px solid #E5E7EB;">
                 <div class="py-4 px-3"></div>
                 <div class="py-4 px-3" style="color: #9CA3AF;">Carte papier</div>
-                <div class="py-4 px-3" style="color: #42B574;">LinkCard</div>
+                <div class="py-4 px-3" style="color: #42B574;">Link-Card</div>
             </div>
             @php
             $comparisons = [
@@ -601,7 +601,7 @@
         </div>
         <div class="text-center mt-10 fade-up">
             <p class="text-base leading-relaxed max-w-xl mx-auto" style="color: #4B5563;">
-                LinkCard est conçue pour les professionnels qui rencontrent des gens chaque semaine et veulent sécuriser ce lien.
+                Link-Card est conçue pour les professionnels qui rencontrent des gens chaque semaine et veulent sécuriser ce lien.
             </p>
         </div>
     </div>
@@ -620,7 +620,7 @@
                 </div>
                 <h3 class="text-xl font-bold mb-3" style="color: #2C2A27;">La continuité crée la confiance</h3>
                 <p class="text-sm leading-relaxed" style="color: #4B5563;">
-                    Avec LinkCard, vos informations restent accessibles dans le temps. Que ce soit le lendemain, dans six mois ou dans quatre ans, votre contact est toujours là. La continuité crée la confiance — et la confiance crée les relations durables.
+                    Avec Link-Card, vos informations restent accessibles dans le temps. Que ce soit le lendemain, dans six mois ou dans quatre ans, votre contact est toujours là. La continuité crée la confiance — et la confiance crée les relations durables.
                 </p>
             </div>
             {{-- Écologie --}}
@@ -630,7 +630,7 @@
                 </div>
                 <h3 class="text-xl font-bold mb-3" style="color: #2C2A27;">Moins de papier, plus de liens</h3>
                 <p class="text-sm leading-relaxed" style="color: #4B5563;">
-                    Chaque année, des millions de cartes d'affaires sont imprimées… puis jetées. LinkCard propose une alternative durable. Une seule carte suffit pour des centaines de connexions. Moins de gaspillage, une solution adaptée à la réalité d'aujourd'hui.
+                    Chaque année, des millions de cartes d'affaires sont imprimées… puis jetées. Link-Card propose une alternative durable. Une seule carte suffit pour des centaines de connexions. Moins de gaspillage, une solution adaptée à la réalité d'aujourd'hui.
                 </p>
             </div>
         </div>
@@ -776,7 +776,7 @@
             </h2>
             <p class="mt-6 text-lg" style="color: #9CA3AF;">Mais seulement si le contact reste accessible. Ne laissez pas une bonne rencontre disparaître.</p>
             <div class="mt-8">
-                <a href="{{ route('register') }}" class="btn btn-primary" style="padding: 16px 32px; font-size: 16px; border-radius: 12px;">
+                <a href="{{ route('pages.forfaits') }}" class="btn btn-primary" style="padding: 16px 32px; font-size: 16px; border-radius: 12px;">
                     Créer mon profil gratuitement
                     <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                 </a>

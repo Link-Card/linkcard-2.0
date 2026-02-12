@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'Contact — LinkCard')
-@section('meta_description', 'Contactez l\'équipe LinkCard. Question, problème technique, partenariat — nous répondons en moins de 24 heures.')
+@section('title', 'Contact — Link-Card')
+@section('meta_description', 'Contactez l\'équipe Link-Card. Question, problème technique, partenariat — nous répondons en moins de 24 heures.')
 
 @section('content')
 
@@ -77,7 +77,7 @@
                             </div>
                             <div>
                                 <p class="text-sm font-semibold" style="color: #2C2A27;">Basé au Québec</p>
-                                <p class="text-sm" style="color: #4B5563;">Saint-Pierre-les-Becquets, QC</p>
+                                <p class="text-sm" style="color: #4B5563;">Mauricie, QC</p>
                             </div>
                         </div>
                         <div class="flex items-start gap-4">
