@@ -62,14 +62,15 @@ class PlanOverride extends Model
             'beta' => 'Beta testeur',
             'support' => 'Support client',
             'promo' => 'Promotion',
-            'gift' => 'Cadeau',
+            'gift' => 'Cadeau / Ami',
+            'ambassador' => 'Ambassadeur',
             'testing' => 'Test admin',
             default => $this->reason,
         };
     }
 
     /**
-     * Expire this override and revert user's plan
+     * Expire this override and revert user's plan to their real Stripe plan
      */
     public function expire(): void
     {
@@ -79,18 +80,17 @@ class PlanOverride extends Model
 
         // Check if user has active Stripe subscription
         if ($user->subscribed('default')) {
-            // Revert to Stripe plan
             $subscription = $user->subscription('default');
             $stripePrice = $subscription->stripe_price;
 
             $stripePlan = 'free';
             $proPrices = [
-                config('services.stripe.prices.pro_monthly'),
-                config('services.stripe.prices.pro_yearly'),
+                config('services.stripe.price_pro_monthly'),
+                config('services.stripe.price_pro_yearly'),
             ];
             $premiumPrices = [
-                config('services.stripe.prices.premium_monthly'),
-                config('services.stripe.prices.premium_yearly'),
+                config('services.stripe.price_premium_monthly'),
+                config('services.stripe.price_premium_yearly'),
             ];
 
             if (in_array($stripePrice, $proPrices)) {
@@ -101,7 +101,7 @@ class PlanOverride extends Model
 
             $user->update(['plan' => $stripePlan]);
         } else {
-            // No Stripe → revert to free
+            // No active Stripe → revert to free
             $user->update(['plan' => 'free']);
         }
 

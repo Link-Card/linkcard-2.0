@@ -209,7 +209,7 @@
                         </div>
                         @if($realStripePlan !== 'free')
                             <p class="text-[10px] mt-1.5" style="color: #6B7280;">
-                                L'abonnement Stripe sera annulé à la fin du cycle en cours.
+                                L'abonnement Stripe continue normalement. À la fin de la gratuité, le forfait payé reprend.
                             </p>
                         @endif
                     </div>
