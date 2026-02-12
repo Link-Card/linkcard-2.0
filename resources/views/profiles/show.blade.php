@@ -160,6 +160,7 @@
         $headerStyle = $templateConfig['header_style'] ?? 'classic';
         $templateTransition = $templateConfig['transition'] ?? 'wave';
         $buttonStyle = $templateConfig['button_style'] ?? 'rounded';
+        $socialStyle = $templateConfig['social_style'] ?? 'pills';
         
         // Button CSS classes based on template button_style
         $btnRadius = match($buttonStyle) {
@@ -177,7 +178,7 @@
         $headerTextColor = $luminance > 0.6 ? '#2C2A27' : '#FFFFFF';
         
         // Available header partials
-        $validHeaders = ['classic', 'wave', 'minimal', 'diagonal', 'arch', 'split', 'banner', 'geometric', 'bold'];
+        $validHeaders = ['classic', 'wave', 'minimal', 'diagonal', 'arch', 'split', 'banner', 'geometric', 'bold', 'videaste', 'artiste', 'entrepreneur'];
         $headerPartial = in_array($headerStyle, $validHeaders) ? $headerStyle : 'classic';
     @endphp
 
@@ -191,9 +192,9 @@
         <!-- CONTENT BANDS -->
         @php
             $isBoldTemplate = ($headerStyle === 'bold');
-            $bodyBg = $isBoldTemplate ? '#EDEBE8' : 'white';
-            $blockBg = $isBoldTemplate ? '#E4E2DF' : '#F9FAFB';
-            $blockBorder = $isBoldTemplate ? ($primaryColor . '40') : '#E5E7EB';
+            $bodyBg = $isBoldTemplate ? '#E8E6E3' : 'white';
+            $blockBg = $isBoldTemplate ? '#DFDDD9' : '#F9FAFB';
+            $blockBorder = $isBoldTemplate ? ($secondaryColor ?? $primaryColor) : '#E5E7EB';
         @endphp
         <div class="min-h-[200px]" style="background: {{ $bodyBg }};">
             <div class="px-5 py-6 space-y-3">
@@ -225,21 +226,61 @@
                         @endif
 
                     @elseif($band->type === 'social_link')
-                        <!-- Lien social -->
-                        <a href="{{ $band->data['url'] }}" target="_blank" rel="noopener"
-                           data-band-id="{{ $band->id }}" data-band-url="{{ $band->data['url'] }}"
-                           class="block p-3.5 {{ $btnRadius }} transition-all duration-200 trackable-link"
-                           style="background: {{ $blockBg }}; border: 1px solid {{ $blockBorder }};"
-                           onmouseover="this.style.background='#F3F4F6'; this.style.borderColor='#D1D5DB'"
-                           onmouseout="this.style.background='#F9FAFB'; this.style.borderColor='#E5E7EB'">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-8 h-8 flex items-center justify-center">
-                                    <x-social-icon :platform="$band->data['platform'] ?? ''" size="w-6 h-6" />
+                        @if(!isset($socialLinksRendered))
+                            @php
+                                $socialLinksRendered = true;
+                                $allSocialBands = $profile->contentBands->where('type', 'social_link');
+                            @endphp
+
+                            @if($socialStyle === 'circles')
+                                {{-- CIRCLES: icônes rondes en ligne --}}
+                                <div class="flex flex-wrap justify-center gap-3 py-2">
+                                    @foreach($allSocialBands as $sBand)
+                                        <a href="{{ $sBand->data['url'] }}" target="_blank" rel="noopener"
+                                           data-band-id="{{ $sBand->id }}" data-band-url="{{ $sBand->data['url'] }}"
+                                           class="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 trackable-link hover:scale-110 shadow-sm"
+                                           style="background: {{ $blockBg }}; border: 1px solid {{ $blockBorder }};">
+                                            <x-social-icon :platform="$sBand->data['platform'] ?? ''" size="w-5 h-5" />
+                                        </a>
+                                    @endforeach
                                 </div>
-                                <span class="font-medium text-sm" style="color: #2C2A27;">{{ $band->data['platform'] }}</span>
-                                <svg class="w-4 h-4 ml-auto" fill="#9CA3AF" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-                            </div>
-                        </a>
+
+                            @elseif($socialStyle === 'pills')
+                                {{-- PILLS: badges compacts en ligne --}}
+                                <div class="flex flex-wrap justify-center gap-2 py-1">
+                                    @foreach($allSocialBands as $sBand)
+                                        <a href="{{ $sBand->data['url'] }}" target="_blank" rel="noopener"
+                                           data-band-id="{{ $sBand->id }}" data-band-url="{{ $sBand->data['url'] }}"
+                                           class="inline-flex items-center gap-2 px-4 py-2.5 {{ $btnRadius }} transition-all duration-200 trackable-link hover:shadow-md"
+                                           style="background: {{ $blockBg }}; border: 1px solid {{ $blockBorder }};"
+                                           onmouseover="this.style.borderColor='{{ $primaryColor }}50'"
+                                           onmouseout="this.style.borderColor='{{ $blockBorder }}'">
+                                            <x-social-icon :platform="$sBand->data['platform'] ?? ''" size="w-4 h-4" />
+                                            <span class="font-medium text-xs" style="color: #2C2A27;">{{ ucfirst($sBand->data['platform'] ?? '') }}</span>
+                                        </a>
+                                    @endforeach
+                                </div>
+
+                            @else
+                                {{-- LIST: détaillé, un par ligne (défaut) --}}
+                                @foreach($allSocialBands as $sBand)
+                                    <a href="{{ $sBand->data['url'] }}" target="_blank" rel="noopener"
+                                       data-band-id="{{ $sBand->id }}" data-band-url="{{ $sBand->data['url'] }}"
+                                       class="block p-3.5 {{ $btnRadius }} transition-all duration-200 trackable-link"
+                                       style="background: {{ $blockBg }}; border: 1px solid {{ $blockBorder }};"
+                                       onmouseover="this.style.background='{{ $isBoldTemplate ? '#DBD9D6' : '#F3F4F6' }}'; this.style.borderColor='{{ $isBoldTemplate ? $primaryColor . '60' : '#D1D5DB' }}'"
+                                       onmouseout="this.style.background='{{ $blockBg }}'; this.style.borderColor='{{ $blockBorder }}'">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-8 h-8 flex items-center justify-center">
+                                                <x-social-icon :platform="$sBand->data['platform'] ?? ''" size="w-6 h-6" />
+                                            </div>
+                                            <span class="font-medium text-sm" style="color: {{ $isBoldTemplate ? '#4B5563' : '#2C2A27' }};">{{ ucfirst($sBand->data['platform'] ?? '') }}</span>
+                                            <svg class="w-4 h-4 ml-auto" fill="#9CA3AF" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            @endif
+                        @endif
 
                     @elseif($band->type === 'image')
                         <!-- Image(s) -->

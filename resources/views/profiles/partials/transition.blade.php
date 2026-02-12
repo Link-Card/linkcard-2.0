@@ -37,8 +37,8 @@
     </div>
 
 @elseif($transition === 'arch')
-    <svg viewBox="0 0 400 35" style="display: block; width: 100%; margin-top: -1px;" preserveAspectRatio="none">
-        <ellipse cx="200" cy="0" rx="220" ry="35" fill="white" />
+    <svg viewBox="0 0 400 40" style="display: block; width: 100%; margin-top: -1px;" preserveAspectRatio="none">
+        <path d="M0,40 L0,28 Q200,-10 400,28 L400,40 Z" fill="white" />
     </svg>
 
 @elseif($transition === 'diagonal')

@@ -1,9 +1,9 @@
-{{-- Header: Split (#6) - Photo à gauche, infos à droite --}}
-<div class="relative">
+{{-- Header: Duo (#6) - Photo à gauche, infos à droite --}}
+<div class="relative" style="background: linear-gradient(135deg, {{ $primaryColor }} 0%, {{ $secondaryColor }} 100%);">
     @include('profiles.partials.share-button')
     <div class="flex">
         {{-- Left: Photo --}}
-        <div class="w-[38%] flex items-center justify-center py-12" style="background: {{ $primaryColor }};">
+        <div class="w-[38%] flex items-center justify-center py-12">
             @if($profile->photo_path)
                 <img src="{{ Storage::url($profile->photo_path) }}"
                      class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-xl">
@@ -14,7 +14,7 @@
             @endif
         </div>
         {{-- Right: Info --}}
-        <div class="w-[62%] flex flex-col justify-center py-12 px-5" style="background: linear-gradient(180deg, {{ $secondaryColor }} 0%, {{ $primaryColor }} 100%);">
+        <div class="w-[62%] flex flex-col justify-center py-12 px-5">
             <h1 class="text-xl font-semibold" style="letter-spacing: -0.02em; color: {{ $headerTextColor }};">{{ $profile->full_name }}</h1>
             @if($profile->job_title)
                 <p class="text-sm font-medium mt-1" style="opacity: 0.9; color: {{ $headerTextColor }};">{{ $profile->job_title }}</p>
@@ -32,5 +32,6 @@
             @endif
         </div>
     </div>
-    @include('profiles.partials.transition', ['transition' => $templateTransition ?? 'wave'])
+    {{-- Subtle gradient fade to white --}}
+    <div style="height: 24px; background: linear-gradient(180deg, transparent 0%, white 100%);"></div>
 </div>

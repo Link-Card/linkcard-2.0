@@ -1,6 +1,6 @@
 {{-- Header: Épuré (#3) - Barre accent + fond couleur subtile --}}
 <div style="height: 6px; background: linear-gradient(90deg, {{ $primaryColor }}, {{ $secondaryColor }});"></div>
-<div class="relative" style="background: linear-gradient(180deg, {{ $primaryColor }}12 0%, white 50%);">
+<div class="relative" style="background: linear-gradient(180deg, {{ $primaryColor }}22 0%, {{ $primaryColor }}08 70%, white 100%);">
     @include('profiles.partials.share-button')
     <div class="px-6 pt-8 pb-6 text-center">
         {{-- Photo avec ombre colorée --}}
@@ -8,10 +8,10 @@
             @if($profile->photo_path)
                 <img src="{{ Storage::url($profile->photo_path) }}"
                      class="w-28 h-28 rounded-full object-cover border-4 border-white"
-                     style="box-shadow: 0 4px 20px {{ $primaryColor }}40;">
+                     style="box-shadow: 0 4px 24px {{ $primaryColor }}50;">
             @else
                 <div class="w-28 h-28 rounded-full border-4 border-white flex items-center justify-center"
-                     style="background: linear-gradient(135deg, {{ $primaryColor }}, {{ $secondaryColor }}); box-shadow: 0 4px 20px {{ $primaryColor }}40;">
+                     style="background: linear-gradient(135deg, {{ $primaryColor }}, {{ $secondaryColor }}); box-shadow: 0 4px 24px {{ $primaryColor }}50;">
                     <span class="text-5xl">👤</span>
                 </div>
             @endif
