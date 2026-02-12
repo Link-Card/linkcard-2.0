@@ -35,7 +35,7 @@
                                     </div>
                                 @endif
                                 <div class="min-w-0">
-                                    <p class="font-semibold text-sm truncate" style="color: #2C2A27;">{{ $user->name }}</p>
+                                    <p class="font-semibold text-sm truncate" style="color: #2C2A27;">{{ $profile->full_name ?? $user->name }}</p>
                                     @if($profile)
                                         <p class="text-xs truncate" style="color: #4B5563;">
                                             {{ $profile->job_title }}{{ $profile->company ? ' @ '.$profile->company : '' }}
@@ -84,7 +84,7 @@
                                     </div>
                                 @endif
                                 <div class="min-w-0">
-                                    <p class="font-semibold text-sm truncate" style="color: #2C2A27;">{{ $user->name }}</p>
+                                    <p class="font-semibold text-sm truncate" style="color: #2C2A27;">{{ $profile->full_name ?? $user->name }}</p>
                                     @if($profile)
                                         <p class="text-xs truncate" style="color: #4B5563;">
                                             {{ $profile->job_title }}{{ $profile->company ? ' @ '.$profile->company : '' }}
@@ -138,7 +138,7 @@
                                         </div>
                                     @endif
                                     <div class="min-w-0 flex-1">
-                                        <p class="font-semibold text-sm truncate" style="color: #2C2A27;">{{ $otherUser->name }}</p>
+                                        <p class="font-semibold text-sm truncate" style="color: #2C2A27;">{{ $profile->full_name ?? $otherUser->name }}</p>
                                         @if($profile)
                                             @if($profile->job_title)
                                                 <p class="text-xs truncate" style="color: #4B5563;">{{ $profile->job_title }}</p>
@@ -151,7 +151,7 @@
                                     {{-- Quick contact icons --}}
                                     <div class="flex gap-1.5 flex-shrink-0">
                                         @if($profile && $profile->phone)
-                                            <a href="tel:{{ $profile->phone }}" title="Appeler {{ $otherUser->name }}"
+                                            <a href="tel:{{ $profile->phone }}" title="Appeler {{ $profile->full_name ?? $otherUser->name }}"
                                                class="w-9 h-9 rounded-full flex items-center justify-center transition-all"
                                                style="background: #F0F9F4;"
                                                onmouseover="this.style.background='#42B574'; this.querySelector('svg').style.fill='#FFFFFF'"
@@ -160,7 +160,7 @@
                                             </a>
                                         @endif
                                         @if($profile && $profile->email)
-                                            <a href="mailto:{{ $profile->email }}" title="Envoyer un courriel à {{ $otherUser->name }}"
+                                            <a href="mailto:{{ $profile->email }}" title="Envoyer un courriel à {{ $profile->full_name ?? $otherUser->name }}"
                                                class="w-9 h-9 rounded-full flex items-center justify-center transition-all"
                                                style="background: #EFF6FF;"
                                                onmouseover="this.style.background='#4A7FBF'; this.querySelector('svg').style.fill='#FFFFFF'"
