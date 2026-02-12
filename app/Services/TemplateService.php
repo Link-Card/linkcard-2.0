@@ -16,11 +16,11 @@ class TemplateService
                 'id' => 1,
                 'slug' => 'classic',
                 'name' => 'Classique',
-                'description' => 'Dégradé plein, transition wave douce',
+                'description' => 'Dégradé plein, finition nette',
                 'category' => 'general',
                 'required_plan' => 'free', // free = tous y ont accès
                 'header_style' => 'classic',
-                'transition' => 'wave',
+                'transition' => 'none',
                 'photo_style' => 'round_center',
                 'social_style' => 'pills',
                 'features' => [],
