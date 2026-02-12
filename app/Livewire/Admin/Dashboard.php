@@ -307,6 +307,16 @@ class Dashboard extends Component
         session()->flash('success', "Demande d'accès envoyée à {$user->name}. En attente d'approbation.");
     }
 
+    public function cancelImpersonation($userId)
+    {
+        \App\Models\ImpersonationRequest::where('admin_id', auth()->id())
+            ->where('user_id', $userId)
+            ->where('status', 'pending')
+            ->update(['status' => 'cancelled']);
+
+        session()->flash('success', 'Demande d\'accès annulée.');
+    }
+
     public function doImpersonate(User $user)
     {
         session(['impersonating_from' => auth()->id()]);
