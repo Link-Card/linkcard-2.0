@@ -113,7 +113,25 @@
     @if($changingPlanUserId)
         @php $changingUser = $users->firstWhere('id', $changingPlanUserId); @endphp
         @if($changingUser)
-            @php $activeOverride = \App\Models\PlanOverride::where('user_id', $changingUser->id)->where('status', 'active')->where(function($q) { $q->whereNull('expires_at')->orWhere('expires_at', '>', now()); })->first(); @endphp
+            @php
+                $activeOverride = \App\Models\PlanOverride::where('user_id', $changingUser->id)->where('status', 'active')->where(function($q) { $q->whereNull('expires_at')->orWhere('expires_at', '>', now()); })->first();
+                // Detect real Stripe plan
+                $stripeSub = $changingUser->subscription('default');
+                $realStripePlan = 'free';
+                if ($stripeSub && $stripeSub->stripe_status === 'active') {
+                    $priceMap = [
+                        config('services.stripe.price_pro_monthly') => 'pro',
+                        config('services.stripe.price_pro_yearly') => 'pro',
+                        config('services.stripe.price_premium_monthly') => 'premium',
+                        config('services.stripe.price_premium_yearly') => 'premium',
+                    ];
+                    $realStripePlan = $priceMap[$stripeSub->stripe_price] ?? 'free';
+                }
+                $planOrder = ['free' => 0, 'pro' => 1, 'premium' => 2];
+                $realLevel = $planOrder[$realStripePlan] ?? 0;
+                $planLabels = ['free' => 'GRATUIT', 'pro' => 'PRO', 'premium' => 'PREMIUM'];
+                $isSelf = $changingUser->id === auth()->id();
+            @endphp
             <div class="fixed inset-0 z-50 flex items-center justify-center" style="background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);">
                 <div class="bg-white rounded-2xl shadow-xl max-w-md w-full mx-4 p-6" style="animation: popupIn 0.2s ease-out;">
                     <div class="flex items-center justify-between mb-4">
@@ -124,7 +142,7 @@
                                 </svg>
                             </div>
                             <div>
-                                <h3 class="text-lg font-semibold" style="color: #2C2A27;">Changer le forfait</h3>
+                                <h3 class="text-lg font-semibold" style="color: #2C2A27;">Offrir un forfait</h3>
                                 <p class="text-sm" style="color: #9CA3AF;">{{ $changingUser->name }} ({{ $changingUser->email }})</p>
                             </div>
                         </div>
@@ -133,13 +151,21 @@
                         </button>
                     </div>
 
+                    {{-- Stripe context --}}
+                    @if($realStripePlan !== 'free')
+                        <div class="rounded-xl p-3 mb-3 text-xs flex items-center space-x-2" style="background: #EFF6FF; border: 1px solid #93C5FD;">
+                            <svg class="w-4 h-4 flex-shrink-0" style="color: #4A7FBF;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                            <span style="color: #1E40AF;">Paie <strong>{{ $planLabels[$realStripePlan] }}</strong> via Stripe{{ $stripeSub && $stripeSub->ends_at ? ' (annulation prévue)' : '' }}</span>
+                        </div>
+                    @endif
+
                     {{-- Active override info + cancel button --}}
                     @if($activeOverride)
-                        <div class="rounded-xl p-3 mb-4 flex items-center justify-between" style="background: #FEF3C7; border: 1px solid #FDE68A;">
+                        <div class="rounded-xl p-3 mb-3 flex items-center justify-between" style="background: #FEF3C7; border: 1px solid #FDE68A;">
                             <div class="text-xs" style="color: #92400E;">
-                                <strong>Gratuité active :</strong> {{ ['free' => 'GRATUIT', 'pro' => 'PRO', 'premium' => 'PREMIUM'][$activeOverride->granted_plan] ?? strtoupper($activeOverride->granted_plan) }}
+                                <strong>Gratuité active :</strong> {{ $planLabels[$activeOverride->granted_plan] ?? strtoupper($activeOverride->granted_plan) }}
                                 @if($activeOverride->expires_at)
-                                    — expire {{ $activeOverride->expires_at->format('d/m/Y') }} ({{ $activeOverride->daysRemaining() }}j)
+                                    — {{ $activeOverride->daysRemaining() }}j restants
                                 @else
                                     — permanent
                                 @endif
@@ -155,22 +181,37 @@
                         </div>
                     @endif
 
-                    {{-- Plan selection --}}
+                    {{-- Plan selection — only same or higher than Stripe --}}
                     <div class="mb-4" x-data="{ selected: @entangle('newPlan') }">
-                        <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="color: #4B5563;">Forfait *</label>
+                        <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="color: #4B5563;">Forfait à offrir *</label>
                         <div class="grid grid-cols-3 gap-2">
                             @foreach(['free' => 'GRATUIT', 'pro' => 'PRO', 'premium' => 'PREMIUM'] as $planKey => $planLabel)
-                                <button wire:click="$set('newPlan', '{{ $planKey }}')"
-                                        @click="selected = '{{ $planKey }}'"
-                                        class="py-2.5 px-3 rounded-xl text-xs font-semibold border-2 transition-all"
-                                        :style="selected === '{{ $planKey }}' ? 'border-color: #42B574; background: #F0F9F4; color: #42B574; box-shadow: 0 0 0 1px #42B574;' : 'border-color: #E5E7EB; color: #4B5563;'">
-                                    {{ $planLabel }}
-                                    @if($changingUser->plan === $planKey)
-                                        <span class="text-[10px] block" style="color: #9CA3AF;">actuel</span>
-                                    @endif
-                                </button>
+                                @php $planLevel = $planOrder[$planKey]; @endphp
+                                @if($isSelf || $planLevel >= $realLevel)
+                                    <button wire:click="$set('newPlan', '{{ $planKey }}')"
+                                            @click="selected = '{{ $planKey }}'"
+                                            class="py-2.5 px-3 rounded-xl text-xs font-semibold border-2 transition-all"
+                                            :style="selected === '{{ $planKey }}' ? 'border-color: #42B574; background: #F0F9F4; color: #42B574; box-shadow: 0 0 0 1px #42B574;' : 'border-color: #E5E7EB; color: #4B5563;'">
+                                        {{ $planLabel }}
+                                        @if($changingUser->plan === $planKey)
+                                            <span class="text-[10px] block" style="color: #9CA3AF;">actuel</span>
+                                        @endif
+                                        @if($realStripePlan === $planKey && $realStripePlan !== 'free')
+                                            <span class="text-[10px] block" style="color: #4A7FBF;">payé</span>
+                                        @endif
+                                    </button>
+                                @else
+                                    <div class="py-2.5 px-3 rounded-xl text-xs font-semibold border-2 text-center opacity-30" style="border-color: #E5E7EB; color: #9CA3AF;">
+                                        {{ $planLabel }}
+                                    </div>
+                                @endif
                             @endforeach
                         </div>
+                        @if($realStripePlan !== 'free')
+                            <p class="text-[10px] mt-1.5" style="color: #6B7280;">
+                                L'abonnement Stripe sera annulé à la fin du cycle en cours.
+                            </p>
+                        @endif
                     </div>
 
                     {{-- Duration selection --}}
@@ -188,22 +229,22 @@
                         </div>
                         <div x-show="dur !== '0'" class="text-[10px] mt-1.5" style="color: #9CA3AF;">
                             Expire le <span x-text="(() => { const d = new Date(); d.setDate(d.getDate() + parseInt(dur)); return d.toLocaleDateString('fr-CA'); })()"></span>
-                            → retombe au plan Stripe actif ou GRATUIT
+                            → retombe au plan Stripe ou GRATUIT
                         </div>
                         <div x-show="dur === '0'" class="text-[10px] mt-1.5" style="color: #F59E0B;">Permanent (pas d'expiration)</div>
                     </div>
 
                     {{-- Reason --}}
-                    @if($changingUser->id !== auth()->id())
+                    @if(!$isSelf)
                         <div class="mb-3">
                             <label class="block text-xs font-medium uppercase tracking-wider mb-2" style="color: #4B5563;">Raison</label>
                             <select wire:model="planReason" class="w-full text-sm rounded-xl border px-3 py-2" style="border-color: #D1D5DB;">
                                 <option value="">Sélectionner...</option>
                                 <option value="beta">Beta testeur</option>
-                                <option value="support">Support client</option>
-                                <option value="promo">Promotion</option>
-                                <option value="gift">Cadeau</option>
                                 <option value="ambassador">Ambassadeur</option>
+                                <option value="gift">Cadeau / Ami</option>
+                                <option value="promo">Promotion</option>
+                                <option value="support">Support client</option>
                             </select>
                         </div>
 

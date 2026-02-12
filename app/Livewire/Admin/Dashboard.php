@@ -182,7 +182,21 @@ class Dashboard extends Component
     public function startChangePlan($userId, $currentPlan)
     {
         $this->changingPlanUserId = $userId;
-        $this->newPlan = $currentPlan;
+        // Pre-select: if premium already, keep premium. Otherwise pick pro if available.
+        $user = User::find($userId);
+        $realStripe = $user ? $this->getUserStripePlan($user) : 'free';
+        $planOrder = ['free' => 0, 'pro' => 1, 'premium' => 2];
+        $realLevel = $planOrder[$realStripe] ?? 0;
+        
+        // Default to current plan if it's >= real, otherwise pick the first available
+        if (($planOrder[$currentPlan] ?? 0) >= $realLevel) {
+            $this->newPlan = $currentPlan;
+        } elseif ($realLevel <= 1) {
+            $this->newPlan = 'pro';
+        } else {
+            $this->newPlan = 'premium';
+        }
+        
         $this->planDuration = '30';
         $this->planReason = '';
         $this->planNote = '';
@@ -202,10 +216,23 @@ class Dashboard extends Component
         if (!$this->changingPlanUserId || !$this->newPlan) return;
 
         $user = User::findOrFail($this->changingPlanUserId);
-        $oldPlan = $user->plan;
         $isSelf = $user->id === auth()->id() && auth()->user()->role === 'super_admin';
+        $planOrder = ['free' => 0, 'pro' => 1, 'premium' => 2];
 
-        if ($oldPlan === $this->newPlan) {
+        // Determine the "real" Stripe plan
+        $realStripePlan = $this->getUserStripePlan($user);
+        $realPlanLevel = $planOrder[$realStripePlan] ?? 0;
+        $newPlanLevel = $planOrder[$this->newPlan] ?? 0;
+
+        // Block downgrade below real Stripe plan (unless self-testing)
+        if (!$isSelf && $newPlanLevel < $realPlanLevel) {
+            session()->flash('error', "Impossible: {$user->name} paie déjà un forfait supérieur via Stripe.");
+            $this->cancelChangePlan();
+            return;
+        }
+
+        $oldPlan = $user->plan;
+        if ($oldPlan === $this->newPlan && !$isSelf) {
             $this->cancelChangePlan();
             return;
         }
@@ -215,13 +242,13 @@ class Dashboard extends Component
             ->where('status', 'active')
             ->update(['status' => 'cancelled']);
 
-        // Create plan override record
+        // Create plan override record — store real Stripe plan as previous
         $expiresAt = $this->planDuration === '0' ? null : now()->addDays((int)$this->planDuration);
 
         \App\Models\PlanOverride::create([
             'user_id' => $user->id,
             'granted_plan' => $this->newPlan,
-            'previous_plan' => $oldPlan,
+            'previous_plan' => $realStripePlan, // Real plan, not current DB value
             'granted_by' => auth()->id(),
             'reason' => $isSelf ? 'testing' : ($this->planReason ?: 'support'),
             'note' => $this->planNote,
@@ -230,14 +257,21 @@ class Dashboard extends Component
             'status' => 'active',
         ]);
 
-        // Update plan
+        // Update plan in DB
         $user->update(['plan' => $this->newPlan]);
 
-        // Apply limits on downgrade or unhide on upgrade
-        $planOrder = ['free' => 0, 'pro' => 1, 'premium' => 2];
-        if ($planOrder[$this->newPlan] < $planOrder[$oldPlan]) {
-            \App\Services\PlanLimitsService::applyLimitsOnDowngrade($user);
-        } elseif ($planOrder[$this->newPlan] > $planOrder[$oldPlan]) {
+        // If user has active Stripe subscription at same or lower level → cancel at period end
+        $stripeMessage = '';
+        if ($realStripePlan !== 'free' && $newPlanLevel >= $realPlanLevel) {
+            $subscription = $user->subscription('default');
+            if ($subscription && $subscription->stripe_status === 'active' && !$subscription->ends_at) {
+                $subscription->cancel(); // Cashier: cancels at end of billing period
+                $stripeMessage = ' — Abonnement Stripe annulé à la fin du cycle';
+            }
+        }
+
+        // Apply limits
+        if ($planOrder[$this->newPlan] > $planOrder[$oldPlan]) {
             \App\Services\PlanLimitsService::unhideOnUpgrade($user);
         }
 
@@ -245,20 +279,36 @@ class Dashboard extends Component
             'user_id' => $user->id,
             'user_name' => $user->name,
             'old_plan' => $oldPlan,
+            'real_stripe_plan' => $realStripePlan,
             'new_plan' => $this->newPlan,
             'duration_days' => $this->planDuration,
             'reason' => $this->planReason,
+            'stripe_cancelled' => !empty($stripeMessage),
             'changed_by' => auth()->id(),
         ]);
 
         $newPlan = $this->newPlan;
         $userName = $user->name;
-        $planLabels = ['free' => 'gratuit', 'pro' => 'pro', 'premium' => 'premium'];
+        $planLabels = ['free' => 'Gratuit', 'pro' => 'Pro', 'premium' => 'Premium'];
         $oldLabel = $planLabels[$oldPlan] ?? $oldPlan;
         $newLabel = $planLabels[$newPlan] ?? $newPlan;
         $duration = $this->planDuration === '0' ? 'permanent' : $this->planDuration . 'j';
         $this->cancelChangePlan();
-        session()->flash('success', "Plan de {$userName}: {$oldLabel} → {$newLabel} ({$duration})");
+        session()->flash('success', "{$userName}: {$oldLabel} → {$newLabel} ({$duration}){$stripeMessage}");
+    }
+
+    /**
+     * Get the user's real plan from Stripe (ignoring overrides).
+     * Returns 'free' if no active subscription.
+     */
+    public function getUserStripePlan(User $user): string
+    {
+        $subscription = $user->subscription('default');
+        if (!$subscription || $subscription->stripe_status !== 'active') {
+            return 'free';
+        }
+        $priceId = $subscription->stripe_price;
+        return $this->getPlanFromStripePrice($priceId) ?? 'free';
     }
 
     public function cancelOverride($userId)
