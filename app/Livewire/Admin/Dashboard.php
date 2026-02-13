@@ -569,6 +569,9 @@ class Dashboard extends Component
                   ->orWhere('email', 'like', "%{$search}%")
                   ->orWhereHas('profiles', function ($pq) use ($search) {
                       $pq->where('username', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('cards', function ($cq) use ($search) {
+                      $cq->where('card_code', 'like', "%{$search}%");
                   });
             });
         }
