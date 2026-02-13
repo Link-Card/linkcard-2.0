@@ -1,12 +1,9 @@
 {{-- Header: Duo (#6) - Photo à gauche, infos à droite --}}
-<div class="relative overflow-hidden" style="background: linear-gradient(135deg, {{ $primaryColor }} 0%, {{ $secondaryColor }} 50%, {{ $primaryColor }}DD 100%);">
-    {{-- Subtle overlay for depth --}}
-    <div style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.08) 0%, transparent 40%, rgba(0,0,0,0.03) 100%);"></div>
-    <div style="position: absolute; top: -30px; left: 25%; width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.04);"></div>
+<div class="relative overflow-hidden" style="background: linear-gradient(135deg, {{ $primaryColor }} 0%, {{ $secondaryColor }} 100%);">
     @include('profiles.partials.share-button')
     <div class="flex relative" style="z-index: 1;">
-        {{-- Left: Photo --}}
-        <div class="w-[38%] flex items-center justify-center py-12">
+        {{-- Left: Photo (slightly darker overlay) --}}
+        <div class="w-[38%] flex items-center justify-center py-12" style="background: rgba(0,0,0,0.12);">
             @if($profile->photo_path)
                 <img src="{{ Storage::url($profile->photo_path) }}"
                      class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-xl">
@@ -16,8 +13,8 @@
                 </div>
             @endif
         </div>
-        {{-- Right: Info --}}
-        <div class="w-[62%] flex flex-col justify-center py-12 px-5">
+        {{-- Right: Info (slightly lighter) --}}
+        <div class="w-[62%] flex flex-col justify-center py-12 px-5" style="background: rgba(255,255,255,0.06);">
             <h1 class="text-xl font-semibold" style="letter-spacing: -0.02em; color: {{ $headerTextColor }};">{{ $profile->full_name }}</h1>
             @if($profile->job_title)
                 <p class="text-sm font-medium mt-1" style="opacity: 0.9; color: {{ $headerTextColor }};">{{ $profile->job_title }}</p>

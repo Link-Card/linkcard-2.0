@@ -24,5 +24,5 @@
         @include('profiles.partials.photo', ['photoStyle' => 'round_center'])
         @include('profiles.partials.info')
     </div>
-    @include('profiles.partials.transition', ['transition' => 'double_wave'])
+    @include('profiles.partials.transition', ['transition' => 'arch'])
 </div>

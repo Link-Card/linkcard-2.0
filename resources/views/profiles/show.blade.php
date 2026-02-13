@@ -216,7 +216,7 @@
                             </div>
                         @else
                             <button onclick="openContactPopup()"
-                               class="flex items-center justify-center space-x-2 w-full {{ $buttonStyle === 'square_wide' ? 'py-4 px-5' : 'py-3.5 px-5' }} text-white text-center {{ $btnRadius }} font-semibold {{ $buttonStyle === 'square_wide' ? 'text-base tracking-wide' : 'text-sm' }} shadow-md transition-all duration-200"
+                               class="flex items-center justify-center space-x-2 w-full {{ $buttonStyle === 'square_wide' ? 'py-3.5 px-5' : 'py-3 px-5' }} text-white text-center {{ $btnRadius }} font-semibold {{ $buttonStyle === 'square_wide' ? 'text-base tracking-wide' : 'text-sm' }} shadow-sm transition-all duration-200"
                                style="background: {{ $secondaryColor }};"
                                onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-1px)'"
                                onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)'">

@@ -24,8 +24,8 @@
                     </div>
                 </div>
             @elseif($headerStyle === 'minimal')
-                <div style="height: 5px; background: linear-gradient(90deg, {{ $primary_color }}, {{ $secondary_color }});"></div>
-                <div class="bg-white px-6 pt-8 pb-6 text-center">
+                <div style="height: 7px; background: linear-gradient(90deg, {{ $primary_color }}, {{ $secondary_color }});"></div>
+                <div class="px-6 pt-8 pb-6 text-center" style="background: linear-gradient(180deg, {{ $primary_color }}30 0%, {{ $primary_color }}12 50%, white 100%);">
                     @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle, 'shadowColor' => $primary_color])
                     @include('livewire.profile.partials.preview-info', ['textColor' => '#2C2A27'])
                 </div>
@@ -46,10 +46,9 @@
                     </div>
                 </div>
             @elseif($headerStyle === 'split')
-                <div class="relative overflow-hidden" style="background: linear-gradient(135deg, {{ $primary_color }} 0%, {{ $secondary_color }} 50%, {{ $primary_color }}DD 100%);">
-                    <div style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.08) 0%, transparent 40%, rgba(0,0,0,0.03) 100%);"></div>
+                <div class="relative overflow-hidden" style="background: linear-gradient(135deg, {{ $primary_color }} 0%, {{ $secondary_color }} 100%);">
                     <div class="flex relative" style="z-index: 1;">
-                        <div class="w-[38%] flex items-center justify-center py-10">
+                        <div class="w-[38%] flex items-center justify-center py-10" style="background: rgba(0,0,0,0.12);">
                             @if($profile->photo_path)
                                 <img src="{{ Storage::url($profile->photo_path) }}" class="w-20 h-20 rounded-full object-cover border-3 border-white shadow-xl">
                             @else
@@ -58,7 +57,7 @@
                                 </div>
                             @endif
                         </div>
-                        <div class="w-[62%] flex flex-col justify-center py-10 px-4" style="color: {{ $headerTextColor }};">
+                        <div class="w-[62%] flex flex-col justify-center py-10 px-4" style="background: rgba(255,255,255,0.06); color: {{ $headerTextColor }};">
                             <h2 class="text-lg font-semibold" style="font-family: 'Manrope', sans-serif;">{{ $full_name ?: 'Votre nom' }}</h2>
                             @if($job_title)<p class="text-xs font-medium mt-1" style="opacity: 0.9;">{{ $job_title }}</p>@endif
                             @if($company || $location)<p class="text-xs mt-0.5" style="opacity: 0.8;">{{ $company }}@if($company && $location) · @endif{{ $location }}</p>@endif
@@ -98,7 +97,7 @@
                         @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
                         @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
                     </div>
-                    @include('livewire.profile.partials.preview-transition', ['transition' => 'double_wave'])
+                    @include('livewire.profile.partials.preview-transition', ['transition' => 'arch'])
                 </div>
             @elseif($headerStyle === 'entrepreneur')
                 {{-- Entrepreneur: business lines + square photo --}}

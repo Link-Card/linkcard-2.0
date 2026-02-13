@@ -1,6 +1,6 @@
 {{-- Header: Épuré (#3) - Barre accent + fond couleur subtile --}}
-<div style="height: 6px; background: linear-gradient(90deg, {{ $primaryColor }}, {{ $secondaryColor }});"></div>
-<div class="relative" style="background: linear-gradient(180deg, {{ $primaryColor }}22 0%, {{ $primaryColor }}08 70%, white 100%);">
+<div style="height: 8px; background: linear-gradient(90deg, {{ $primaryColor }}, {{ $secondaryColor }});"></div>
+<div class="relative" style="background: linear-gradient(180deg, {{ $primaryColor }}30 0%, {{ $primaryColor }}12 50%, white 100%);">
     @include('profiles.partials.share-button')
     <div class="px-6 pt-8 pb-6 text-center">
         {{-- Photo avec ombre colorée --}}
