@@ -97,7 +97,7 @@ class TemplateService
                 'category' => 'general',
                 'required_plan' => 'pro',
                 'header_style' => 'split',
-                'transition' => 'none',
+                'transition' => 'wave',
                 'photo_style' => 'round_left',
                 'social_style' => 'pills',
                 'button_style' => 'rounded',

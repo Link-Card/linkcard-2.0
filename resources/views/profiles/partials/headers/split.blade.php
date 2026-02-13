@@ -3,7 +3,7 @@
     @include('profiles.partials.share-button')
     <div class="flex">
         {{-- Left: Photo --}}
-        <div class="w-[38%] flex items-center justify-center py-12">
+        <div class="w-[38%] flex items-center justify-center py-12" style="background: {{ $secondaryColor }};">
             @if($profile->photo_path)
                 <img src="{{ Storage::url($profile->photo_path) }}"
                      class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-xl">
@@ -14,7 +14,7 @@
             @endif
         </div>
         {{-- Right: Info --}}
-        <div class="w-[62%] flex flex-col justify-center py-12 px-5">
+        <div class="w-[62%] flex flex-col justify-center py-12 px-5" style="background: linear-gradient(180deg, {{ $primaryColor }}, {{ $secondaryColor }});">
             <h1 class="text-xl font-semibold" style="letter-spacing: -0.02em; color: {{ $headerTextColor }};">{{ $profile->full_name }}</h1>
             @if($profile->job_title)
                 <p class="text-sm font-medium mt-1" style="opacity: 0.9; color: {{ $headerTextColor }};">{{ $profile->job_title }}</p>
@@ -32,6 +32,6 @@
             @endif
         </div>
     </div>
-    {{-- Subtle gradient fade to white --}}
-    <div style="height: 24px; background: linear-gradient(180deg, transparent 0%, white 100%);"></div>
+    {{-- Wave transition --}}
+    @include('profiles.partials.transition', ['transition' => 'wave'])
 </div>

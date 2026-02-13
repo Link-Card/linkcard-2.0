@@ -82,16 +82,16 @@
             <div x-data="{ filter: 'all' }" class="px-5 pt-4 pb-2">
                 <div class="flex gap-1 p-1 rounded-lg" style="background: #F3F4F6;">
                     <button @click="filter = 'all'" class="flex-1 py-2 px-3 rounded-md text-xs font-semibold transition-all"
-                            :style="filter === 'all' ? 'background: #42B574; color: white;' : 'color: #4B5563;'"
+                            :style="filter === 'all' ? 'background: white; color: #2C2A27; box-shadow: 0 1px 3px rgba(0,0,0,0.08);' : 'color: #9CA3AF;'"
                             style="font-family: 'Manrope', sans-serif;">Tous</button>
                     <button @click="filter = 'general'" class="flex-1 py-2 px-3 rounded-md text-xs font-semibold transition-all"
-                            :style="filter === 'general' ? 'background: #42B574; color: white;' : 'color: #4B5563;'"
+                            :style="filter === 'general' ? 'background: white; color: #2C2A27; box-shadow: 0 1px 3px rgba(0,0,0,0.08);' : 'color: #9CA3AF;'"
                             style="font-family: 'Manrope', sans-serif;">Généraux</button>
                     <button @click="filter = 'specialized'" class="flex-1 py-2 px-3 rounded-md text-xs font-semibold transition-all"
-                            :style="filter === 'specialized' ? 'background: #42B574; color: white;' : 'color: #4B5563;'"
+                            :style="filter === 'specialized' ? 'background: white; color: #2C2A27; box-shadow: 0 1px 3px rgba(0,0,0,0.08);' : 'color: #9CA3AF;'"
                             style="font-family: 'Manrope', sans-serif;">Spécialisés</button>
                     <button @click="filter = 'custom'" class="flex-1 py-2 px-3 rounded-md text-xs font-semibold transition-all"
-                            :style="filter === 'custom' ? 'background: #42B574; color: white;' : 'color: #4B5563;'"
+                            :style="filter === 'custom' ? 'background: white; color: #2C2A27; box-shadow: 0 1px 3px rgba(0,0,0,0.08);' : 'color: #9CA3AF;'"
                             style="font-family: 'Manrope', sans-serif;">Mon Style</button>
                 </div>
 
@@ -108,7 +108,7 @@
                         <div x-show="filter === 'all' || filter === '{{ $tpl['category'] }}'"
                              x-transition
                              class="relative rounded-xl overflow-hidden cursor-pointer transition-all duration-200"
-                             style="border: {{ $isActive ? '2px solid #42B574' : '1px solid #E5E7EB' }}; {{ !$canUse ? 'opacity: 0.6;' : '' }}"
+                             style="border: {{ $isActive ? '2px solid #2C2A27' : '1px solid #E5E7EB' }}; {{ !$canUse ? 'opacity: 0.6;' : '' }}"
                              @if($canUse)
                                  wire:click="changeTemplate('{{ $slug }}')"
                                  @click="showModal = false"
@@ -214,7 +214,7 @@
                             {{-- Badges --}}
                             <div class="absolute top-1.5 left-1.5 flex gap-1">
                                 @if($isActive)
-                                    <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-md" style="background: #42B574; color: white;">ACTIF</span>
+                                    <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-md" style="background: #2C2A27; color: white;">ACTIF</span>
                                 @endif
                                 @if($tpl['category'] === 'specialized')
                                     <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-md" style="background: #FEF3C7; color: #92400E;">SPÉCIAL</span>
@@ -233,7 +233,7 @@
 
                             {{-- Active check --}}
                             @if($isActive)
-                                <div class="absolute top-1.5 right-1.5 w-5 h-5 rounded-full flex items-center justify-center" style="background: #42B574;">
+                                <div class="absolute top-1.5 right-1.5 w-5 h-5 rounded-full flex items-center justify-center" style="background: #2C2A27;">
                                     <svg class="w-3 h-3" fill="none" stroke="white" viewBox="0 0 24 24" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
                                 </div>
                             @endif

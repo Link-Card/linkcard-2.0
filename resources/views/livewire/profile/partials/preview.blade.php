@@ -46,9 +46,9 @@
                     </div>
                 </div>
             @elseif($headerStyle === 'split')
-                <div style="background: linear-gradient(180deg, {{ $primary_color }}, {{ $secondary_color }});">
+                <div style="background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});">
                     <div class="flex">
-                        <div class="w-[38%] flex items-center justify-center py-10" style="background: {{ $primary_color }};">
+                        <div class="w-[38%] flex items-center justify-center py-10" style="background: {{ $secondary_color }};">
                             @if($profile->photo_path)
                                 <img src="{{ Storage::url($profile->photo_path) }}" class="w-20 h-20 rounded-full object-cover border-3 border-white shadow-xl">
                             @else
@@ -57,7 +57,7 @@
                                 </div>
                             @endif
                         </div>
-                        <div class="w-[62%] flex flex-col justify-center py-10 px-4" style="background: linear-gradient(180deg, {{ $secondary_color }}, {{ $primary_color }}); color: {{ $headerTextColor }};">
+                        <div class="w-[62%] flex flex-col justify-center py-10 px-4" style="background: linear-gradient(180deg, {{ $primary_color }}, {{ $secondary_color }}); color: {{ $headerTextColor }};">
                             <h2 class="text-lg font-semibold" style="font-family: 'Manrope', sans-serif;">{{ $full_name ?: 'Votre nom' }}</h2>
                             @if($job_title)<p class="text-xs font-medium mt-1" style="opacity: 0.9;">{{ $job_title }}</p>@endif
                             @if($company || $location)<p class="text-xs mt-0.5" style="opacity: 0.8;">{{ $company }}@if($company && $location) · @endif{{ $location }}</p>@endif
@@ -75,6 +75,53 @@
                     </div>
                     @include('livewire.profile.partials.preview-transition', ['transition' => 'chevron'])
                 </div>
+            @elseif($headerStyle === 'videaste')
+                {{-- Vidéaste: animated gradient + dark cinematic --}}
+                <div class="relative overflow-hidden" style="background: linear-gradient(135deg, #1a1a2e 0%, {{ $primary_color }}CC 50%, {{ $secondary_color }} 100%);">
+                    <div class="absolute" style="width: 6px; height: 6px; border-radius: 50%; background: {{ $primary_color }}; top: 15%; left: 15%; opacity: 0.5;"></div>
+                    <div class="absolute" style="width: 4px; height: 4px; border-radius: 50%; background: white; top: 30%; right: 20%; opacity: 0.3;"></div>
+                    <div class="absolute" style="width: 8px; height: 8px; border-radius: 50%; background: {{ $primary_color }}60; bottom: 30%; left: 30%; opacity: 0.4;"></div>
+                    <div class="absolute inset-0" style="background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.3) 100%);"></div>
+                    <div class="relative z-10 px-6 pt-10 pb-2 text-center" style="color: #FFFFFF;">
+                        @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
+                        @include('livewire.profile.partials.preview-info', ['textColor' => '#FFFFFF'])
+                    </div>
+                    @include('livewire.profile.partials.preview-transition', ['transition' => 'wave'])
+                </div>
+            @elseif($headerStyle === 'artiste')
+                {{-- Artiste: organic blobs --}}
+                <div class="relative overflow-hidden" style="background: linear-gradient(160deg, {{ $primary_color }}, {{ $secondary_color }});">
+                    <div class="absolute" style="top: -20px; right: -15px; width: 80px; height: 80px; border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; background: rgba(255,255,255,0.06);"></div>
+                    <div class="absolute" style="bottom: 10px; left: -20px; width: 60px; height: 60px; border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; background: rgba(255,255,255,0.04);"></div>
+                    <div class="relative z-10 px-6 pt-10 pb-2 text-center" style="color: {{ $headerTextColor }};">
+                        @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
+                        @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
+                    </div>
+                    @include('livewire.profile.partials.preview-transition', ['transition' => 'arch'])
+                </div>
+            @elseif($headerStyle === 'entrepreneur')
+                {{-- Entrepreneur: business lines + square photo --}}
+                <div class="relative overflow-hidden" style="background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});">
+                    <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);"></div>
+                    <div style="position: absolute; right: 15px; top: 0; bottom: 0; width: 30px; background: rgba(255,255,255,0.04);"></div>
+                    <div class="relative z-10 px-6 pt-10 pb-2 text-center" style="color: {{ $headerTextColor }};">
+                        @if($profile->photo_path)
+                            <div class="flex justify-center mb-3">
+                                <img src="{{ Storage::url($profile->photo_path) }}" class="w-20 h-20 rounded-2xl object-cover shadow-2xl" style="border: 3px solid rgba(255,255,255,0.9);">
+                            </div>
+                        @else
+                            <div class="flex justify-center mb-3">
+                                <div class="w-20 h-20 rounded-2xl shadow-2xl flex items-center justify-center" style="background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }}); border: 3px solid rgba(255,255,255,0.9);">
+                                    <span class="text-3xl">👤</span>
+                                </div>
+                            </div>
+                        @endif
+                        @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
+                    </div>
+                    <svg viewBox="0 0 400 25" style="display: block; width: 100%; margin-top: -1px;" preserveAspectRatio="none">
+                        <polygon points="0,8 400,18 400,25 0,25" fill="white" />
+                    </svg>
+                </div>
             @else
                 {{-- classic, wave, diagonal, arch --}}
                 <div style="background: linear-gradient({{ $headerStyle === 'diagonal' ? '135deg' : '180deg' }}, {{ $primary_color }} 0%, {{ $secondary_color }} 100%);">
@@ -87,28 +134,86 @@
             @endif
 
             <!-- CONTENT BANDS -->
-            <div class="bg-white">
+            @php
+                $previewSocialStyle = $templateConfig['social_style'] ?? 'pills';
+                $previewButtonStyle = $templateConfig['button_style'] ?? 'rounded';
+                $previewIsBold = ($headerStyle === 'bold');
+                $previewBodyBg = $previewIsBold ? '#E8E6E3' : 'white';
+                $previewBlockBg = $previewIsBold ? '#DFDDD9' : '#F9FAFB';
+                $previewBlockBorder = $previewIsBold ? ($primary_color . '50') : '#E5E7EB';
+                $previewBtnRadius = match($previewButtonStyle) {
+                    'square', 'square_wide' => 'rounded-lg',
+                    'outline_compact' => 'rounded-full',
+                    default => 'rounded-xl',
+                };
+            @endphp
+            <div style="background: {{ $previewBodyBg }};">
                 <div class="px-5 py-6 space-y-3">
-                    @php $visibleBands = collect($contentBands)->filter(fn($b) => !($b['is_hidden'] ?? false)); @endphp
+                    @php
+                        $visibleBands = collect($contentBands)->filter(fn($b) => !($b['is_hidden'] ?? false));
+                        $previewSocialRendered = false;
+                    @endphp
                     
                     @foreach($visibleBands as $band)
 
                         @if($band['type'] === 'contact_button')
-                            <div class="flex items-center justify-center space-x-2 w-full py-3.5 px-5 text-white text-center rounded-xl font-semibold text-sm shadow-md"
-                                 style="font-family: 'Manrope', sans-serif; background: {{ $secondary_color }};">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25s-1.01 2.25-2.25 2.25S9.75 10.24 9.75 9s1.01-2.25 2.25-2.25zM17 17H7v-1.5c0-1.67 3.33-2.5 5-2.5s5 .83 5 2.5V17z"/></svg>
-                                <span>Ajouter aux contacts</span>
-                            </div>
+                            @if($previewButtonStyle === 'outline_compact')
+                                <div class="text-center">
+                                    <div class="inline-flex items-center justify-center space-x-2 py-2.5 px-8 rounded-full font-semibold text-sm"
+                                         style="font-family: 'Manrope', sans-serif; background: transparent; color: {{ $secondary_color }}; border: 2px solid {{ $secondary_color }};">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25s-1.01 2.25-2.25 2.25S9.75 10.24 9.75 9s1.01-2.25 2.25-2.25zM17 17H7v-1.5c0-1.67 3.33-2.5 5-2.5s5 .83 5 2.5V17z"/></svg>
+                                        <span>Ajouter aux contacts</span>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="flex items-center justify-center space-x-2 w-full {{ $previewButtonStyle === 'square_wide' ? 'py-4 px-5' : 'py-3.5 px-5' }} text-white text-center {{ $previewBtnRadius }} font-semibold {{ $previewButtonStyle === 'square_wide' ? 'text-base tracking-wide' : 'text-sm' }} shadow-md"
+                                     style="font-family: 'Manrope', sans-serif; background: {{ $secondary_color }};">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25s-1.01 2.25-2.25 2.25S9.75 10.24 9.75 9s1.01-2.25 2.25-2.25zM17 17H7v-1.5c0-1.67 3.33-2.5 5-2.5s5 .83 5 2.5V17z"/></svg>
+                                    <span>Ajouter aux contacts</span>
+                                </div>
+                            @endif
 
                         @elseif($band['type'] === 'social_link')
-                            <div class="p-3.5 rounded-xl" style="background: #F9FAFB; border: 1px solid #E5E7EB;">
-                                <div class="flex items-center space-x-3">
-                                    <div class="w-8 h-8 flex items-center justify-center">
-                                        <x-social-icon :platform="$band['data']['platform'] ?? ''" size="w-6 h-6" />
+                            @if(!$previewSocialRendered)
+                                @php
+                                    $previewSocialRendered = true;
+                                    $allPreviewSocials = $visibleBands->where('type', 'social_link');
+                                @endphp
+
+                                @if($previewSocialStyle === 'circles')
+                                    <div class="flex flex-wrap justify-center gap-3 py-2">
+                                        @foreach($allPreviewSocials as $sBand)
+                                            <div class="w-11 h-11 rounded-full flex items-center justify-center shadow-sm"
+                                                 style="background: {{ $previewBlockBg }}; border: 1px solid {{ $previewBlockBorder }};">
+                                                <x-social-icon :platform="$sBand['data']['platform'] ?? ''" size="w-5 h-5" />
+                                            </div>
+                                        @endforeach
                                     </div>
-                                    <span class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: #2C2A27;">{{ $band['data']['platform'] ?? 'Lien' }}</span>
-                                </div>
-                            </div>
+                                @elseif($previewSocialStyle === 'pills')
+                                    <div class="flex flex-wrap justify-center gap-2 py-1">
+                                        @foreach($allPreviewSocials as $sBand)
+                                            <div class="inline-flex items-center gap-2 px-4 py-2.5 {{ $previewBtnRadius }}"
+                                                 style="background: {{ $previewBlockBg }}; border: 1px solid {{ $previewBlockBorder }};">
+                                                <x-social-icon :platform="$sBand['data']['platform'] ?? ''" size="w-4 h-4" />
+                                                <span class="font-medium text-xs" style="color: #2C2A27;">{{ ucfirst($sBand['data']['platform'] ?? '') }}</span>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    {{-- list --}}
+                                    @foreach($allPreviewSocials as $sBand)
+                                        <div class="p-3.5 {{ $previewBtnRadius }}" style="background: {{ $previewBlockBg }}; border: 1px solid {{ $previewBlockBorder }};">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="w-8 h-8 flex items-center justify-center">
+                                                    <x-social-icon :platform="$sBand['data']['platform'] ?? ''" size="w-6 h-6" />
+                                                </div>
+                                                <span class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: {{ $previewIsBold ? '#4B5563' : '#2C2A27' }};">{{ ucfirst($sBand['data']['platform'] ?? '') }}</span>
+                                                <svg class="w-4 h-4 ml-auto" fill="#9CA3AF" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            @endif
 
                         @elseif($band['type'] === 'image')
                             @php
@@ -118,13 +223,13 @@
                                 }
                             @endphp
                             @if(count($images) === 1)
-                                <div class="rounded-xl overflow-hidden" style="border: 1px solid #E5E7EB;">
+                                <div class="{{ $previewBtnRadius }} overflow-hidden" style="border: 1px solid {{ $previewBlockBorder }};">
                                     <img src="{{ Storage::url($images[0]['path']) }}" class="w-full h-auto object-contain" style="max-height: 200px;">
                                 </div>
                             @elseif(count($images) >= 2)
                                 <div class="grid grid-cols-2 gap-2">
                                     @foreach(array_slice($images, 0, 2) as $img)
-                                        <div class="rounded-xl overflow-hidden" style="border: 1px solid #E5E7EB;">
+                                        <div class="{{ $previewBtnRadius }} overflow-hidden" style="border: 1px solid {{ $previewBlockBorder }};">
                                             <img src="{{ Storage::url($img['path']) }}" class="w-full h-auto object-contain" style="max-height: 150px;">
                                         </div>
                                     @endforeach
@@ -132,12 +237,12 @@
                             @endif
 
                         @elseif($band['type'] === 'text_block')
-                            <div class="p-4 rounded-xl" style="background: #F9FAFB; border: 1px solid #E5E7EB;">
+                            <div class="p-4 rounded-xl" style="background: {{ $previewBlockBg }}; border: 1px solid {{ $previewBlockBorder }};">
                                 <p class="whitespace-pre-line text-sm" style="font-family: 'Manrope', sans-serif; color: #4B5563;">{{ $band['data']['text'] ?? '' }}</p>
                             </div>
 
                         @elseif($band['type'] === 'video_embed')
-                            <div class="rounded-xl overflow-hidden" style="border: 1px solid #E5E7EB; background: #000;">
+                            <div class="rounded-xl overflow-hidden" style="border: 1px solid {{ $previewBlockBorder }}; background: #000;">
                                 <div class="flex items-center justify-center py-8">
                                     <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: rgba(255,0,0,0.8);">
                                         <svg class="w-4 h-4" fill="white" viewBox="0 0 24 24"><polygon points="9,6 19,12 9,18"/></svg>
@@ -155,14 +260,14 @@
                                     $pBtnText = ((0.299 * $pR + 0.587 * $pG + 0.114 * $pB) / 255 > 0.6) ? '#2C2A27' : '#FFFFFF';
                                 }
                             @endphp
-                            <div class="flex items-center justify-center space-x-2 w-full py-3.5 px-5 text-center rounded-xl font-semibold text-sm shadow-md"
+                            <div class="flex items-center justify-center space-x-2 w-full {{ $previewButtonStyle === 'square_wide' ? 'py-4 px-5' : 'py-3.5 px-5' }} text-center {{ $previewBtnRadius }} font-semibold {{ $previewButtonStyle === 'square_wide' ? 'text-base tracking-wide' : 'text-sm' }} shadow-md"
                                  style="font-family: 'Manrope', sans-serif; background: {{ $pBtnBg }}; color: {{ $pBtnText }};">
                                 @if(!empty($band['data']['icon']))<span>{{ $band['data']['icon'] }}</span>@endif
                                 <span>{{ $band['data']['label'] ?? 'Lien' }}</span>
                             </div>
 
                         @elseif($band['type'] === 'image_carousel')
-                            <div class="rounded-xl overflow-hidden" style="border: 1px solid #E5E7EB;">
+                            <div class="{{ $previewBtnRadius }} overflow-hidden" style="border: 1px solid {{ $previewBlockBorder }};">
                                 @php $carImages = $band['data']['images'] ?? []; @endphp
                                 @if(count($carImages) > 0)
                                     <img src="{{ Storage::url($carImages[0]['path']) }}" class="w-full h-auto object-contain" style="max-height: 180px;">

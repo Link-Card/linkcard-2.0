@@ -5,6 +5,14 @@
     <div style="position: absolute; bottom: 0; right: 20px; width: 60px; height: 100%; background: rgba(255,255,255,0.04);"></div>
     <div style="position: absolute; bottom: 0; right: 90px; width: 30px; height: 100%; background: rgba(255,255,255,0.02);"></div>
 
+    {{-- Secondary logo/photo (top-right) --}}
+    @php $logoPath = $profile->template_config['logo_path'] ?? null; @endphp
+    @if($logoPath)
+        <div style="position: absolute; top: 24px; right: 12px; z-index: 5;">
+            <img src="{{ Storage::url($logoPath) }}" class="w-8 h-8 rounded-full object-cover" style="border: 2px solid rgba(255,255,255,0.7); box-shadow: 0 2px 8px rgba(0,0,0,0.15); backdrop-filter: blur(4px);">
+        </div>
+    @endif
+
     @include('profiles.partials.share-button')
     <div class="px-6 pt-14 pb-3 text-center relative" style="z-index: 1;">
         {{-- Photo avec cadre premium --}}

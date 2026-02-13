@@ -194,7 +194,7 @@
             $isBoldTemplate = ($headerStyle === 'bold');
             $bodyBg = $isBoldTemplate ? '#E8E6E3' : 'white';
             $blockBg = $isBoldTemplate ? '#DFDDD9' : '#F9FAFB';
-            $blockBorder = $isBoldTemplate ? ($secondaryColor ?? $primaryColor) : '#E5E7EB';
+            $blockBorder = $isBoldTemplate ? ($primaryColor . '50') : '#E5E7EB';
         @endphp
         <div class="min-h-[200px]" style="background: {{ $bodyBg }};">
             <div class="px-5 py-6 space-y-3">
@@ -292,7 +292,7 @@
                         @endphp
                         
                         @if(count($images) === 1)
-                            <div class="{{ $btnRadius }} overflow-hidden" style="border: 1px solid #E5E7EB;">
+                            <div class="{{ $btnRadius }} overflow-hidden" style="border: 1px solid {{ $blockBorder }};">
                                 @if(!empty($images[0]['link']))
                                     <a href="{{ $images[0]['link'] }}" target="_blank" rel="noopener"
                                        data-band-id="{{ $band->id }}" data-band-url="{{ $images[0]['link'] }}"
@@ -310,7 +310,7 @@
                         @elseif(count($images) >= 2)
                             <div class="grid grid-cols-2 gap-2">
                                 @foreach(array_slice($images, 0, 2) as $img)
-                                    <div class="{{ $btnRadius }} overflow-hidden" style="border: 1px solid #E5E7EB;">
+                                    <div class="{{ $btnRadius }} overflow-hidden" style="border: 1px solid {{ $blockBorder }};">
                                         @if(!empty($img['link']))
                                             <a href="{{ $img['link'] }}" target="_blank" rel="noopener"
                                                data-band-id="{{ $band->id }}" data-band-url="{{ $img['link'] }}"
@@ -364,7 +364,7 @@
                         @endphp
                         
                         @if($platform === 'youtube' && $videoId)
-                            <div class="{{ $btnRadius }} overflow-hidden" style="border: 1px solid #E5E7EB;">
+                            <div class="{{ $btnRadius }} overflow-hidden" style="border: 1px solid {{ $blockBorder }};">
                                 <div style="position: relative; padding-bottom: 56.25%; height: 0;">
                                     <iframe src="https://www.youtube.com/embed/{{ $videoId }}?rel=0" 
                                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
@@ -372,13 +372,13 @@
                                 </div>
                             </div>
                         @elseif($platform === 'tiktok' && $videoId)
-                            <div class="{{ $btnRadius }} overflow-hidden" style="border: 1px solid #E5E7EB;">
+                            <div class="{{ $btnRadius }} overflow-hidden" style="border: 1px solid {{ $blockBorder }};">
                                 <blockquote class="tiktok-embed" cite="{{ $videoUrl }}" data-video-id="{{ $videoId }}" style="max-width: 100%;">
                                     <section><a target="_blank" href="{{ $videoUrl }}">Voir sur TikTok</a></section>
                                 </blockquote>
                             </div>
                         @elseif($platform === 'vimeo' && $videoId)
-                            <div class="{{ $btnRadius }} overflow-hidden" style="border: 1px solid #E5E7EB;">
+                            <div class="{{ $btnRadius }} overflow-hidden" style="border: 1px solid {{ $blockBorder }};">
                                 <div style="position: relative; padding-bottom: 56.25%; height: 0;">
                                     <iframe src="https://player.vimeo.com/video/{{ $videoId }}" 
                                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
@@ -407,7 +407,7 @@
                         @endphp
                         
                         @if(count($carouselImages) > 0)
-                            <div class="{{ $btnRadius }} overflow-hidden relative" style="border: 1px solid #E5E7EB;" id="{{ $carouselId }}" data-autoplay="{{ $autoplay ? '1' : '0' }}">
+                            <div class="{{ $btnRadius }} overflow-hidden relative" style="border: 1px solid {{ $blockBorder }};" id="{{ $carouselId }}" data-autoplay="{{ $autoplay ? '1' : '0' }}">
                                 {{-- Images container --}}
                                 <div class="carousel-track flex transition-transform duration-500 ease-out" style="touch-action: pan-y;">
                                     @foreach($carouselImages as $idx => $img)
