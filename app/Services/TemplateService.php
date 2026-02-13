@@ -180,7 +180,7 @@ class TemplateService
                 'category' => 'specialized',
                 'required_plan' => 'pro',
                 'header_style' => 'artiste',
-                'transition' => 'arch',
+                'transition' => 'double_wave',
                 'photo_style' => 'round_center',
                 'social_style' => 'circles',
                 'button_style' => 'rounded',

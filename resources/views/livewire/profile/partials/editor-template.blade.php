@@ -91,7 +91,7 @@
                                onmouseover="this.style.borderColor='#42B574'; this.style.background='#F0F9F4'" onmouseout="this.style.borderColor='#D1D5DB'; this.style.background='transparent'">
                             <svg class="w-6 h-6 mb-1" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
                             <span class="text-xs font-medium" style="color: #9CA3AF;">Ajouter un logo</span>
-                            <span class="text-[10px] mt-0.5" style="color: #D1D5DB;">Affiché en haut à droite du header</span>
+                            <span class="text-[10px] mt-0.5" style="color: #D1D5DB;">Affiché en haut à gauche du header</span>
                             <input type="file" wire:model="entrepreneurLogo" accept="image/*" class="hidden">
                         </label>
                     @endif
@@ -197,8 +197,8 @@
                                         <path d="M0,6 C40,12 80,0 120,8 C160,14 180,4 200,6 L200,12 L0,12 Z" fill="white" />
                                     </svg>
                                 @elseif($tpl['transition'] === 'arch')
-                                    <svg viewBox="0 0 200 10" style="display: block; width: 100%; margin-top: -1px; height: 8px;" preserveAspectRatio="none">
-                                        <ellipse cx="100" cy="0" rx="110" ry="10" fill="white" />
+                                    <svg viewBox="0 0 200 12" style="display: block; width: 100%; margin-top: -1px; height: 10px;" preserveAspectRatio="none">
+                                        <path d="M0,0 Q100,24 200,0 L200,12 L0,12 Z" fill="white" />
                                     </svg>
                                 @elseif($tpl['transition'] === 'diagonal')
                                     <svg viewBox="0 0 200 10" style="display: block; width: 100%; margin-top: -1px; height: 8px;" preserveAspectRatio="none">

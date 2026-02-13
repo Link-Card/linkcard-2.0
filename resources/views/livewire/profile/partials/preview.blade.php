@@ -46,18 +46,19 @@
                     </div>
                 </div>
             @elseif($headerStyle === 'split')
-                <div style="background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});">
-                    <div class="flex">
-                        <div class="w-[38%] flex items-center justify-center py-10" style="background: {{ $secondary_color }};">
+                <div class="relative overflow-hidden" style="background: linear-gradient(135deg, {{ $primary_color }} 0%, {{ $secondary_color }} 50%, {{ $primary_color }}DD 100%);">
+                    <div style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.08) 0%, transparent 40%, rgba(0,0,0,0.03) 100%);"></div>
+                    <div class="flex relative" style="z-index: 1;">
+                        <div class="w-[38%] flex items-center justify-center py-10">
                             @if($profile->photo_path)
                                 <img src="{{ Storage::url($profile->photo_path) }}" class="w-20 h-20 rounded-full object-cover border-3 border-white shadow-xl">
                             @else
-                                <div class="w-20 h-20 rounded-full bg-white/30 border-3 border-white shadow-xl flex items-center justify-center">
+                                <div class="w-20 h-20 rounded-full bg-white/20 border-3 border-white/80 shadow-xl flex items-center justify-center">
                                     <span class="text-3xl">👤</span>
                                 </div>
                             @endif
                         </div>
-                        <div class="w-[62%] flex flex-col justify-center py-10 px-4" style="background: linear-gradient(180deg, {{ $primary_color }}, {{ $secondary_color }}); color: {{ $headerTextColor }};">
+                        <div class="w-[62%] flex flex-col justify-center py-10 px-4" style="color: {{ $headerTextColor }};">
                             <h2 class="text-lg font-semibold" style="font-family: 'Manrope', sans-serif;">{{ $full_name ?: 'Votre nom' }}</h2>
                             @if($job_title)<p class="text-xs font-medium mt-1" style="opacity: 0.9;">{{ $job_title }}</p>@endif
                             @if($company || $location)<p class="text-xs mt-0.5" style="opacity: 0.8;">{{ $company }}@if($company && $location) · @endif{{ $location }}</p>@endif
@@ -97,7 +98,7 @@
                         @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
                         @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
                     </div>
-                    @include('livewire.profile.partials.preview-transition', ['transition' => 'arch'])
+                    @include('livewire.profile.partials.preview-transition', ['transition' => 'double_wave'])
                 </div>
             @elseif($headerStyle === 'entrepreneur')
                 {{-- Entrepreneur: business lines + square photo --}}
@@ -106,8 +107,8 @@
                     <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);"></div>
                     <div style="position: absolute; right: 15px; top: 0; bottom: 0; width: 30px; background: rgba(255,255,255,0.04);"></div>
                     @if($previewLogoPath)
-                        <div style="position: absolute; top: 16px; right: 10px; z-index: 5;">
-                            <img src="{{ Storage::url($previewLogoPath) }}" class="w-7 h-7 rounded-full object-cover" style="border: 2px solid rgba(255,255,255,0.7); box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+                        <div style="position: absolute; top: 12px; left: 10px; z-index: 5;">
+                            <img src="{{ Storage::url($previewLogoPath) }}" class="w-8 h-8 rounded-full object-cover" style="border: 2px solid rgba(255,255,255,0.8); box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
                         </div>
                     @endif
                     <div class="relative z-10 px-6 pt-10 pb-2 text-center" style="color: {{ $headerTextColor }};">
