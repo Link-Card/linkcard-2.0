@@ -55,6 +55,60 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg>
                 <span>Changer de template</span>
             </button>
+
+            {{-- Entrepreneur logo upload (only for entrepreneur template) --}}
+            @if($currentTemplate === 'entrepreneur')
+                @php $logoPath = $profile->template_config['logo_path'] ?? null; @endphp
+                <div class="mt-4 p-4 rounded-xl" style="background: #F9FAFB; border: 1px solid #E5E7EB;">
+                    <p class="text-xs font-semibold mb-2" style="color: #2C2A27; font-family: 'Manrope', sans-serif;">
+                        <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                        Logo / 2e photo (coin supérieur droit)
+                    </p>
+                    @if($logoPath)
+                        <div class="flex items-center gap-3">
+                            <img src="{{ Storage::url($logoPath) }}" class="w-12 h-12 rounded-full object-cover" style="border: 2px solid #E5E7EB;">
+                            <div class="flex-1">
+                                <p class="text-xs" style="color: #6B7280;">Logo actuel</p>
+                            </div>
+                            <button wire:click="removeEntrepreneurLogo" class="text-xs px-3 py-1.5 rounded-lg font-medium transition-all"
+                                    style="color: #EF4444; background: #FEF2F2; border: 1px solid #FECACA;"
+                                    onmouseover="this.style.background='#FEE2E2'" onmouseout="this.style.background='#FEF2F2'">
+                                Retirer
+                            </button>
+                        </div>
+                        <div class="mt-2">
+                            <label class="text-xs cursor-pointer font-medium px-3 py-1.5 rounded-lg inline-flex items-center gap-1 transition-all"
+                                   style="color: #4B5563; background: #F3F4F6; border: 1px solid #E5E7EB;"
+                                   onmouseover="this.style.background='#E5E7EB'" onmouseout="this.style.background='#F3F4F6'">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14"/></svg>
+                                Changer
+                                <input type="file" wire:model="entrepreneurLogo" accept="image/*" class="hidden">
+                            </label>
+                        </div>
+                    @else
+                        <label class="flex flex-col items-center justify-center py-4 cursor-pointer rounded-lg transition-all"
+                               style="border: 2px dashed #D1D5DB;"
+                               onmouseover="this.style.borderColor='#42B574'; this.style.background='#F0F9F4'" onmouseout="this.style.borderColor='#D1D5DB'; this.style.background='transparent'">
+                            <svg class="w-6 h-6 mb-1" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                            <span class="text-xs font-medium" style="color: #9CA3AF;">Ajouter un logo</span>
+                            <span class="text-[10px] mt-0.5" style="color: #D1D5DB;">Affiché en haut à droite du header</span>
+                            <input type="file" wire:model="entrepreneurLogo" accept="image/*" class="hidden">
+                        </label>
+                    @endif
+
+                    {{-- Loading state --}}
+                    <div wire:loading wire:target="entrepreneurLogo" class="mt-2">
+                        <div class="flex items-center gap-2 text-xs" style="color: #42B574;">
+                            <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                            Téléchargement...
+                        </div>
+                    </div>
+
+                    @error('entrepreneurLogo')
+                        <p class="text-xs mt-1" style="color: #EF4444;">{{ $message }}</p>
+                    @enderror
+                </div>
+            @endif
         </div>
     </div>
 

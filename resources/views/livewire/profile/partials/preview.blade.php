@@ -101,9 +101,15 @@
                 </div>
             @elseif($headerStyle === 'entrepreneur')
                 {{-- Entrepreneur: business lines + square photo --}}
+                @php $previewLogoPath = $profile->template_config['logo_path'] ?? null; @endphp
                 <div class="relative overflow-hidden" style="background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});">
                     <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);"></div>
                     <div style="position: absolute; right: 15px; top: 0; bottom: 0; width: 30px; background: rgba(255,255,255,0.04);"></div>
+                    @if($previewLogoPath)
+                        <div style="position: absolute; top: 16px; right: 10px; z-index: 5;">
+                            <img src="{{ Storage::url($previewLogoPath) }}" class="w-7 h-7 rounded-full object-cover" style="border: 2px solid rgba(255,255,255,0.7); box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+                        </div>
+                    @endif
                     <div class="relative z-10 px-6 pt-10 pb-2 text-center" style="color: {{ $headerTextColor }};">
                         @if($profile->photo_path)
                             <div class="flex justify-center mb-3">

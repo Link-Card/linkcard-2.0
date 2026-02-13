@@ -32,6 +32,9 @@ class EditProfile extends Component
     public $newImages = [], $newImageLink = '', $currentImagePaths = [];
     public $newTextContent = '';
 
+    // Entrepreneur template logo
+    public $entrepreneurLogo;
+
     // Nouveaux types de bandes (Sprint 7 Phase 5)
     public $newVideoUrl = '';
     public $newCtaLabel = '', $newCtaUrl = '', $newCtaIcon = '', $newCtaBgColor = '#42B574';
@@ -42,6 +45,11 @@ class EditProfile extends Component
     {
         // Juste compter — les fichiers restent dans $this->newCarouselImages
         $this->carouselFilesReceived = is_array($this->newCarouselImages) ? count($this->newCarouselImages) : 0;
+    }
+
+    public function updatedEntrepreneurLogo()
+    {
+        $this->saveEntrepreneurLogo();
     }
 
     public function mount(Profile $profile)
@@ -231,6 +239,40 @@ class EditProfile extends Component
         $this->profile->update(['photo_path' => $path]);
         $this->profile->refresh();
         $this->photo = null;
+        $this->dispatch('auto-saved');
+    }
+
+    public function saveEntrepreneurLogo()
+    {
+        $this->validate(['entrepreneurLogo' => 'image|max:10240']);
+
+        $config = $this->profile->template_config ?? [];
+
+        // Delete old logo if exists
+        if (!empty($config['logo_path'])) {
+            Storage::disk('public')->delete($config['logo_path']);
+        }
+
+        $path = $this->entrepreneurLogo->store('profile-logos', 'public');
+        $config['logo_path'] = $path;
+
+        $this->profile->update(['template_config' => $config]);
+        $this->profile->refresh();
+        $this->entrepreneurLogo = null;
+        $this->dispatch('auto-saved');
+    }
+
+    public function removeEntrepreneurLogo()
+    {
+        $config = $this->profile->template_config ?? [];
+
+        if (!empty($config['logo_path'])) {
+            Storage::disk('public')->delete($config['logo_path']);
+        }
+
+        unset($config['logo_path']);
+        $this->profile->update(['template_config' => $config]);
+        $this->profile->refresh();
         $this->dispatch('auto-saved');
     }
 
