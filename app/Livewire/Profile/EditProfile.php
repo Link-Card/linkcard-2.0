@@ -305,7 +305,7 @@ class EditProfile extends Component
         $config = $this->profile->template_config ?? [];
         $config[$key] = $value;
         $this->profile->update(['template_config' => $config]);
-        $this->profile->refresh();
+        $this->profile = $this->profile->fresh();
         $this->dispatch('auto-saved');
     }
 

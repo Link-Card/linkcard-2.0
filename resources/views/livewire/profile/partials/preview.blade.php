@@ -135,7 +135,8 @@
                 $previewBlockBg = $previewIsBold ? '#DFDDD9' : '#F9FAFB';
                 $previewBlockBorder = $previewIsBold ? ($primary_color . '50') : '#E5E7EB';
                 $previewBtnRadius = match($previewButtonStyle) {
-                    'square', 'square_wide' => 'rounded-lg',
+                    'square' => 'rounded-md',
+                    'square_wide' => 'rounded-none',
                     'outline_compact' => 'rounded-full',
                     default => 'rounded-xl',
                 };

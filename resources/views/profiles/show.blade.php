@@ -164,7 +164,8 @@
         
         // Button CSS classes based on template button_style
         $btnRadius = match($buttonStyle) {
-            'square', 'square_wide' => 'rounded-lg',
+            'square' => 'rounded-md',
+            'square_wide' => 'rounded-none',
             'outline_compact' => 'rounded-full',
             default => 'rounded-xl',
         };
