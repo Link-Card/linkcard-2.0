@@ -369,9 +369,11 @@ class EditProfile extends Component
         $templateConfig = \App\Services\TemplateService::get($templateSlug);
         $templateFeatures = $templateConfig['features'] ?? [];
 
-        $hasVideoFeature = in_array('video_embed', $templateFeatures) || $isSuperAdmin;
-        $hasCarouselFeature = in_array('image_carousel', $templateFeatures) || $isSuperAdmin;
-        $hasCtaFeature = in_array('cta_buttons', $templateFeatures) || $isSuperAdmin;
+        // Template restrictions apply to EVERYONE (even super_admin)
+        // Super admin only bypasses plan limits (quantities)
+        $hasVideoFeature = in_array('video_embed', $templateFeatures);
+        $hasCarouselFeature = in_array('image_carousel', $templateFeatures);
+        $hasCtaFeature = in_array('cta_buttons', $templateFeatures);
 
         // Limites nouveaux types par plan
         $videoLimits = ['free' => 0, 'pro' => 1, 'premium' => 2];

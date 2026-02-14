@@ -34,8 +34,4 @@
         </div>
         @include('profiles.partials.info')
     </div>
-    {{-- Sharp diagonal transition --}}
-    <svg viewBox="0 0 400 35" style="display: block; width: 100%; margin-top: -1px;" preserveAspectRatio="none">
-        <polygon points="0,10 400,25 400,35 0,35" fill="white" />
-    </svg>
 </div>

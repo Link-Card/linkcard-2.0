@@ -189,6 +189,9 @@
         <!-- HEADER (Template: {{ $headerPartial }}) -->
         @include('profiles.partials.headers.' . $headerPartial)
 
+        <!-- TRANSITION -->
+        @include('profiles.partials.transition', ['transition' => $templateTransition])
+
         <!-- CONTENT BANDS -->
         @php
             $isBoldTemplate = ($headerStyle === 'bold');

@@ -63,7 +63,7 @@
                             @if($company || $location)<p class="text-xs mt-0.5" style="opacity: 0.8;">{{ $company }}@if($company && $location) · @endif{{ $location }}</p>@endif
                         </div>
                     </div>
-                    @include('livewire.profile.partials.preview-transition', ['transition' => 'wave'])
+                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
             @elseif($headerStyle === 'geometric')
                 <div class="relative overflow-hidden" style="background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});">
@@ -73,7 +73,7 @@
                         @include('livewire.profile.partials.preview-photo', ['photoStyle' => 'square_center'])
                         @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
                     </div>
-                    @include('livewire.profile.partials.preview-transition', ['transition' => 'chevron'])
+                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
             @elseif($headerStyle === 'videaste')
                 {{-- Vidéaste: animated gradient + dark cinematic --}}
@@ -86,7 +86,7 @@
                         @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
                         @include('livewire.profile.partials.preview-info', ['textColor' => '#FFFFFF'])
                     </div>
-                    @include('livewire.profile.partials.preview-transition', ['transition' => 'wave'])
+                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
             @elseif($headerStyle === 'artiste')
                 {{-- Artiste: organic blobs --}}
@@ -97,7 +97,7 @@
                         @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
                         @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
                     </div>
-                    @include('livewire.profile.partials.preview-transition', ['transition' => 'arch'])
+                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
             @elseif($headerStyle === 'entrepreneur')
                 {{-- Entrepreneur: business lines + square photo --}}
@@ -124,9 +124,7 @@
                         @endif
                         @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
                     </div>
-                    <svg viewBox="0 0 400 25" style="display: block; width: 100%; margin-top: -1px;" preserveAspectRatio="none">
-                        <polygon points="0,8 400,18 400,25 0,25" fill="white" />
-                    </svg>
+                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
             @else
                 {{-- classic, wave, diagonal, arch --}}

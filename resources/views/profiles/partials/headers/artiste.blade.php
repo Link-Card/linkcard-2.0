@@ -21,8 +21,8 @@
 
     @include('profiles.partials.share-button')
     <div class="px-6 pt-14 pb-3 text-center relative" style="z-index: 1;">
-        @include('profiles.partials.photo', ['photoStyle' => 'round_center'])
+        @include('profiles.partials.photo', ['photoStyle' => $templateConfig['photo_style'] ?? 'round_center'])
         @include('profiles.partials.info')
     </div>
-    @include('profiles.partials.transition', ['transition' => 'arch'])
+
 </div>
