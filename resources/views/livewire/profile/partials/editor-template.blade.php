@@ -147,6 +147,20 @@
                                     @elseif($styleKey === 'banner')
                                         <div style="height: 18px; background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});"></div>
                                         <div style="height: 10px; background: white;"></div>
+                                    @elseif($styleKey === 'videaste')
+                                        <div style="height: 28px; background: linear-gradient(135deg, #1a1a2e 0%, {{ $primary_color }}CC 50%, {{ $secondary_color }} 100%); position: relative;">
+                                            <div style="position: absolute; width: 3px; height: 3px; border-radius: 50%; background: white; top: 20%; left: 20%; opacity: 0.5;"></div>
+                                            <div style="position: absolute; width: 2px; height: 2px; border-radius: 50%; background: {{ $primary_color }}; top: 50%; right: 25%; opacity: 0.7;"></div>
+                                        </div>
+                                    @elseif($styleKey === 'artiste')
+                                        <div style="height: 28px; background: linear-gradient(160deg, {{ $primary_color }}, {{ $secondary_color }}); position: relative; overflow: hidden;">
+                                            <div style="position: absolute; top: -5px; right: -5px; width: 20px; height: 20px; border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; background: rgba(255,255,255,0.1);"></div>
+                                        </div>
+                                    @elseif($styleKey === 'entrepreneur')
+                                        <div style="height: 28px; background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }}); position: relative;">
+                                            <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);"></div>
+                                            <div style="position: absolute; right: 8px; top: 0; bottom: 0; width: 8px; background: rgba(255,255,255,0.06);"></div>
+                                        </div>
                                     @else
                                         <div style="height: 28px; background: linear-gradient({{ $styleKey === 'diagonal' ? '135deg' : '180deg' }}, {{ $primary_color }}, {{ $secondary_color }});"></div>
                                     @endif

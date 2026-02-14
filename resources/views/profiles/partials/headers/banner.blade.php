@@ -8,7 +8,10 @@
     </div>
     {{-- Photo overlaps + info on white --}}
     <div class="bg-white text-center pb-4">
-        @include('profiles.partials.photo', ['photoStyle' => $templateConfig['photo_style'] ?? 'round_overlap'])
+        @include('profiles.partials.photo', [
+            'photoStyle' => $templateConfig['photo_style'] ?? 'round_overlap',
+            'overlapContext' => true,
+        ])
         <div class="mt-3 px-6">
             @include('profiles.partials.info', ['headerTextColor' => '#2C2A27'])
         </div>

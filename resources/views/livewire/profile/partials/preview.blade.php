@@ -39,15 +39,7 @@
                     @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
                 <div class="bg-white text-center pb-4">
-                    <div class="flex justify-center">
-                        @if($profile->photo_path)
-                            <img src="{{ Storage::url($profile->photo_path) }}" class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-xl" style="margin-top: -48px;">
-                        @else
-                            <div class="w-24 h-24 rounded-full border-4 border-white shadow-xl flex items-center justify-center" style="margin-top: -48px; background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});">
-                                <span class="text-4xl">👤</span>
-                            </div>
-                        @endif
-                    </div>
+                    @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle, 'overlapContext' => true])
                     <div class="mt-3 px-6">
                         @include('livewire.profile.partials.preview-info', ['textColor' => '#2C2A27'])
                     </div>

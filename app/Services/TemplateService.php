@@ -345,6 +345,9 @@ class TemplateService
             'banner' => 'Vitrine',
             'geometric' => 'Prisme',
             'bold' => 'Contraste',
+            'videaste' => 'Vidéaste',
+            'artiste' => 'Artiste',
+            'entrepreneur' => 'Entrepreneur',
         ];
     }
 
