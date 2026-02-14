@@ -385,7 +385,6 @@ class TemplateService
     {
         return [
             'round_center' => 'Ronde centrée',
-            'round_left' => 'Ronde à gauche',
             'round_overlap' => 'Ronde débordante',
             'square_center' => 'Carrée arrondie',
         ];
