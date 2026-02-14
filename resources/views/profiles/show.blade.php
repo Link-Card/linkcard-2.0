@@ -185,7 +185,7 @@
 
     <style>:root { --share-color: {{ $primaryColor }}; }</style>
 
-    <div class="max-w-md mx-auto min-h-screen relative">
+    <div class="max-w-md mx-auto min-h-screen relative" style="background: {{ $headerStyle === 'bold' ? '#E8E6E3' : 'white' }};">
 
         <!-- HEADER (Template: {{ $headerPartial }}) -->
         @include('profiles.partials.headers.' . $headerPartial)

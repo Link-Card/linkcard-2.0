@@ -4,7 +4,7 @@
         Aperçu en direct
     </p>
     <div class="rounded-2xl overflow-hidden" style="box-shadow: 0 8px 32px rgba(0,0,0,0.12); border: 1px solid #E5E7EB;">
-        <div class="overflow-y-auto" style="max-height: calc(100vh - 120px); background: #F7F8F4;">
+        <div class="overflow-y-auto" style="max-height: calc(100vh - 120px); background: white;">
 
             @php
                 $templateSlug = $profile->template_id ?? 'classic';
