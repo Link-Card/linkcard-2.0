@@ -17,12 +17,14 @@
             {{-- HEADER based on template --}}
             @if($headerStyle === 'bold')
                 <div style="background: #2C2A27; position: relative;">
-                    <div class="absolute bottom-0 left-0 right-0" style="height: 4px; background: linear-gradient(90deg, {{ $primary_color }}, {{ $secondary_color }}); z-index: 2;"></div>
+                    @if($transition === 'none')
+                        <div class="absolute bottom-0 left-0 right-0" style="height: 4px; background: linear-gradient(90deg, {{ $primary_color }}, {{ $secondary_color }}); z-index: 2;"></div>
+                    @endif
                     <div class="px-6 pt-10 pb-6 text-center" style="color: #FFFFFF;">
                         @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle, 'borderStyle' => "border: 3px solid {$primary_color};"])
                         @include('livewire.profile.partials.preview-info', ['textColor' => '#FFFFFF'])
                     </div>
-                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
+                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => '#E8E6E3'])
                 </div>
             @elseif($headerStyle === 'minimal')
                 <div style="height: 7px; background: linear-gradient(90deg, {{ $primary_color }}, {{ $secondary_color }});"></div>

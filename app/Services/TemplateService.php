@@ -397,9 +397,9 @@ class TemplateService
     {
         return [
             'rounded' => 'Arrondis',
-            'square' => 'Coins carrés',
-            'square_wide' => 'Carrés larges',
-            'outline_compact' => 'Outline compact',
+            'square' => 'Carrés',
+            'square_wide' => 'Pleine largeur',
+            'outline_compact' => 'Contour',
         ];
     }
 

@@ -2,8 +2,10 @@
 <div class="relative" style="background: #2C2A27;">
     @include('profiles.partials.share-button')
     
-    {{-- Gradient accent line at bottom --}}
-    <div class="absolute bottom-0 left-0 right-0" style="height: 4px; background: linear-gradient(90deg, {{ $primaryColor }}, {{ $secondaryColor }}); z-index: 2;"></div>
+    {{-- Gradient accent line at bottom (only when no transition) --}}
+    @if(($templateTransition ?? 'none') === 'none')
+        <div class="absolute bottom-0 left-0 right-0" style="height: 4px; background: linear-gradient(90deg, {{ $primaryColor }}, {{ $secondaryColor }}); z-index: 2;"></div>
+    @endif
     
     <div class="px-6 pt-12 pb-8 text-center">
         @include('profiles.partials.photo', [
