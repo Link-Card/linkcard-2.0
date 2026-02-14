@@ -145,10 +145,10 @@
                 <div class="px-5 py-6 space-y-3">
                     @php
                         $visibleBands = collect($contentBands)->filter(fn($b) => !($b['is_hidden'] ?? false));
-                        $previewSocialRendered = false;
+                        $previewRenderedSocialIds = [];
                     @endphp
                     
-                    @foreach($visibleBands as $band)
+                    @foreach($visibleBands as $bandIndex => $band)
 
                         @if($band['type'] === 'contact_button')
                             @if($previewButtonStyle === 'outline_compact')
@@ -168,15 +168,28 @@
                             @endif
 
                         @elseif($band['type'] === 'social_link')
-                            @if(!$previewSocialRendered)
+                            @if(!in_array($band['id'], $previewRenderedSocialIds))
                                 @php
-                                    $previewSocialRendered = true;
-                                    $allPreviewSocials = $visibleBands->where('type', 'social_link');
+                                    // Collect consecutive social links from this position
+                                    $consecutivePreviewSocials = collect();
+                                    $foundCurrent = false;
+                                    foreach ($visibleBands as $checkBand) {
+                                        if ($checkBand['id'] === $band['id']) {
+                                            $foundCurrent = true;
+                                            $consecutivePreviewSocials->push($checkBand);
+                                            $previewRenderedSocialIds[] = $checkBand['id'];
+                                        } elseif ($foundCurrent && $checkBand['type'] === 'social_link') {
+                                            $consecutivePreviewSocials->push($checkBand);
+                                            $previewRenderedSocialIds[] = $checkBand['id'];
+                                        } elseif ($foundCurrent) {
+                                            break;
+                                        }
+                                    }
                                 @endphp
 
                                 @if($previewSocialStyle === 'circles')
                                     <div class="flex flex-wrap justify-center gap-3 py-2">
-                                        @foreach($allPreviewSocials as $sBand)
+                                        @foreach($consecutivePreviewSocials as $sBand)
                                             <div class="w-11 h-11 rounded-full flex items-center justify-center shadow-sm"
                                                  style="background: {{ $previewBlockBg }}; border: 1px solid {{ $previewBlockBorder }};">
                                                 <x-social-icon :platform="$sBand['data']['platform'] ?? ''" size="w-5 h-5" />
@@ -185,7 +198,7 @@
                                     </div>
                                 @elseif($previewSocialStyle === 'pills')
                                     <div class="flex flex-wrap justify-center gap-2 py-1">
-                                        @foreach($allPreviewSocials as $sBand)
+                                        @foreach($consecutivePreviewSocials as $sBand)
                                             <div class="inline-flex items-center gap-2 px-4 py-2.5 {{ $previewBtnRadius }}"
                                                  style="background: {{ $previewBlockBg }}; border: 1px solid {{ $previewBlockBorder }};">
                                                 <x-social-icon :platform="$sBand['data']['platform'] ?? ''" size="w-4 h-4" />
@@ -194,8 +207,7 @@
                                         @endforeach
                                     </div>
                                 @else
-                                    {{-- list --}}
-                                    @foreach($allPreviewSocials as $sBand)
+                                    @foreach($consecutivePreviewSocials as $sBand)
                                         <div class="p-3.5 {{ $previewBtnRadius }}" style="background: {{ $previewBlockBg }}; border: 1px solid {{ $previewBlockBorder }};">
                                             <div class="flex items-center space-x-3">
                                                 <div class="w-8 h-8 flex items-center justify-center">

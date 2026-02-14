@@ -200,7 +200,12 @@
         <div class="min-h-[200px]" style="background: {{ $bodyBg }};">
             <div class="px-5 py-6 space-y-3">
 
-                @foreach($profile->contentBands as $band)
+                @php
+                    $visibleBands = $profile->contentBands->where('is_hidden', false)->sortBy('order')->values();
+                    $renderedSocialIds = [];
+                @endphp
+
+                @foreach($visibleBands as $band)
 
                     @if($band->type === 'contact_button')
                         <!-- Bouton Ajouter au contact → ouvre popup -->
@@ -227,16 +232,30 @@
                         @endif
 
                     @elseif($band->type === 'social_link')
-                        @if(!isset($socialLinksRendered))
+                        @if(!in_array($band->id, $renderedSocialIds ?? []))
                             @php
-                                $socialLinksRendered = true;
-                                $allSocialBands = $profile->contentBands->where('type', 'social_link');
+                                // Collect consecutive social links starting from this band
+                                $renderedSocialIds = $renderedSocialIds ?? [];
+                                $consecutiveSocials = collect();
+                                $foundCurrent = false;
+                                foreach ($visibleBands as $checkBand) {
+                                    if ($checkBand->id === $band->id) {
+                                        $foundCurrent = true;
+                                        $consecutiveSocials->push($checkBand);
+                                        $renderedSocialIds[] = $checkBand->id;
+                                    } elseif ($foundCurrent && $checkBand->type === 'social_link') {
+                                        $consecutiveSocials->push($checkBand);
+                                        $renderedSocialIds[] = $checkBand->id;
+                                    } elseif ($foundCurrent) {
+                                        break; // Non-social band breaks the group
+                                    }
+                                }
                             @endphp
 
                             @if($socialStyle === 'circles')
                                 {{-- CIRCLES: icônes rondes en ligne --}}
                                 <div class="flex flex-wrap justify-center gap-3 py-2">
-                                    @foreach($allSocialBands as $sBand)
+                                    @foreach($consecutiveSocials as $sBand)
                                         <a href="{{ $sBand->data['url'] }}" target="_blank" rel="noopener"
                                            data-band-id="{{ $sBand->id }}" data-band-url="{{ $sBand->data['url'] }}"
                                            class="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 trackable-link hover:scale-110 shadow-sm"
@@ -249,7 +268,7 @@
                             @elseif($socialStyle === 'pills')
                                 {{-- PILLS: badges compacts en ligne --}}
                                 <div class="flex flex-wrap justify-center gap-2 py-1">
-                                    @foreach($allSocialBands as $sBand)
+                                    @foreach($consecutiveSocials as $sBand)
                                         <a href="{{ $sBand->data['url'] }}" target="_blank" rel="noopener"
                                            data-band-id="{{ $sBand->id }}" data-band-url="{{ $sBand->data['url'] }}"
                                            class="inline-flex items-center gap-2 px-4 py-2.5 {{ $btnRadius }} transition-all duration-200 trackable-link hover:shadow-md"
@@ -264,7 +283,7 @@
 
                             @else
                                 {{-- LIST: détaillé, un par ligne (défaut) --}}
-                                @foreach($allSocialBands as $sBand)
+                                @foreach($consecutiveSocials as $sBand)
                                     <a href="{{ $sBand->data['url'] }}" target="_blank" rel="noopener"
                                        data-band-id="{{ $sBand->id }}" data-band-url="{{ $sBand->data['url'] }}"
                                        class="block p-3.5 {{ $btnRadius }} transition-all duration-200 trackable-link"
