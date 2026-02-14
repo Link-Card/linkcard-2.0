@@ -276,6 +276,39 @@ class EditProfile extends Component
         $this->dispatch('auto-saved');
     }
 
+    public function updateCustomConfig(string $key, string $value)
+    {
+        // Only allow for custom template
+        if (($this->profile->template_id ?? 'classic') !== 'custom') {
+            return;
+        }
+
+        $allowedKeys = ['header_style', 'transition', 'photo_style', 'social_style', 'button_style'];
+        if (!in_array($key, $allowedKeys)) {
+            return;
+        }
+
+        // Validate value exists in TemplateService options
+        $validValues = match($key) {
+            'header_style' => array_keys(\App\Services\TemplateService::headerStyles()),
+            'transition' => array_keys(\App\Services\TemplateService::transitions()),
+            'photo_style' => array_keys(\App\Services\TemplateService::photoStyles()),
+            'social_style' => array_keys(\App\Services\TemplateService::socialStyles()),
+            'button_style' => array_keys(\App\Services\TemplateService::buttonStyles()),
+            default => [],
+        };
+
+        if (!in_array($value, $validValues)) {
+            return;
+        }
+
+        $config = $this->profile->template_config ?? [];
+        $config[$key] = $value;
+        $this->profile->update(['template_config' => $config]);
+        $this->profile->refresh();
+        $this->dispatch('auto-saved');
+    }
+
     public function saveAndReturn()
     {
         $this->profile->update(['website' => route('profile.public', $this->profile->username)]);
@@ -319,6 +352,7 @@ class EditProfile extends Component
         $user = auth()->user();
         $plan = $user->plan ?? 'free';
         $limits = PlanLimitsService::getLimits($plan, $user);
+        $isSuperAdmin = PlanLimitsService::isSuperAdmin($user);
         
         $visibleBands = collect($this->contentBands)->filter(fn($b) => !($b['is_hidden'] ?? false));
         
@@ -330,6 +364,15 @@ class EditProfile extends Component
         $carouselCount = $visibleBands->where('type', 'image_carousel')->count();
         $ctaCount = $visibleBands->where('type', 'cta_button')->count();
 
+        // Check template features for specialized bands
+        $templateSlug = $this->profile->template_id ?? 'classic';
+        $templateConfig = \App\Services\TemplateService::get($templateSlug);
+        $templateFeatures = $templateConfig['features'] ?? [];
+
+        $hasVideoFeature = in_array('video_embed', $templateFeatures) || $isSuperAdmin;
+        $hasCarouselFeature = in_array('image_carousel', $templateFeatures) || $isSuperAdmin;
+        $hasCtaFeature = in_array('cta_buttons', $templateFeatures) || $isSuperAdmin;
+
         // Limites nouveaux types par plan
         $videoLimits = ['free' => 0, 'pro' => 1, 'premium' => 2];
         $carouselLimits = ['free' => 0, 'pro' => 1, 'premium' => 2];
@@ -338,7 +381,7 @@ class EditProfile extends Component
         $carouselMax = $carouselLimits[$plan] ?? 0;
         $ctaMax = $ctaLimits[$plan] ?? 0;
 
-        if (PlanLimitsService::isSuperAdmin($user)) {
+        if ($isSuperAdmin) {
             $videoMax = 10; $carouselMax = 10; $ctaMax = 10;
         }
 
@@ -347,10 +390,28 @@ class EditProfile extends Component
             'social_link' => ['available' => $socialCount < $limits['social_links'], 'remaining' => $limits['social_links'] - $socialCount],
             'image' => ['available' => $totalImages < $limits['images'], 'remaining' => $limits['images'] - $totalImages, 'max_per_band' => min(2, $limits['images'] - $totalImages)],
             'text_block' => ['available' => $textCount < $limits['text_blocks'], 'remaining' => $limits['text_blocks'] - $textCount],
-            'video_embed' => ['available' => $videoCount < $videoMax, 'remaining' => $videoMax - $videoCount, 'plan_required' => $plan === 'free' ? 'pro' : null],
-            'image_carousel' => ['available' => $carouselCount < $carouselMax, 'remaining' => $carouselMax - $carouselCount, 'plan_required' => $plan === 'free' ? 'pro' : null],
-            'cta_button' => ['available' => $ctaCount < $ctaMax, 'remaining' => $ctaMax - $ctaCount, 'plan_required' => $plan === 'free' ? 'pro' : null],
-            'image_url_allowed' => $plan !== 'free' || PlanLimitsService::isSuperAdmin($user),
+            'video_embed' => [
+                'available' => $hasVideoFeature && $videoCount < $videoMax,
+                'remaining' => $videoMax - $videoCount,
+                'plan_required' => $plan === 'free' ? 'pro' : null,
+                'template_restricted' => !$hasVideoFeature,
+                'supported_templates' => 'Vidéaste, Mon Style',
+            ],
+            'image_carousel' => [
+                'available' => $hasCarouselFeature && $carouselCount < $carouselMax,
+                'remaining' => $carouselMax - $carouselCount,
+                'plan_required' => $plan === 'free' ? 'pro' : null,
+                'template_restricted' => !$hasCarouselFeature,
+                'supported_templates' => 'Artiste, Mon Style',
+            ],
+            'cta_button' => [
+                'available' => $hasCtaFeature && $ctaCount < $ctaMax,
+                'remaining' => $ctaMax - $ctaCount,
+                'plan_required' => $plan === 'free' ? 'pro' : null,
+                'template_restricted' => !$hasCtaFeature,
+                'supported_templates' => 'Entrepreneur, Mon Style',
+            ],
+            'image_url_allowed' => $plan !== 'free' || $isSuperAdmin,
         ];
     }
 

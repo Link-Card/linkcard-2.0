@@ -109,10 +109,123 @@
                     @enderror
                 </div>
             @endif
+
+            {{-- Custom template configurator (Mon Style) --}}
+            @if($currentTemplate === 'custom')
+                @php
+                    $customConfig = $profile->template_config ?? [];
+                    $activeHeader = $customConfig['header_style'] ?? 'classic';
+                    $activeTransition = $customConfig['transition'] ?? 'wave';
+                    $activePhoto = $customConfig['photo_style'] ?? 'round_center';
+                    $activeSocial = $customConfig['social_style'] ?? 'pills';
+                    $activeButton = $customConfig['button_style'] ?? 'rounded';
+                @endphp
+                <div class="mt-4 space-y-4">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-sm">✨</span>
+                        <p class="text-xs font-semibold uppercase tracking-wider" style="color: #2C2A27; font-family: 'Manrope', sans-serif;">Personnalisation</p>
+                    </div>
+
+                    {{-- Header Style --}}
+                    <div class="p-4 rounded-xl" style="background: #F9FAFB; border: 1px solid #E5E7EB;">
+                        <p class="text-xs font-semibold mb-3" style="color: #2C2A27; font-family: 'Manrope', sans-serif;">Style du header</p>
+                        <div class="grid grid-cols-3 gap-2">
+                            @foreach(\App\Services\TemplateService::headerStyles() as $styleKey => $styleName)
+                                <button wire:click="updateCustomConfig('header_style', '{{ $styleKey }}')"
+                                        class="relative rounded-lg overflow-hidden transition-all duration-200"
+                                        style="border: {{ $activeHeader === $styleKey ? '2px solid #42B574' : '1px solid #E5E7EB' }}; {{ $activeHeader === $styleKey ? 'box-shadow: 0 0 0 1px #42B574;' : '' }}"
+                                        onmouseover="if('{{ $activeHeader }}' !== '{{ $styleKey }}') this.style.borderColor='#42B574'"
+                                        onmouseout="if('{{ $activeHeader }}' !== '{{ $styleKey }}') this.style.borderColor='#E5E7EB'">
+                                    {{-- Mini preview --}}
+                                    @if($styleKey === 'bold')
+                                        <div style="height: 28px; background: #2C2A27; position: relative;">
+                                            <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, {{ $primary_color }}, {{ $secondary_color }});"></div>
+                                        </div>
+                                    @elseif($styleKey === 'minimal')
+                                        <div style="height: 2px; background: linear-gradient(90deg, {{ $primary_color }}, {{ $secondary_color }});"></div>
+                                        <div style="height: 26px; background: white;"></div>
+                                    @elseif($styleKey === 'banner')
+                                        <div style="height: 18px; background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});"></div>
+                                        <div style="height: 10px; background: white;"></div>
+                                    @else
+                                        <div style="height: 28px; background: linear-gradient({{ $styleKey === 'diagonal' ? '135deg' : '180deg' }}, {{ $primary_color }}, {{ $secondary_color }});"></div>
+                                    @endif
+                                    <div class="py-1.5 bg-white">
+                                        <p class="text-[10px] text-center font-medium" style="color: #4B5563; font-family: 'Manrope', sans-serif;">{{ $styleName }}</p>
+                                    </div>
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    {{-- Transition --}}
+                    <div class="p-4 rounded-xl" style="background: #F9FAFB; border: 1px solid #E5E7EB;">
+                        <p class="text-xs font-semibold mb-3" style="color: #2C2A27; font-family: 'Manrope', sans-serif;">Transition</p>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach(\App\Services\TemplateService::transitions() as $transKey => $transName)
+                                <button wire:click="updateCustomConfig('transition', '{{ $transKey }}')"
+                                        class="px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200"
+                                        style="font-family: 'Manrope', sans-serif; {{ $activeTransition === $transKey ? 'background: #42B574; color: white;' : 'background: white; color: #4B5563; border: 1px solid #E5E7EB;' }}"
+                                        onmouseover="if('{{ $activeTransition }}' !== '{{ $transKey }}') this.style.borderColor='#42B574'"
+                                        onmouseout="if('{{ $activeTransition }}' !== '{{ $transKey }}') this.style.borderColor='#E5E7EB'">
+                                    {{ $transName }}
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    {{-- Photo Style --}}
+                    <div class="p-4 rounded-xl" style="background: #F9FAFB; border: 1px solid #E5E7EB;">
+                        <p class="text-xs font-semibold mb-3" style="color: #2C2A27; font-family: 'Manrope', sans-serif;">Style de la photo</p>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach(\App\Services\TemplateService::photoStyles() as $photoKey => $photoName)
+                                <button wire:click="updateCustomConfig('photo_style', '{{ $photoKey }}')"
+                                        class="px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200"
+                                        style="font-family: 'Manrope', sans-serif; {{ $activePhoto === $photoKey ? 'background: #42B574; color: white;' : 'background: white; color: #4B5563; border: 1px solid #E5E7EB;' }}"
+                                        onmouseover="if('{{ $activePhoto }}' !== '{{ $photoKey }}') this.style.borderColor='#42B574'"
+                                        onmouseout="if('{{ $activePhoto }}' !== '{{ $photoKey }}') this.style.borderColor='#E5E7EB'">
+                                    {{ $photoName }}
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    {{-- Social Style --}}
+                    <div class="p-4 rounded-xl" style="background: #F9FAFB; border: 1px solid #E5E7EB;">
+                        <p class="text-xs font-semibold mb-3" style="color: #2C2A27; font-family: 'Manrope', sans-serif;">Style des liens sociaux</p>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach(\App\Services\TemplateService::socialStyles() as $socialKey => $socialName)
+                                <button wire:click="updateCustomConfig('social_style', '{{ $socialKey }}')"
+                                        class="px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200"
+                                        style="font-family: 'Manrope', sans-serif; {{ $activeSocial === $socialKey ? 'background: #42B574; color: white;' : 'background: white; color: #4B5563; border: 1px solid #E5E7EB;' }}"
+                                        onmouseover="if('{{ $activeSocial }}' !== '{{ $socialKey }}') this.style.borderColor='#42B574'"
+                                        onmouseout="if('{{ $activeSocial }}' !== '{{ $socialKey }}') this.style.borderColor='#E5E7EB'">
+                                    {{ $socialName }}
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    {{-- Button Style --}}
+                    <div class="p-4 rounded-xl" style="background: #F9FAFB; border: 1px solid #E5E7EB;">
+                        <p class="text-xs font-semibold mb-3" style="color: #2C2A27; font-family: 'Manrope', sans-serif;">Style des boutons</p>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach(\App\Services\TemplateService::buttonStyles() as $btnKey => $btnName)
+                                <button wire:click="updateCustomConfig('button_style', '{{ $btnKey }}')"
+                                        class="px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200"
+                                        style="font-family: 'Manrope', sans-serif; {{ $activeButton === $btnKey ? 'background: #42B574; color: white;' : 'background: white; color: #4B5563; border: 1px solid #E5E7EB;' }}"
+                                        onmouseover="if('{{ $activeButton }}' !== '{{ $btnKey }}') this.style.borderColor='#42B574'"
+                                        onmouseout="if('{{ $activeButton }}' !== '{{ $btnKey }}') this.style.borderColor='#E5E7EB'">
+                                    {{ $btnName }}
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 
-    {{-- TEMPLATE SELECTION MODAL --}}
     <div x-show="showModal" x-transition.opacity
          class="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto"
          style="background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); padding: 20px 16px;"

@@ -79,7 +79,7 @@
                     @endif
 
                     {{-- Séparateur types spécialisés --}}
-                    @if($availableTypes['video_embed']['available'] || $availableTypes['image_carousel']['available'] || $availableTypes['cta_button']['available'])
+                    @if($availableTypes['video_embed']['available'] || $availableTypes['image_carousel']['available'] || $availableTypes['cta_button']['available'] || ($availableTypes['video_embed']['template_restricted'] ?? false) || ($availableTypes['image_carousel']['template_restricted'] ?? false) || ($availableTypes['cta_button']['template_restricted'] ?? false) || ($availableTypes['video_embed']['plan_required'] ?? null) || ($availableTypes['image_carousel']['plan_required'] ?? null) || ($availableTypes['cta_button']['plan_required'] ?? null))
                         <div class="flex items-center gap-3 pt-2">
                             <div class="flex-1 h-px" style="background: #E5E7EB;"></div>
                             <span class="text-[10px] font-semibold uppercase tracking-wider" style="color: #9CA3AF; font-family: 'Manrope', sans-serif;">Spécialisés</span>
@@ -100,6 +100,18 @@
                                 </div>
                             </div>
                         </button>
+                    @elseif($availableTypes['video_embed']['template_restricted'] ?? false)
+                        <div class="w-full p-4 rounded-xl opacity-60" style="border: 1.5px solid #E5E7EB; background: #F9FAFB;">
+                            <div class="flex items-center space-x-4">
+                                <span class="w-10 h-10 rounded-full flex items-center justify-center" style="background: #F3F4F6;">
+                                    <svg class="w-5 h-5" fill="#9CA3AF" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                </span>
+                                <div class="flex-1">
+                                    <p class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Vidéo</p>
+                                    <p class="text-xs" style="font-family: 'Manrope', sans-serif; color: #F59E0B;">Template requis : {{ $availableTypes['video_embed']['supported_templates'] }}</p>
+                                </div>
+                            </div>
+                        </div>
                     @elseif(($availableTypes['video_embed']['plan_required'] ?? null))
                         <div class="w-full p-4 rounded-xl opacity-60" style="border: 1.5px solid #E5E7EB; background: #F9FAFB;">
                             <div class="flex items-center space-x-4">
@@ -127,6 +139,18 @@
                                 </div>
                             </div>
                         </button>
+                    @elseif($availableTypes['image_carousel']['template_restricted'] ?? false)
+                        <div class="w-full p-4 rounded-xl opacity-60" style="border: 1.5px solid #E5E7EB; background: #F9FAFB;">
+                            <div class="flex items-center space-x-4">
+                                <span class="w-10 h-10 rounded-full flex items-center justify-center" style="background: #F3F4F6;">
+                                    <svg class="w-5 h-5" fill="#9CA3AF" viewBox="0 0 24 24"><path d="M2 6h4v11H2zm5-1h4v13H7zm5-1h4v15h-4zm5-1h4v17h-4z"/></svg>
+                                </span>
+                                <div class="flex-1">
+                                    <p class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Carrousel</p>
+                                    <p class="text-xs" style="font-family: 'Manrope', sans-serif; color: #F59E0B;">Template requis : {{ $availableTypes['image_carousel']['supported_templates'] }}</p>
+                                </div>
+                            </div>
+                        </div>
                     @elseif(($availableTypes['image_carousel']['plan_required'] ?? null))
                         <div class="w-full p-4 rounded-xl opacity-60" style="border: 1.5px solid #E5E7EB; background: #F9FAFB;">
                             <div class="flex items-center space-x-4">
@@ -154,6 +178,18 @@
                                 </div>
                             </div>
                         </button>
+                    @elseif($availableTypes['cta_button']['template_restricted'] ?? false)
+                        <div class="w-full p-4 rounded-xl opacity-60" style="border: 1.5px solid #E5E7EB; background: #F9FAFB;">
+                            <div class="flex items-center space-x-4">
+                                <span class="w-10 h-10 rounded-full flex items-center justify-center" style="background: #F3F4F6;">
+                                    <svg class="w-5 h-5" fill="#9CA3AF" viewBox="0 0 24 24"><path d="M19 7H5c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm0 8H5V9h14v6z"/></svg>
+                                </span>
+                                <div class="flex-1">
+                                    <p class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">Bouton</p>
+                                    <p class="text-xs" style="font-family: 'Manrope', sans-serif; color: #F59E0B;">Template requis : {{ $availableTypes['cta_button']['supported_templates'] }}</p>
+                                </div>
+                            </div>
+                        </div>
                     @elseif(($availableTypes['cta_button']['plan_required'] ?? null))
                         <div class="w-full p-4 rounded-xl opacity-60" style="border: 1.5px solid #E5E7EB; background: #F9FAFB;">
                             <div class="flex items-center space-x-4">
