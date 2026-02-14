@@ -1,40 +1,35 @@
 {{-- Photo component - supports: round_center, round_left, round_overlap, square_center --}}
-@php $photoStyle = $photoStyle ?? 'round_center'; @endphp
+{{-- Optional params: $borderColor (default white), $extraStyle (inline CSS), $noBg (for bold/dark headers) --}}
+@php
+    $photoStyle = $photoStyle ?? 'round_center';
+    $borderColor = $borderColor ?? 'white';
+    $extraStyle = $extraStyle ?? '';
+    $noBg = $noBg ?? false;
+    
+    $shape = match($photoStyle) {
+        'square_center' => 'rounded-2xl',
+        default => 'rounded-full',
+    };
+    $margin = $photoStyle === 'round_overlap' ? 'margin-top: -56px;' : '';
+    $wrapClass = $photoStyle === 'round_overlap' ? 'flex justify-center' : 'flex justify-center mb-5';
+    $borderClass = $borderColor === 'white' ? 'border-4 border-white' : 'border-[3px]';
+    $borderStyle = $borderColor !== 'white' ? "border-color: {$borderColor};" : '';
+    $placeholderBg = $noBg 
+        ? "background: linear-gradient(135deg, {$primaryColor}, {$secondaryColor});" 
+        : ($photoStyle === 'round_overlap' 
+            ? "background: linear-gradient(135deg, {$primaryColor}, {$secondaryColor});" 
+            : 'background: rgba(255,255,255,0.3);');
+@endphp
 
-@if($photoStyle === 'square_center')
-    {{-- Square rounded --}}
-    <div class="flex justify-center mb-5">
-        @if($profile->photo_path)
-            <img src="{{ Storage::url($profile->photo_path) }}"
-                 class="w-28 h-28 rounded-2xl object-cover border-4 border-white shadow-xl">
-        @else
-            <div class="w-28 h-28 rounded-2xl bg-white/30 border-4 border-white shadow-xl flex items-center justify-center">
-                <span class="text-5xl">👤</span>
-            </div>
-        @endif
-    </div>
-@elseif($photoStyle === 'round_overlap')
-    {{-- Round overlapping (rendered separately in banner header) --}}
-    <div class="flex justify-center">
-        @if($profile->photo_path)
-            <img src="{{ Storage::url($profile->photo_path) }}"
-                 class="w-28 h-28 rounded-full object-cover border-4 border-white shadow-xl" style="margin-top: -56px;">
-        @else
-            <div class="w-28 h-28 rounded-full bg-white/30 border-4 border-white shadow-xl flex items-center justify-center" style="margin-top: -56px; background: linear-gradient(135deg, {{ $primaryColor }}, {{ $secondaryColor }});">
-                <span class="text-5xl">👤</span>
-            </div>
-        @endif
-    </div>
-@else
-    {{-- Default: round_center (also used for round_left but positioned differently by parent) --}}
-    <div class="flex justify-center mb-5">
-        @if($profile->photo_path)
-            <img src="{{ Storage::url($profile->photo_path) }}"
-                 class="w-28 h-28 rounded-full object-cover border-4 border-white shadow-xl">
-        @else
-            <div class="w-28 h-28 rounded-full bg-white/30 border-4 border-white shadow-xl flex items-center justify-center">
-                <span class="text-5xl">👤</span>
-            </div>
-        @endif
-    </div>
-@endif
+<div class="{{ $wrapClass }}">
+    @if($profile->photo_path)
+        <img src="{{ Storage::url($profile->photo_path) }}"
+             class="w-28 h-28 {{ $shape }} object-cover {{ $borderClass }} shadow-xl"
+             style="{{ $borderStyle }} {{ $margin }} {{ $extraStyle }}">
+    @else
+        <div class="w-28 h-28 {{ $shape }} {{ $borderClass }} shadow-xl flex items-center justify-center"
+             style="{{ $placeholderBg }} {{ $borderStyle }} {{ $margin }} {{ $extraStyle }}">
+            <span class="text-5xl">👤</span>
+        </div>
+    @endif
+</div>

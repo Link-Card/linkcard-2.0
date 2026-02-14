@@ -8,9 +8,9 @@
     <div class="absolute" style="bottom: 30px; right: -10px; width: 70px; height: 70px; background: rgba(255,255,255,0.04); transform: rotate(45deg);"></div>
     <div class="absolute" style="bottom: 60px; left: 20px; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.03);"></div>
     
-    <div class="relative z-10 px-6 pt-12 pb-10 text-center">
+    <div class="relative z-10 px-6 pt-12 pb-3 text-center">
         @include('profiles.partials.photo', ['photoStyle' => $templateConfig['photo_style'] ?? 'square_center'])
         @include('profiles.partials.info')
     </div>
-
+    @include('profiles.partials.transition', ['transition' => $templateTransition ?? 'chevron'])
 </div>

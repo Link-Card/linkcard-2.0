@@ -17,20 +17,27 @@
             {{-- HEADER based on template --}}
             @if($headerStyle === 'bold')
                 <div style="background: #2C2A27; position: relative;">
-                    <div class="absolute bottom-0 left-0 right-0" style="height: 4px; background: linear-gradient(90deg, {{ $primary_color }}, {{ $secondary_color }});"></div>
+                    <div class="absolute bottom-0 left-0 right-0" style="height: 4px; background: linear-gradient(90deg, {{ $primary_color }}, {{ $secondary_color }}); z-index: 2;"></div>
                     <div class="px-6 pt-10 pb-6 text-center" style="color: #FFFFFF;">
                         @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle, 'borderStyle' => "border: 3px solid {$primary_color};"])
                         @include('livewire.profile.partials.preview-info', ['textColor' => '#FFFFFF'])
                     </div>
+                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
             @elseif($headerStyle === 'minimal')
                 <div style="height: 7px; background: linear-gradient(90deg, {{ $primary_color }}, {{ $secondary_color }});"></div>
-                <div class="px-6 pt-8 pb-6 text-center" style="background: linear-gradient(180deg, {{ $primary_color }}30 0%, {{ $primary_color }}12 50%, white 100%);">
-                    @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle, 'shadowColor' => $primary_color])
-                    @include('livewire.profile.partials.preview-info', ['textColor' => '#2C2A27'])
+                <div style="background: linear-gradient(180deg, {{ $primary_color }}30 0%, {{ $primary_color }}12 50%, {{ $primary_color }}08 100%);">
+                    <div class="px-6 pt-8 pb-6 text-center">
+                        @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle, 'shadowColor' => $primary_color])
+                        @include('livewire.profile.partials.preview-info', ['textColor' => '#2C2A27'])
+                    </div>
+                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
             @elseif($headerStyle === 'banner')
-                <div style="height: 100px; background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});"></div>
+                <div style="background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});">
+                    <div style="height: 100px;"></div>
+                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
+                </div>
                 <div class="bg-white text-center pb-4">
                     <div class="flex justify-center">
                         @if($profile->photo_path)
@@ -70,7 +77,7 @@
                     <div class="absolute" style="top: 10px; left: -20px; width: 80px; height: 80px; border-radius: 50%; background: rgba(255,255,255,0.07);"></div>
                     <div class="absolute" style="top: -15px; right: 20px; width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.05);"></div>
                     <div class="relative z-10 px-6 pt-10 pb-2 text-center" style="color: {{ $headerTextColor }};">
-                        @include('livewire.profile.partials.preview-photo', ['photoStyle' => 'square_center'])
+                        @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
                         @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
                     </div>
                     @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
@@ -111,17 +118,7 @@
                         </div>
                     @endif
                     <div class="relative z-10 px-6 pt-10 pb-2 text-center" style="color: {{ $headerTextColor }};">
-                        @if($profile->photo_path)
-                            <div class="flex justify-center mb-3">
-                                <img src="{{ Storage::url($profile->photo_path) }}" class="w-20 h-20 rounded-2xl object-cover shadow-2xl" style="border: 3px solid rgba(255,255,255,0.9);">
-                            </div>
-                        @else
-                            <div class="flex justify-center mb-3">
-                                <div class="w-20 h-20 rounded-2xl shadow-2xl flex items-center justify-center" style="background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }}); border: 3px solid rgba(255,255,255,0.9);">
-                                    <span class="text-3xl">👤</span>
-                                </div>
-                            </div>
-                        @endif
+                        @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
                         @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
                     </div>
                     @include('livewire.profile.partials.preview-transition', ['transition' => $transition])

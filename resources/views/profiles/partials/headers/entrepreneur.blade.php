@@ -15,23 +15,11 @@
 
     @include('profiles.partials.share-button')
     <div class="px-6 pt-14 pb-3 text-center relative" style="z-index: 1;">
-        {{-- Photo avec cadre premium --}}
-        <div class="flex justify-center mb-5">
-            @if($profile->photo_path)
-                <div class="relative">
-                    <img src="{{ Storage::url($profile->photo_path) }}"
-                         class="w-28 h-28 rounded-2xl object-cover shadow-2xl"
-                         style="border: 3px solid rgba(255,255,255,0.9);">
-                    {{-- Accent corner --}}
-                    <div style="position: absolute; top: -4px; right: -4px; width: 16px; height: 16px; border-top: 3px solid {{ $primaryColor }}; border-right: 3px solid {{ $primaryColor }}; border-radius: 0 6px 0 0; background: transparent;"></div>
-                </div>
-            @else
-                <div class="w-28 h-28 rounded-2xl shadow-2xl flex items-center justify-center"
-                     style="background: linear-gradient(135deg, {{ $primaryColor }}, {{ $secondaryColor }}); border: 3px solid rgba(255,255,255,0.9);">
-                    <span class="text-5xl">👤</span>
-                </div>
-            @endif
-        </div>
+        @include('profiles.partials.photo', [
+            'photoStyle' => $templateConfig['photo_style'] ?? 'square_center',
+            'extraStyle' => 'border: 3px solid rgba(255,255,255,0.9);',
+        ])
         @include('profiles.partials.info')
     </div>
+    @include('profiles.partials.transition', ['transition' => $templateTransition ?? 'diagonal'])
 </div>

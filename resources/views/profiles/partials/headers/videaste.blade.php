@@ -29,5 +29,5 @@
         @include('profiles.partials.photo', ['photoStyle' => $templateConfig['photo_style'] ?? 'round_center'])
         @include('profiles.partials.info', ['headerTextColor' => '#FFFFFF'])
     </div>
-
+    @include('profiles.partials.transition', ['transition' => $templateTransition ?? 'wave'])
 </div>

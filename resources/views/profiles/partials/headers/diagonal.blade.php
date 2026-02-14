@@ -5,5 +5,5 @@
         @include('profiles.partials.photo', ['photoStyle' => $templateConfig['photo_style'] ?? 'round_center'])
         @include('profiles.partials.info')
     </div>
-
+    @include('profiles.partials.transition', ['transition' => $templateTransition ?? 'diagonal'])
 </div>
