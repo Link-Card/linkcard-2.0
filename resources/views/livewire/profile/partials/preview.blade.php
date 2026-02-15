@@ -143,7 +143,7 @@
                     default => 'rounded-xl',
                 };
             @endphp
-            <div style="background: {{ $previewBodyBg }};">
+            <div class="relative" style="background: {{ $previewBodyBg }}; margin-top: -1px; z-index: 1;">
                 <div class="px-5 py-6 space-y-3">
                     @php
                         $visibleBands = collect($contentBands)->filter(fn($b) => !($b['is_hidden'] ?? false));
