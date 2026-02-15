@@ -129,8 +129,17 @@
             @endif
 
             {{-- TRANSITION (centralisée, sauf banner qui a la sienne) --}}
-            @if($headerStyle !== 'banner')
-                @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => $previewBodyBg])
+            @if($headerStyle !== 'banner' && $transition !== 'none')
+                @php
+                    $previewBridgeColor = match($headerStyle) {
+                        'bold' => '#2C2A27',
+                        'minimal' => $primary_color . '08',
+                        default => $secondary_color,
+                    };
+                @endphp
+                <div style="background: {{ $previewBridgeColor }}; margin-top: -1px;">
+                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => $previewBodyBg])
+                </div>
             @endif
 
             <!-- CONTENT BANDS -->
