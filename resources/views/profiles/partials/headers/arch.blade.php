@@ -10,5 +10,4 @@
             @include('profiles.partials.info')
         </div>
     </div>
-    @include('profiles.partials.transition', ['transition' => $templateTransition ?? 'arch'])
 </div>

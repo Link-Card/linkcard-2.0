@@ -4,7 +4,6 @@
     {{-- Short gradient banner --}}
     <div style="background: linear-gradient(135deg, {{ $primaryColor }} 0%, {{ $secondaryColor }} 100%);">
         <div style="height: 120px;"></div>
-        @include('profiles.partials.transition', ['transition' => $templateTransition ?? 'none'])
     </div>
     {{-- Photo overlaps + info on white --}}
     <div class="bg-white text-center pb-4">

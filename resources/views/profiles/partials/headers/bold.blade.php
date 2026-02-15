@@ -15,5 +15,4 @@
         ])
         @include('profiles.partials.info', ['headerTextColor' => '#FFFFFF'])
     </div>
-    @include('profiles.partials.transition', ['transition' => $templateTransition ?? 'none', 'fillColor' => '#E8E6E3'])
 </div>

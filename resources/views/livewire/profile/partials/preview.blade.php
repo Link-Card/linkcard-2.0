@@ -4,15 +4,16 @@
         Aperçu en direct
     </p>
     <div class="rounded-2xl overflow-hidden" style="box-shadow: 0 8px 32px rgba(0,0,0,0.12); border: 1px solid #E5E7EB;">
-        <div class="overflow-y-auto" style="max-height: calc(100vh - 120px); background: white;">
-
-            @php
-                $templateSlug = $profile->template_id ?? 'classic';
-                $templateConfig = $profile->getEffectiveTemplateConfig();
-                $headerStyle = $templateConfig['header_style'] ?? 'classic';
-                $transition = $templateConfig['transition'] ?? 'wave';
-                $photoStyle = $templateConfig['photo_style'] ?? 'round_center';
-            @endphp
+        @php
+            $templateSlug = $profile->template_id ?? 'classic';
+            $templateConfig = $profile->getEffectiveTemplateConfig();
+            $headerStyle = $templateConfig['header_style'] ?? 'classic';
+            $transition = $templateConfig['transition'] ?? 'wave';
+            $photoStyle = $templateConfig['photo_style'] ?? 'round_center';
+            $previewIsBold = ($headerStyle === 'bold');
+            $previewBodyBg = $previewIsBold ? '#E8E6E3' : 'white';
+        @endphp
+        <div class="overflow-y-auto" style="max-height: calc(100vh - 120px); background: {{ $previewBodyBg }};">
 
             {{-- HEADER based on template --}}
             @if($headerStyle === 'bold')
@@ -24,7 +25,6 @@
                         @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle, 'borderStyle' => "border: 3px solid {$primary_color};"])
                         @include('livewire.profile.partials.preview-info', ['textColor' => '#FFFFFF'])
                     </div>
-                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => '#E8E6E3'])
                 </div>
             @elseif($headerStyle === 'minimal')
                 <div style="height: 7px; background: linear-gradient(90deg, {{ $primary_color }}, {{ $secondary_color }});"></div>
@@ -33,14 +33,12 @@
                         @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle, 'shadowColor' => $primary_color])
                         @include('livewire.profile.partials.preview-info', ['textColor' => '#2C2A27'])
                     </div>
-                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
             @elseif($headerStyle === 'banner')
                 <div style="background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});">
                     <div style="height: 100px;"></div>
-                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
-                <div class="bg-white text-center pb-4">
+                <div class="text-center pb-4">
                     @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle, 'overlapContext' => true])
                     <div class="mt-3 px-6">
                         @include('livewire.profile.partials.preview-info', ['textColor' => '#2C2A27'])
@@ -66,7 +64,6 @@
                             </div>
                         </div>
                     </div>
-                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
             @elseif($headerStyle === 'geometric')
                 <div style="background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});">
@@ -78,10 +75,8 @@
                             @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
                         </div>
                     </div>
-                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
             @elseif($headerStyle === 'videaste')
-                {{-- Vidéaste: animated gradient + dark cinematic --}}
                 <div style="background: linear-gradient(135deg, #1a1a2e 0%, {{ $primary_color }}CC 50%, {{ $secondary_color }} 100%);">
                     <div class="relative overflow-hidden">
                         <div class="absolute" style="width: 6px; height: 6px; border-radius: 50%; background: {{ $primary_color }}; top: 15%; left: 15%; opacity: 0.5;"></div>
@@ -93,10 +88,8 @@
                             @include('livewire.profile.partials.preview-info', ['textColor' => '#FFFFFF'])
                         </div>
                     </div>
-                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
             @elseif($headerStyle === 'artiste')
-                {{-- Artiste: organic blobs --}}
                 <div style="background: linear-gradient(160deg, {{ $primary_color }}, {{ $secondary_color }});">
                     <div class="relative overflow-hidden">
                         <div class="absolute" style="top: -20px; right: -15px; width: 80px; height: 80px; border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; background: rgba(255,255,255,0.06);"></div>
@@ -106,10 +99,8 @@
                             @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
                         </div>
                     </div>
-                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
             @elseif($headerStyle === 'entrepreneur')
-                {{-- Entrepreneur: business lines + square photo --}}
                 @php $previewLogoPath = $profile->template_config['logo_path'] ?? null; @endphp
                 <div style="background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});">
                     <div class="relative overflow-hidden">
@@ -125,7 +116,6 @@
                             @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
                         </div>
                     </div>
-                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
             @else
                 {{-- classic, wave, diagonal, arch --}}
@@ -134,16 +124,16 @@
                         @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
                         @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
                     </div>
-                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
             @endif
+
+            {{-- TRANSITION (centralisée) --}}
+            @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => $previewBodyBg])
 
             <!-- CONTENT BANDS -->
             @php
                 $previewSocialStyle = $templateConfig['social_style'] ?? 'pills';
                 $previewButtonStyle = $templateConfig['button_style'] ?? 'rounded';
-                $previewIsBold = ($headerStyle === 'bold');
-                $previewBodyBg = $previewIsBold ? '#E8E6E3' : 'white';
                 $previewBlockBg = $previewIsBold ? '#DFDDD9' : '#F9FAFB';
                 $previewBlockBorder = $previewIsBold ? ($primary_color . '50') : '#E5E7EB';
                 $previewBtnRadius = match($previewButtonStyle) {
@@ -153,7 +143,7 @@
                     default => 'rounded-xl',
                 };
             @endphp
-            <div class="relative" style="background: {{ $previewBodyBg }}; margin-top: -1px; z-index: 1;">
+            <div>
                 <div class="px-5 py-6 space-y-3">
                     @php
                         $visibleBands = collect($contentBands)->filter(fn($b) => !($b['is_hidden'] ?? false));

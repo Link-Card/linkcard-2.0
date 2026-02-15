@@ -30,5 +30,4 @@
             @include('profiles.partials.info', ['headerTextColor' => '#FFFFFF'])
         </div>
     </div>
-    @include('profiles.partials.transition', ['transition' => $templateTransition ?? 'wave'])
 </div>

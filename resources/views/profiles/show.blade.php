@@ -185,19 +185,23 @@
 
     <style>:root { --share-color: {{ $primaryColor }}; }</style>
 
-    <div class="max-w-md mx-auto min-h-screen relative" style="background: {{ $headerStyle === 'bold' ? '#E8E6E3' : 'white' }};">
+    @php
+        $isBoldTemplate = ($headerStyle === 'bold');
+        $bodyBg = $isBoldTemplate ? '#E8E6E3' : 'white';
+        $blockBg = $isBoldTemplate ? '#DFDDD9' : '#F9FAFB';
+        $blockBorder = $isBoldTemplate ? ($primaryColor . '50') : '#E5E7EB';
+    @endphp
+
+    <div class="max-w-md mx-auto min-h-screen relative" style="background: {{ $bodyBg }};">
 
         <!-- HEADER (Template: {{ $headerPartial }}) -->
         @include('profiles.partials.headers.' . $headerPartial)
 
+        <!-- TRANSITION (centralisée) -->
+        @include('profiles.partials.transition', ['transition' => $templateTransition, 'fillColor' => $bodyBg])
+
         <!-- CONTENT BANDS -->
-        @php
-            $isBoldTemplate = ($headerStyle === 'bold');
-            $bodyBg = $isBoldTemplate ? '#E8E6E3' : 'white';
-            $blockBg = $isBoldTemplate ? '#DFDDD9' : '#F9FAFB';
-            $blockBorder = $isBoldTemplate ? ($primaryColor . '50') : '#E5E7EB';
-        @endphp
-        <div class="min-h-[200px] relative" style="background: {{ $bodyBg }}; margin-top: -1px; z-index: 1;">
+        <div class="min-h-[200px]">
             <div class="px-5 py-6 space-y-3">
 
                 @php
