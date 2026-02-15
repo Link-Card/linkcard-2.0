@@ -47,73 +47,83 @@
                     </div>
                 </div>
             @elseif($headerStyle === 'split')
-                <div class="relative overflow-hidden" style="background: linear-gradient(135deg, {{ $primary_color }} 0%, {{ $secondary_color }} 100%);">
-                    <div class="flex relative" style="z-index: 1;">
-                        <div class="w-[38%] flex items-center justify-center py-10" style="background: rgba(0,0,0,0.12);">
-                            @if($profile->photo_path)
-                                <img src="{{ Storage::url($profile->photo_path) }}" class="w-20 h-20 rounded-full object-cover border-3 border-white shadow-xl">
-                            @else
-                                <div class="w-20 h-20 rounded-full bg-white/20 border-3 border-white/80 shadow-xl flex items-center justify-center">
-                                    <span class="text-3xl">👤</span>
-                                </div>
-                            @endif
-                        </div>
-                        <div class="w-[62%] flex flex-col justify-center py-10 px-4" style="background: rgba(255,255,255,0.06); color: {{ $headerTextColor }};">
-                            <h2 class="text-lg font-semibold" style="font-family: 'Manrope', sans-serif;">{{ $full_name ?: 'Votre nom' }}</h2>
-                            @if($job_title)<p class="text-xs font-medium mt-1" style="opacity: 0.9;">{{ $job_title }}</p>@endif
-                            @if($company || $location)<p class="text-xs mt-0.5" style="opacity: 0.8;">{{ $company }}@if($company && $location) · @endif{{ $location }}</p>@endif
+                <div style="background: linear-gradient(135deg, {{ $primary_color }} 0%, {{ $secondary_color }} 100%);">
+                    <div class="relative overflow-hidden">
+                        <div class="flex relative" style="z-index: 1;">
+                            <div class="w-[38%] flex items-center justify-center py-10" style="background: rgba(0,0,0,0.12);">
+                                @if($profile->photo_path)
+                                    <img src="{{ Storage::url($profile->photo_path) }}" class="w-20 h-20 rounded-full object-cover border-3 border-white shadow-xl">
+                                @else
+                                    <div class="w-20 h-20 rounded-full bg-white/20 border-3 border-white/80 shadow-xl flex items-center justify-center">
+                                        <span class="text-3xl">👤</span>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="w-[62%] flex flex-col justify-center py-10 px-4" style="background: rgba(255,255,255,0.06); color: {{ $headerTextColor }};">
+                                <h2 class="text-lg font-semibold" style="font-family: 'Manrope', sans-serif;">{{ $full_name ?: 'Votre nom' }}</h2>
+                                @if($job_title)<p class="text-xs font-medium mt-1" style="opacity: 0.9;">{{ $job_title }}</p>@endif
+                                @if($company || $location)<p class="text-xs mt-0.5" style="opacity: 0.8;">{{ $company }}@if($company && $location) · @endif{{ $location }}</p>@endif
+                            </div>
                         </div>
                     </div>
                     @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
             @elseif($headerStyle === 'geometric')
-                <div class="relative overflow-hidden" style="background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});">
-                    <div class="absolute" style="top: 10px; left: -20px; width: 80px; height: 80px; border-radius: 50%; background: rgba(255,255,255,0.07);"></div>
-                    <div class="absolute" style="top: -15px; right: 20px; width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.05);"></div>
-                    <div class="relative z-10 px-6 pt-10 pb-2 text-center" style="color: {{ $headerTextColor }};">
-                        @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
-                        @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
+                <div style="background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});">
+                    <div class="relative overflow-hidden">
+                        <div class="absolute" style="top: 10px; left: -20px; width: 80px; height: 80px; border-radius: 50%; background: rgba(255,255,255,0.07);"></div>
+                        <div class="absolute" style="top: -15px; right: 20px; width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.05);"></div>
+                        <div class="relative z-10 px-6 pt-10 pb-2 text-center" style="color: {{ $headerTextColor }};">
+                            @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
+                            @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
+                        </div>
                     </div>
                     @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
             @elseif($headerStyle === 'videaste')
                 {{-- Vidéaste: animated gradient + dark cinematic --}}
-                <div class="relative overflow-hidden" style="background: linear-gradient(135deg, #1a1a2e 0%, {{ $primary_color }}CC 50%, {{ $secondary_color }} 100%);">
-                    <div class="absolute" style="width: 6px; height: 6px; border-radius: 50%; background: {{ $primary_color }}; top: 15%; left: 15%; opacity: 0.5;"></div>
-                    <div class="absolute" style="width: 4px; height: 4px; border-radius: 50%; background: white; top: 30%; right: 20%; opacity: 0.3;"></div>
-                    <div class="absolute" style="width: 8px; height: 8px; border-radius: 50%; background: {{ $primary_color }}60; bottom: 30%; left: 30%; opacity: 0.4;"></div>
-                    <div class="absolute inset-0" style="background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.3) 100%);"></div>
-                    <div class="relative z-10 px-6 pt-10 pb-2 text-center" style="color: #FFFFFF;">
-                        @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
-                        @include('livewire.profile.partials.preview-info', ['textColor' => '#FFFFFF'])
+                <div style="background: linear-gradient(135deg, #1a1a2e 0%, {{ $primary_color }}CC 50%, {{ $secondary_color }} 100%);">
+                    <div class="relative overflow-hidden">
+                        <div class="absolute" style="width: 6px; height: 6px; border-radius: 50%; background: {{ $primary_color }}; top: 15%; left: 15%; opacity: 0.5;"></div>
+                        <div class="absolute" style="width: 4px; height: 4px; border-radius: 50%; background: white; top: 30%; right: 20%; opacity: 0.3;"></div>
+                        <div class="absolute" style="width: 8px; height: 8px; border-radius: 50%; background: {{ $primary_color }}60; bottom: 30%; left: 30%; opacity: 0.4;"></div>
+                        <div class="absolute inset-0" style="background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.3) 100%);"></div>
+                        <div class="relative z-10 px-6 pt-10 pb-2 text-center" style="color: #FFFFFF;">
+                            @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
+                            @include('livewire.profile.partials.preview-info', ['textColor' => '#FFFFFF'])
+                        </div>
                     </div>
                     @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
             @elseif($headerStyle === 'artiste')
                 {{-- Artiste: organic blobs --}}
-                <div class="relative overflow-hidden" style="background: linear-gradient(160deg, {{ $primary_color }}, {{ $secondary_color }});">
-                    <div class="absolute" style="top: -20px; right: -15px; width: 80px; height: 80px; border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; background: rgba(255,255,255,0.06);"></div>
-                    <div class="absolute" style="bottom: 10px; left: -20px; width: 60px; height: 60px; border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; background: rgba(255,255,255,0.04);"></div>
-                    <div class="relative z-10 px-6 pt-10 pb-2 text-center" style="color: {{ $headerTextColor }};">
-                        @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
-                        @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
+                <div style="background: linear-gradient(160deg, {{ $primary_color }}, {{ $secondary_color }});">
+                    <div class="relative overflow-hidden">
+                        <div class="absolute" style="top: -20px; right: -15px; width: 80px; height: 80px; border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; background: rgba(255,255,255,0.06);"></div>
+                        <div class="absolute" style="bottom: 10px; left: -20px; width: 60px; height: 60px; border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; background: rgba(255,255,255,0.04);"></div>
+                        <div class="relative z-10 px-6 pt-10 pb-2 text-center" style="color: {{ $headerTextColor }};">
+                            @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
+                            @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
+                        </div>
                     </div>
                     @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
             @elseif($headerStyle === 'entrepreneur')
                 {{-- Entrepreneur: business lines + square photo --}}
                 @php $previewLogoPath = $profile->template_config['logo_path'] ?? null; @endphp
-                <div class="relative overflow-hidden" style="background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});">
-                    <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);"></div>
-                    <div style="position: absolute; right: 15px; top: 0; bottom: 0; width: 30px; background: rgba(255,255,255,0.04);"></div>
-                    @if($previewLogoPath)
-                        <div style="position: absolute; top: 12px; left: 10px; z-index: 5;">
-                            <img src="{{ Storage::url($previewLogoPath) }}" class="w-8 h-8 rounded-full object-cover" style="border: 2px solid rgba(255,255,255,0.8); box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+                <div style="background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});">
+                    <div class="relative overflow-hidden">
+                        <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);"></div>
+                        <div style="position: absolute; right: 15px; top: 0; bottom: 0; width: 30px; background: rgba(255,255,255,0.04);"></div>
+                        @if($previewLogoPath)
+                            <div style="position: absolute; top: 12px; left: 10px; z-index: 5;">
+                                <img src="{{ Storage::url($previewLogoPath) }}" class="w-8 h-8 rounded-full object-cover" style="border: 2px solid rgba(255,255,255,0.8); box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+                            </div>
+                        @endif
+                        <div class="relative z-10 px-6 pt-10 pb-2 text-center" style="color: {{ $headerTextColor }};">
+                            @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
+                            @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
                         </div>
-                    @endif
-                    <div class="relative z-10 px-6 pt-10 pb-2 text-center" style="color: {{ $headerTextColor }};">
-                        @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
-                        @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
                     </div>
                     @include('livewire.profile.partials.preview-transition', ['transition' => $transition])
                 </div>
