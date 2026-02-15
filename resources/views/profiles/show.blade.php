@@ -197,8 +197,10 @@
         <!-- HEADER (Template: {{ $headerPartial }}) -->
         @include('profiles.partials.headers.' . $headerPartial)
 
-        <!-- TRANSITION (centralisée) -->
-        @include('profiles.partials.transition', ['transition' => $templateTransition, 'fillColor' => $bodyBg])
+        <!-- TRANSITION (centralisée, sauf banner qui a la sienne interne) -->
+        @if($headerPartial !== 'banner')
+            @include('profiles.partials.transition', ['transition' => $templateTransition, 'fillColor' => $bodyBg])
+        @endif
 
         <!-- CONTENT BANDS -->
         <div class="min-h-[200px]">

@@ -37,6 +37,7 @@
             @elseif($headerStyle === 'banner')
                 <div style="background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});">
                     <div style="height: 100px;"></div>
+                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => $previewBodyBg])
                 </div>
                 <div class="text-center pb-4">
                     @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle, 'overlapContext' => true])
@@ -127,8 +128,10 @@
                 </div>
             @endif
 
-            {{-- TRANSITION (centralisée) --}}
-            @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => $previewBodyBg])
+            {{-- TRANSITION (centralisée, sauf banner qui a la sienne) --}}
+            @if($headerStyle !== 'banner')
+                @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => $previewBodyBg])
+            @endif
 
             <!-- CONTENT BANDS -->
             @php

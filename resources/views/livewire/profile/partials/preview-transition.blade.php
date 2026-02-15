@@ -1,4 +1,16 @@
 {{-- Preview transition - animated waves matching public profile --}}
+@once
+<style>
+    .waves-container { position: relative; width: 100%; height: 50px; margin-top: -1px; overflow: hidden; }
+    .waves-container svg { position: absolute; bottom: 0; width: 200%; height: 100%; }
+    .waves-container .parallax > use { animation: wave-move 25s cubic-bezier(.55,.5,.45,.5) infinite; }
+    .waves-container .parallax > use:nth-child(1) { animation-delay: -2s; animation-duration: 7s; }
+    .waves-container .parallax > use:nth-child(2) { animation-delay: -3s; animation-duration: 10s; }
+    .waves-container .parallax > use:nth-child(3) { animation-delay: -4s; animation-duration: 13s; }
+    .waves-container .parallax > use:nth-child(4) { animation-delay: -5s; animation-duration: 20s; }
+    @keyframes wave-move { 0% { transform: translate3d(-90px,0,0); } 100% { transform: translate3d(85px,0,0); } }
+</style>
+@endonce
 @php
     $transition = $transition ?? 'wave';
     $fillColor = $fillColor ?? 'white';
