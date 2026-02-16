@@ -15,6 +15,16 @@
         @endphp
         <div class="overflow-y-auto" style="max-height: calc(100vh - 120px); background: {{ $previewBodyBg }};">
 
+            @php
+                // Bridge background fills any gap between header and transition
+                $previewBridgeColor = match($headerStyle) {
+                    'bold' => '#2C2A27',
+                    'minimal' => $primary_color . '08',
+                    'banner' => 'transparent',
+                    default => $secondary_color,
+                };
+            @endphp
+            <div style="background: {{ $previewBridgeColor }};">
             {{-- HEADER based on template --}}
             @if($headerStyle === 'bold')
                 <div style="background: #2C2A27; position: relative;">
@@ -130,17 +140,9 @@
 
             {{-- TRANSITION (centralisée, sauf banner qui a la sienne) --}}
             @if($headerStyle !== 'banner' && $transition !== 'none')
-                @php
-                    $previewBridgeColor = match($headerStyle) {
-                        'bold' => '#2C2A27',
-                        'minimal' => $primary_color . '08',
-                        default => $secondary_color,
-                    };
-                @endphp
-                <div style="background: {{ $previewBridgeColor }}; margin-top: -1px;">
-                    @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => $previewBodyBg])
-                </div>
+                @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => $previewBodyBg])
             @endif
+            </div>{{-- fin wrapper bridge --}}
 
             <!-- CONTENT BANDS -->
             @php

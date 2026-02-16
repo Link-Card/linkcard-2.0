@@ -194,25 +194,26 @@
 
     <div class="max-w-md mx-auto min-h-screen relative" style="background: {{ $bodyBg }};">
 
-        <!-- HEADER (Template: {{ $headerPartial }}) -->
-        @include('profiles.partials.headers.' . $headerPartial)
+        @php
+            // Background that fills any gap between header and transition
+            $bridgeColor = match($headerPartial) {
+                'bold' => '#2C2A27',
+                'minimal' => $primaryColor . '08',
+                'arch' => $primaryColor . '88',
+                'entrepreneur' => $primaryColor . 'DD',
+                'banner' => 'transparent',
+                default => $secondaryColor,
+            };
+        @endphp
+        <div style="background: {{ $bridgeColor }};">
+            <!-- HEADER (Template: {{ $headerPartial }}) -->
+            @include('profiles.partials.headers.' . $headerPartial)
 
-        <!-- TRANSITION (centralisée, sauf banner qui a la sienne interne) -->
-        @if($headerPartial !== 'banner' && $templateTransition !== 'none')
-            @php
-                // Bridge color = bottom color of each header's gradient
-                $bridgeColor = match($headerPartial) {
-                    'bold' => '#2C2A27',
-                    'minimal' => $primaryColor . '08',
-                    'arch' => $primaryColor . '88',
-                    'entrepreneur' => $primaryColor . 'DD',
-                    default => $secondaryColor,
-                };
-            @endphp
-            <div style="background: {{ $bridgeColor }}; margin-top: -1px;">
+            <!-- TRANSITION (centralisée, sauf banner qui a la sienne interne) -->
+            @if($headerPartial !== 'banner' && $templateTransition !== 'none')
                 @include('profiles.partials.transition', ['transition' => $templateTransition, 'fillColor' => $bodyBg])
-            </div>
-        @endif
+            @endif
+        </div>
 
         <!-- CONTENT BANDS -->
         <div class="min-h-[200px]">
