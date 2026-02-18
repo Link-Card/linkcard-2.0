@@ -180,6 +180,11 @@
                 </div>
             @endif
 
+            {{-- Transition inside same gradient div as header = zero seam --}}
+            @if($headerStyle !== 'banner' && $transition !== 'none')
+                @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => $previewBodyBg])
+            @endif
+
             </div>{{-- fin wrapper bridge --}}
 
             <!-- CONTENT BANDS -->
@@ -194,13 +199,7 @@
                     default => 'rounded-xl',
                 };
             @endphp
-            <div style="background: {{ $previewBodyBg }};">
-                {{-- Transition inside content div = zero gap --}}
-                @if($headerStyle !== 'banner' && $transition !== 'none')
-                    <div style="margin-top: -1px; {{ $previewBridgeGradient }};">
-                        @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => $previewBodyBg])
-                    </div>
-                @endif
+            <div style="background: {{ $previewBodyBg }}; margin-top: -2px;">
                 <div class="px-5 py-6 space-y-3">
                     @php
                         $visibleBands = collect($contentBands)->filter(fn($b) => !($b['is_hidden'] ?? false));

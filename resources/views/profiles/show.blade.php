@@ -230,19 +230,17 @@
                 default => "background: linear-gradient(180deg, {$primaryColor} 0%, {$secondaryColor} 100%)",
             };
         @endphp
+        {{-- Single div for header + transition = one gradient, zero seam --}}
         <div style="{{ $bridgeGradient }};">
-            <!-- HEADER (Template: {{ $headerPartial }}) -->
             @include('profiles.partials.headers.' . $headerPartial)
+
+            @if($headerPartial !== 'banner' && $templateTransition !== 'none')
+                @include('profiles.partials.transition', ['transition' => $templateTransition, 'fillColor' => $bodyBg])
+            @endif
         </div>
 
         <!-- CONTENT BANDS -->
-        <div class="min-h-[200px]" style="background: {{ $bodyBg }};">
-            {{-- Transition sits inside content div = zero gap possible --}}
-            @if($headerPartial !== 'banner' && $templateTransition !== 'none')
-                <div style="margin-top: -1px; {{ $bridgeGradient }};">
-                    @include('profiles.partials.transition', ['transition' => $templateTransition, 'fillColor' => $bodyBg])
-                </div>
-            @endif
+        <div class="min-h-[200px]" style="background: {{ $bodyBg }}; margin-top: -2px;">
             <div class="px-5 py-6 space-y-3">
 
                 @php
