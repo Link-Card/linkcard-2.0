@@ -316,9 +316,12 @@
                                         <div style="position: absolute; bottom: 5px; left: -5px; width: 20px; height: 20px; background: rgba(255,255,255,0.05); transform: rotate(45deg);"></div>
                                     </div>
                                 @elseif($tpl['header_style'] === 'neon')
-                                    <div style="height: 48px; background: linear-gradient(160deg, #0A0A18 0%, {{ $primary_color }}30 40%, {{ $secondary_color }}50 70%, #0F0F1A 100%); position: relative; overflow: hidden;">
-                                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; background: radial-gradient(circle, {{ $primary_color }}20 0%, transparent 70%); filter: blur(10px);"></div>
-                                        <div style="position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, {{ $primary_color }}40, transparent);"></div>
+                                    <div style="height: 48px; background: linear-gradient(160deg, #0A0A18 0%, {{ $primary_color }}25 35%, {{ $secondary_color }}40 65%, #0F0F1A 100%); position: relative; overflow: hidden;">
+                                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: radial-gradient(circle, {{ $primary_color }}30 0%, transparent 70%); filter: blur(12px);"></div>
+                                        <div style="position: absolute; width: 3px; height: 3px; border-radius: 50%; background: {{ $primary_color }}; top: 20%; left: 15%; opacity: 0.7;"></div>
+                                        <div style="position: absolute; width: 2px; height: 2px; border-radius: 50%; background: white; top: 35%; right: 20%; opacity: 0.5;"></div>
+                                        <div style="position: absolute; width: 4px; height: 4px; border-radius: 50%; background: {{ $primary_color }}50; bottom: 20%; left: 30%; opacity: 0.5;"></div>
+                                        <div style="position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent 10%, {{ $primary_color }}60, transparent 90%);"></div>
                                     </div>
                                 @else
                                     <div style="height: 48px; background: linear-gradient({{ $tpl['header_style'] === 'diagonal' ? '135deg' : '180deg' }}, {{ $primary_color }}, {{ $secondary_color }});"></div>

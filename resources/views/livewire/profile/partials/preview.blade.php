@@ -139,17 +139,24 @@
                     </div>
                 </div>
             @elseif($headerStyle === 'neon')
-                <div style="background: linear-gradient(160deg, #0A0A18 0%, {{ $primary_color }}30 40%, {{ $secondary_color }}50 70%, #0F0F1A 100%);">
+                <div style="background: linear-gradient(160deg, #0A0A18 0%, {{ $primary_color }}25 35%, {{ $secondary_color }}40 65%, #0F0F1A 100%);">
                     <div class="relative overflow-hidden">
-                        <div class="absolute" style="width: 120px; height: 120px; top: 25%; left: 50%; transform: translateX(-50%); background: radial-gradient(circle, {{ $primary_color }}20 0%, transparent 70%); filter: blur(30px);"></div>
-                        <div class="absolute" style="width: 4px; height: 4px; border-radius: 50%; background: {{ $primary_color }}; top: 15%; left: 12%; opacity: 0.5;"></div>
-                        <div class="absolute" style="width: 3px; height: 3px; border-radius: 50%; background: {{ $primary_color }}; top: 30%; right: 15%; opacity: 0.4;"></div>
-                        <div class="absolute" style="width: 5px; height: 5px; border-radius: 50%; background: {{ $primary_color }}40; top: 60%; left: 25%; opacity: 0.3;"></div>
-                        <div class="absolute top-0 left-0 right-0 h-px" style="background: linear-gradient(90deg, transparent, {{ $primary_color }}40, transparent);"></div>
+                        {{-- Main glow --}}
+                        <div class="absolute" style="width: 160px; height: 160px; top: 20%; left: 50%; transform: translateX(-50%); background: radial-gradient(circle, {{ $primary_color }}30 0%, transparent 70%); filter: blur(35px);"></div>
+                        {{-- Secondary glows --}}
+                        <div class="absolute" style="width: 80px; height: 80px; top: 55%; left: 15%; background: radial-gradient(circle, {{ $secondary_color }}15 0%, transparent 70%); filter: blur(20px);"></div>
+                        {{-- Particles --}}
+                        <div class="absolute" style="width: 5px; height: 5px; border-radius: 50%; background: {{ $primary_color }}; top: 12%; left: 10%; opacity: 0.6;"></div>
+                        <div class="absolute" style="width: 3px; height: 3px; border-radius: 50%; background: {{ $primary_color }}; top: 28%; right: 14%; opacity: 0.5;"></div>
+                        <div class="absolute" style="width: 7px; height: 7px; border-radius: 50%; background: {{ $primary_color }}40; top: 55%; left: 22%; opacity: 0.4;"></div>
+                        <div class="absolute" style="width: 3px; height: 3px; border-radius: 50%; background: white; top: 18%; left: 38%; opacity: 0.4;"></div>
+                        <div class="absolute" style="width: 4px; height: 4px; border-radius: 50%; background: {{ $secondary_color }}; top: 35%; right: 20%; opacity: 0.4;"></div>
+                        {{-- Top glow line --}}
+                        <div class="absolute top-0 left-0 right-0 h-px" style="background: linear-gradient(90deg, transparent 10%, {{ $primary_color }}60, transparent 90%);"></div>
                         <div class="relative z-10 px-6 pt-10 pb-2 text-center" style="color: #FFFFFF;">
                             @include('livewire.profile.partials.preview-photo', [
                                 'photoStyle' => $photoStyle,
-                                'borderStyle' => "border: 3px solid {$primary_color}; box-shadow: 0 0 12px {$primary_color}50, 0 0 24px {$primary_color}25;",
+                                'borderStyle' => "border: 3px solid {$primary_color}; box-shadow: 0 0 18px {$primary_color}70, 0 0 35px {$primary_color}35;",
                             ])
                             @include('livewire.profile.partials.preview-info', ['textColor' => '#FFFFFF'])
                         </div>
