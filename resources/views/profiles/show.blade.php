@@ -212,32 +212,17 @@
 
     <div class="max-w-md mx-auto min-h-screen relative" style="background: {{ $bodyBg }};">
 
-        @php
-            // Bridge gradient must match the header's gradient for seamless transition
-            $bridgeGradient = match($headerPartial) {
-                'bold' => 'background: #2C2A27',
-                'neon' => "background: linear-gradient(160deg, #0A0A18 0%, {$primaryColor}25 35%, {$secondaryColor}40 65%, #0F0F1A 100%)",
-                'minimal' => "background: {$primaryColor}08",
-                'arch' => "background: linear-gradient(160deg, {$primaryColor} 0%, {$secondaryColor} 60%, {$primaryColor}88 100%)",
-                'artiste' => "background: linear-gradient(160deg, {$primaryColor} 0%, {$secondaryColor} 100%)",
-                'diagonal' => "background: linear-gradient(135deg, {$primaryColor} 0%, {$secondaryColor} 100%)",
-                'geometric' => "background: linear-gradient(160deg, {$primaryColor} 0%, {$secondaryColor} 50%, {$primaryColor}CC 100%)",
-                'entrepreneur' => "background: linear-gradient(180deg, {$primaryColor} 0%, {$primaryColor}DD 100%)",
-                'videaste' => "background: linear-gradient(160deg, {$primaryColor} 0%, {$secondaryColor} 100%)",
-                'split' => "background: linear-gradient(180deg, {$primaryColor} 0%, {$secondaryColor} 100%)",
-                'banner' => 'background: transparent',
-                'wave' => "background: linear-gradient(180deg, {$primaryColor} 0%, {$secondaryColor} 100%)",
-                default => "background: linear-gradient(180deg, {$primaryColor} 0%, {$secondaryColor} 100%)",
-            };
-        @endphp
-        {{-- Single div for header + transition = one gradient, zero seam --}}
-        <div style="{{ $bridgeGradient }};">
-            @include('profiles.partials.headers.' . $headerPartial)
+        {{-- Header --}}
+        @include('profiles.partials.headers.' . $headerPartial)
 
-            @if($headerPartial !== 'banner' && $templateTransition !== 'none')
-                @include('profiles.partials.transition', ['transition' => $templateTransition, 'fillColor' => $bodyBg])
-            @endif
-        </div>
+        {{-- Transition: fades from header gradient to body background --}}
+        @if($headerPartial !== 'banner' && $templateTransition !== 'none')
+            @include('profiles.partials.transition', [
+                'transition' => $templateTransition,
+                'fillColor' => $bodyBg,
+                'gradientColor' => $secondaryColor,
+            ])
+        @endif
 
         <!-- CONTENT BANDS -->
         <div class="min-h-[200px]" style="background: {{ $bodyBg }}; margin-top: -2px;">

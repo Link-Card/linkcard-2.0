@@ -27,21 +27,8 @@
         <div class="overflow-y-auto" style="max-height: calc(100vh - 120px); background: {{ $previewBodyBg }};">
 
             @php
-                // Bridge gradient must match header's gradient for seamless transition
-                $previewBridgeGradient = match($headerStyle) {
-                    'bold' => 'background: #2C2A27',
-                    'neon' => "background: linear-gradient(160deg, #0A0A18 0%, {$primary_color}25 35%, {$secondary_color}40 65%, #0F0F1A 100%)",
-                    'minimal' => "background: {$primary_color}08",
-                    'arch' => "background: linear-gradient(160deg, {$primary_color} 0%, {$secondary_color} 60%, {$primary_color}88 100%)",
-                    'artiste' => "background: linear-gradient(160deg, {$primary_color} 0%, {$secondary_color} 100%)",
-                    'diagonal' => "background: linear-gradient(135deg, {$primary_color} 0%, {$secondary_color} 100%)",
-                    'geometric' => "background: linear-gradient(160deg, {$primary_color} 0%, {$secondary_color} 50%, {$primary_color}CC 100%)",
-                    'entrepreneur' => "background: linear-gradient(180deg, {$primary_color} 0%, {$primary_color}DD 100%)",
-                    'videaste' => "background: linear-gradient(160deg, {$primary_color} 0%, {$secondary_color} 100%)",
-                    'split' => "background: linear-gradient(180deg, {$primary_color} 0%, {$secondary_color} 100%)",
-                    'banner' => 'background: transparent',
-                    default => "background: linear-gradient(180deg, {$primary_color} 0%, {$secondary_color} 100%)",
-                };
+                // Bridge wrapper - headers have their own gradient, transition has containerBg
+                $previewBridgeGradient = 'background: transparent';
             @endphp
             <div style="{{ $previewBridgeGradient }};">
             @if($headerStyle === 'bold')
@@ -182,7 +169,11 @@
 
             {{-- Transition inside same gradient div as header = zero seam --}}
             @if($headerStyle !== 'banner' && $transition !== 'none')
-                @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => $previewBodyBg])
+                @include('livewire.profile.partials.preview-transition', [
+                    'transition' => $transition,
+                    'fillColor' => $previewBodyBg,
+                    'gradientColor' => $secondary_color,
+                ])
             @endif
 
             </div>{{-- fin wrapper bridge --}}
