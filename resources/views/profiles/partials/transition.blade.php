@@ -3,29 +3,28 @@
 @php
     $transition = $transition ?? 'wave';
     $fillColor = $fillColor ?? 'white';
-    $fillAlpha = [
-        '70' => str_replace('white', 'rgba(255,255,255,0.7)', $fillColor === 'white' ? 'white' : $fillColor . 'B3'),
-        '50' => str_replace('white', 'rgba(255,255,255,0.5)', $fillColor === 'white' ? 'white' : $fillColor . '80'),
-        '30' => str_replace('white', 'rgba(255,255,255,0.3)', $fillColor === 'white' ? 'white' : $fillColor . '4D'),
-    ];
     // For non-white fills, use rgba with opacity
-    if ($fillColor !== 'white') {
+    if ($fillColor !== 'white' && $fillColor !== '#FFFFFF') {
         $hex = ltrim($fillColor, '#');
         $r = hexdec(substr($hex, 0, 2));
         $g = hexdec(substr($hex, 2, 2));
         $b = hexdec(substr($hex, 4, 2));
-        $fillAlpha['70'] = "rgba($r,$g,$b,0.7)";
-        $fillAlpha['50'] = "rgba($r,$g,$b,0.5)";
-        $fillAlpha['30'] = "rgba($r,$g,$b,0.3)";
+        $fillAlpha = [
+            '70' => "rgba($r,$g,$b,0.7)",
+            '50' => "rgba($r,$g,$b,0.5)",
+            '30' => "rgba($r,$g,$b,0.3)",
+        ];
     } else {
-        $fillAlpha['70'] = 'rgba(255,255,255,0.7)';
-        $fillAlpha['50'] = 'rgba(255,255,255,0.5)';
-        $fillAlpha['30'] = 'rgba(255,255,255,0.3)';
+        $fillAlpha = [
+            '70' => 'rgba(255,255,255,0.7)',
+            '50' => 'rgba(255,255,255,0.5)',
+            '30' => 'rgba(255,255,255,0.3)',
+        ];
     }
 @endphp
 
 @if($transition === 'wave')
-    <div class="waves-container">
+    <div class="waves-container" style="margin-bottom: -2px;">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
              viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
             <defs>
@@ -41,7 +40,7 @@
     </div>
 
 @elseif($transition === 'double_wave')
-    <div class="waves-container" style="height: 70px;">
+    <div class="waves-container" style="height: 70px; margin-bottom: -2px;">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
              viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
             <defs>
@@ -57,19 +56,25 @@
     </div>
 
 @elseif($transition === 'arch')
-    <svg viewBox="0 0 400 60" style="display: block; width: 100%; margin-top: -1px;" preserveAspectRatio="none">
-        <path d="M0,0 Q200,120 400,0 L400,60 L0,60 Z" fill="{{ $fillColor }}" />
-    </svg>
+    <div style="margin-bottom: -2px; line-height: 0;">
+        <svg viewBox="0 0 400 60" style="display: block; width: 100%;" preserveAspectRatio="none">
+            <path d="M0,0 Q200,120 400,0 L400,60 L0,60 Z" fill="{{ $fillColor }}" />
+        </svg>
+    </div>
 
 @elseif($transition === 'diagonal')
-    <svg viewBox="0 0 400 40" style="display: block; width: 100%; margin-top: -1px;" preserveAspectRatio="none">
-        <polygon points="0,0 400,30 400,40 0,40" fill="{{ $fillColor }}" />
-    </svg>
+    <div style="margin-bottom: -2px; line-height: 0;">
+        <svg viewBox="0 0 400 40" style="display: block; width: 100%;" preserveAspectRatio="none">
+            <polygon points="0,0 400,30 400,40 0,40" fill="{{ $fillColor }}" />
+        </svg>
+    </div>
 
 @elseif($transition === 'chevron')
-    <svg viewBox="0 0 400 30" style="display: block; width: 100%; margin-top: -1px;" preserveAspectRatio="none">
-        <polygon points="0,0 200,30 400,0 400,30 0,30" fill="{{ $fillColor }}" />
-    </svg>
+    <div style="margin-bottom: -2px; line-height: 0;">
+        <svg viewBox="0 0 400 30" style="display: block; width: 100%;" preserveAspectRatio="none">
+            <polygon points="0,0 200,30 400,0 400,30 0,30" fill="{{ $fillColor }}" />
+        </svg>
+    </div>
 
 @endif
 {{-- 'none' = rien affiché --}}

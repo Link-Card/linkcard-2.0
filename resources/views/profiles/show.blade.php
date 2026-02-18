@@ -97,7 +97,6 @@
             position: relative;
             width: 100%;
             height: 60px;
-            margin-bottom: -2px;
             overflow: hidden;
         }
         .waves-container svg {
@@ -225,7 +224,7 @@
                 default => $secondaryColor,
             };
         @endphp
-        <div style="background: {{ $bridgeColor }}; position: relative; z-index: 1;">
+        <div style="background: {{ $bridgeColor }};">
             <!-- HEADER (Template: {{ $headerPartial }}) -->
             @include('profiles.partials.headers.' . $headerPartial)
 
@@ -236,7 +235,7 @@
         </div>
 
         <!-- CONTENT BANDS -->
-        <div class="min-h-[200px]" style="position: relative; z-index: 2; margin-top: -5px; padding-top: 5px; background: {{ $bodyBg }};">
+        <div class="min-h-[200px]" style="background: {{ $bodyBg }};">
             <div class="px-5 py-6 space-y-3">
 
                 @php
