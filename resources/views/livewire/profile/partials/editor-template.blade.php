@@ -298,6 +298,7 @@
                              @endif>
                             
                             {{-- Mini header preview --}}
+                            @php $tplDark = $tpl['dark_mode'] ?? false; $tplBodyBg = $tpl['body_bg'] ?? '#FFFFFF'; @endphp
                             <div class="relative">
                                 @if($tpl['header_style'] === 'bold')
                                     <div style="height: 48px; background: #2C2A27; position: relative;">
@@ -324,7 +325,6 @@
                                 @endif
                                 
                                 {{-- Transition preview --}}
-                                @php $tplBodyBg = $tpl['body_bg'] ?? '#FFFFFF'; @endphp
                                 @if($tpl['transition'] === 'wave' || $tpl['transition'] === 'double_wave')
                                     <svg viewBox="0 0 200 12" style="display: block; width: 100%; margin-top: -1px; height: 10px;" preserveAspectRatio="none">
                                         <path d="M0,6 C40,12 80,0 120,8 C160,14 180,4 200,6 L200,12 L0,12 Z" fill="{{ $tplBodyBg }}" />
@@ -360,7 +360,6 @@
                             </div>
 
                             {{-- Content preview --}}
-                            @php $tplDark = $tpl['dark_mode'] ?? false; @endphp
                             <div class="px-3 py-2.5" style="background: {{ $tplBodyBg }};">
                                 {{-- Fake social indicators --}}
                                 <div class="flex gap-1 justify-center mb-1.5">
