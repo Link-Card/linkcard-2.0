@@ -227,15 +227,16 @@
         <div style="background: {{ $bridgeColor }};">
             <!-- HEADER (Template: {{ $headerPartial }}) -->
             @include('profiles.partials.headers.' . $headerPartial)
-
-            <!-- TRANSITION (centralisée, sauf banner qui a la sienne interne) -->
-            @if($headerPartial !== 'banner' && $templateTransition !== 'none')
-                @include('profiles.partials.transition', ['transition' => $templateTransition, 'fillColor' => $bodyBg])
-            @endif
         </div>
 
         <!-- CONTENT BANDS -->
         <div class="min-h-[200px]" style="background: {{ $bodyBg }};">
+            {{-- Transition sits inside content div = zero gap possible --}}
+            @if($headerPartial !== 'banner' && $templateTransition !== 'none')
+                <div style="margin-top: -1px; background: {{ $bridgeColor }};">
+                    @include('profiles.partials.transition', ['transition' => $templateTransition, 'fillColor' => $bodyBg])
+                </div>
+            @endif
             <div class="px-5 py-6 space-y-3">
 
                 @php
