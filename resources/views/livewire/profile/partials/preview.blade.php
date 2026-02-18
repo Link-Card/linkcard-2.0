@@ -11,7 +11,17 @@
             $transition = $templateConfig['transition'] ?? 'wave';
             $photoStyle = $templateConfig['photo_style'] ?? 'round_center';
             $previewIsBold = ($headerStyle === 'bold');
-            $previewBodyBg = $previewIsBold ? '#E8E6E3' : 'white';
+            $previewIsDarkMode = $templateConfig['dark_mode'] ?? false;
+            $previewBodyBg = $templateConfig['body_bg'] ?? '#FFFFFF';
+            $previewBodyText = $templateConfig['body_text'] ?? '#2C2A27';
+            $previewBlockBg = $templateConfig['card_bg'] ?? '#F9FAFB';
+            $previewBlockBorderRaw = $templateConfig['card_border'] ?? '#E5E7EB';
+            if (str_starts_with($previewBlockBorderRaw, 'PRIMARY')) {
+                $previewBlockBorder = $primary_color . substr($previewBlockBorderRaw, 7);
+            } else {
+                $previewBlockBorder = $previewBlockBorderRaw;
+            }
+            $previewCardShadow = $templateConfig['card_shadow'] ?? 'sm';
         @endphp
         <div class="overflow-y-auto" style="max-height: calc(100vh - 120px); background: {{ $previewBodyBg }};">
 
@@ -19,6 +29,7 @@
                 // Bridge background fills any gap between header and transition
                 $previewBridgeColor = match($headerStyle) {
                     'bold' => '#2C2A27',
+                    'neon' => '#0F0F1A',
                     'minimal' => $primary_color . '08',
                     'banner' => 'transparent',
                     default => $secondary_color,
@@ -128,6 +139,23 @@
                         </div>
                     </div>
                 </div>
+            @elseif($headerStyle === 'neon')
+                <div style="background: linear-gradient(160deg, #0A0A18 0%, {{ $primary_color }}30 40%, {{ $secondary_color }}50 70%, #0F0F1A 100%);">
+                    <div class="relative overflow-hidden">
+                        <div class="absolute" style="width: 120px; height: 120px; top: 25%; left: 50%; transform: translateX(-50%); background: radial-gradient(circle, {{ $primary_color }}20 0%, transparent 70%); filter: blur(30px);"></div>
+                        <div class="absolute" style="width: 4px; height: 4px; border-radius: 50%; background: {{ $primary_color }}; top: 15%; left: 12%; opacity: 0.5;"></div>
+                        <div class="absolute" style="width: 3px; height: 3px; border-radius: 50%; background: {{ $primary_color }}; top: 30%; right: 15%; opacity: 0.4;"></div>
+                        <div class="absolute" style="width: 5px; height: 5px; border-radius: 50%; background: {{ $primary_color }}40; top: 60%; left: 25%; opacity: 0.3;"></div>
+                        <div class="absolute top-0 left-0 right-0 h-px" style="background: linear-gradient(90deg, transparent, {{ $primary_color }}40, transparent);"></div>
+                        <div class="relative z-10 px-6 pt-10 pb-2 text-center" style="color: #FFFFFF;">
+                            @include('livewire.profile.partials.preview-photo', [
+                                'photoStyle' => $photoStyle,
+                                'borderStyle' => "border: 3px solid {$primary_color}; box-shadow: 0 0 12px {$primary_color}50, 0 0 24px {$primary_color}25;",
+                            ])
+                            @include('livewire.profile.partials.preview-info', ['textColor' => '#FFFFFF'])
+                        </div>
+                    </div>
+                </div>
             @else
                 {{-- classic, wave, diagonal, arch --}}
                 <div style="background: linear-gradient({{ $headerStyle === 'diagonal' ? '135deg' : '180deg' }}, {{ $primary_color }} 0%, {{ $secondary_color }} 100%);">
@@ -148,8 +176,7 @@
             @php
                 $previewSocialStyle = $templateConfig['social_style'] ?? 'pills';
                 $previewButtonStyle = $templateConfig['button_style'] ?? 'rounded';
-                $previewBlockBg = $previewIsBold ? '#DFDDD9' : '#F9FAFB';
-                $previewBlockBorder = $previewIsBold ? ($primary_color . '50') : '#E5E7EB';
+                // $previewBlockBg and $previewBlockBorder already computed above from templateConfig
                 $previewBtnRadius = match($previewButtonStyle) {
                     'square' => 'rounded-md',
                     'square_wide' => 'rounded-none',
@@ -170,10 +197,16 @@
                             @if($previewButtonStyle === 'outline_compact')
                                 <div class="text-center">
                                     <div class="inline-flex items-center justify-center space-x-2 py-2.5 px-8 rounded-full font-semibold text-sm"
-                                         style="font-family: 'Manrope', sans-serif; background: transparent; color: {{ $secondary_color }}; border: 2px solid {{ $secondary_color }};">
+                                         style="font-family: 'Manrope', sans-serif; background: transparent; color: {{ $previewIsDarkMode ? $primary_color : $secondary_color }}; border: 2px solid {{ $previewIsDarkMode ? $primary_color : $secondary_color }};{{ $previewCardShadow === 'glow' ? " box-shadow: 0 0 10px {$primary_color}30;" : '' }}">
                                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25s-1.01 2.25-2.25 2.25S9.75 10.24 9.75 9s1.01-2.25 2.25-2.25zM17 17H7v-1.5c0-1.67 3.33-2.5 5-2.5s5 .83 5 2.5V17z"/></svg>
                                         <span>Ajouter aux contacts</span>
                                     </div>
+                                </div>
+                            @elseif($previewIsDarkMode)
+                                <div class="flex items-center justify-center space-x-2 w-full py-3 px-5 text-center {{ $previewBtnRadius }} font-semibold text-sm"
+                                     style="font-family: 'Manrope', sans-serif; background: transparent; color: {{ $primary_color }}; border: 1px solid {{ $primary_color }}50; box-shadow: 0 0 10px {{ $primary_color }}20;">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25s-1.01 2.25-2.25 2.25S9.75 10.24 9.75 9s1.01-2.25 2.25-2.25zM17 17H7v-1.5c0-1.67 3.33-2.5 5-2.5s5 .83 5 2.5V17z"/></svg>
+                                    <span>Ajouter aux contacts</span>
                                 </div>
                             @else
                                 <div class="flex items-center justify-center space-x-2 w-full {{ $previewButtonStyle === 'square_wide' ? 'py-4 px-5' : 'py-3.5 px-5' }} text-white text-center {{ $previewBtnRadius }} font-semibold {{ $previewButtonStyle === 'square_wide' ? 'text-base tracking-wide' : 'text-sm' }} shadow-md"
@@ -218,7 +251,7 @@
                                             <div class="inline-flex items-center gap-2 px-4 py-2.5 {{ $previewBtnRadius }}"
                                                  style="background: {{ $previewBlockBg }}; border: 1px solid {{ $previewBlockBorder }};">
                                                 <x-social-icon :platform="$sBand['data']['platform'] ?? ''" size="w-4 h-4" />
-                                                <span class="font-medium text-xs" style="color: #2C2A27;">{{ ucfirst($sBand['data']['platform'] ?? '') }}</span>
+                                                <span class="font-medium text-xs" style="color: {{ $previewBodyText }};">{{ ucfirst($sBand['data']['platform'] ?? '') }}</span>
                                             </div>
                                         @endforeach
                                     </div>
@@ -229,7 +262,7 @@
                                                 <div class="w-8 h-8 flex items-center justify-center">
                                                     <x-social-icon :platform="$sBand['data']['platform'] ?? ''" size="w-6 h-6" />
                                                 </div>
-                                                <span class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: {{ $previewIsBold ? '#4B5563' : '#2C2A27' }};">{{ ucfirst($sBand['data']['platform'] ?? '') }}</span>
+                                                <span class="font-medium text-sm" style="font-family: 'Manrope', sans-serif; color: {{ $previewBodyText }};">{{ ucfirst($sBand['data']['platform'] ?? '') }}</span>
                                                 <svg class="w-4 h-4 ml-auto" fill="#9CA3AF" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
                                             </div>
                                         </div>
@@ -260,7 +293,7 @@
 
                         @elseif($band['type'] === 'text_block')
                             <div class="p-4 rounded-xl" style="background: {{ $previewBlockBg }}; border: 1px solid {{ $previewBlockBorder }};">
-                                <p class="whitespace-pre-line text-sm" style="font-family: 'Manrope', sans-serif; color: #4B5563;">{{ $band['data']['text'] ?? '' }}</p>
+                                <p class="whitespace-pre-line text-sm" style="font-family: 'Manrope', sans-serif; color: {{ $previewIsDarkMode ? '#9CA3AF' : '#4B5563' }};">{{ $band['data']['text'] ?? '' }}</p>
                             </div>
 
                         @elseif($band['type'] === 'video_embed')
@@ -311,8 +344,8 @@
                     @endif
                 </div>
 
-                <div class="px-5 pb-6 pt-3 text-center" style="border-top: 1px solid #E5E7EB;">
-                    <p class="text-xs" style="font-family: 'Manrope', sans-serif; color: #9CA3AF;">
+                <div class="px-5 pb-6 pt-3 text-center" style="border-top: 1px solid {{ $previewIsDarkMode ? '#1A1A2E' : '#E5E7EB' }};">
+                    <p class="text-xs" style="font-family: 'Manrope', sans-serif; color: {{ $previewIsDarkMode ? '#4B5563' : '#9CA3AF' }};">
                         Propulsé par <span class="font-semibold" style="color: #6B7280;">Link-Card</span>
                     </p>
                 </div>

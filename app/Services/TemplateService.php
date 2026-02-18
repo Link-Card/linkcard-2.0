@@ -5,8 +5,18 @@ namespace App\Services;
 class TemplateService
 {
     /**
-     * All 13 template definitions.
+     * All template definitions.
      * Each template defines its visual config and plan requirements.
+     * 
+     * Body theme properties (V2):
+     *   body_bg      - Background color of the entire profile body
+     *   body_text    - Main text color
+     *   card_bg      - Background of sections/cards
+     *   card_border  - Border color of cards
+     *   card_shadow  - Shadow style: none, sm, md, glow
+     *   footer_border - Footer separator color
+     *   footer_text  - Footer text color
+     *   dark_mode    - Whether the body is dark (affects fallback text colors)
      */
     public static function all(): array
     {
@@ -23,9 +33,18 @@ class TemplateService
                 'transition' => 'none',
                 'photo_style' => 'round_center',
                 'social_style' => 'pills',
-                'button_style' => 'rounded',  // rounded | square | outline | compact
+                'button_style' => 'rounded',
                 'features' => [],
                 'default_colors' => ['primary' => '#42B574', 'secondary' => '#2D7A4F'],
+                // Body theme
+                'body_bg' => '#FFFFFF',
+                'body_text' => '#2C2A27',
+                'card_bg' => '#F9FAFB',
+                'card_border' => '#E5E7EB',
+                'card_shadow' => 'sm',
+                'footer_border' => '#E5E7EB',
+                'footer_text' => '#9CA3AF',
+                'dark_mode' => false,
             ],
             'wave' => [
                 'id' => 2,
@@ -41,6 +60,14 @@ class TemplateService
                 'button_style' => 'rounded',
                 'features' => [],
                 'default_colors' => ['primary' => '#42B574', 'secondary' => '#2D7A4F'],
+                'body_bg' => '#FFFFFF',
+                'body_text' => '#2C2A27',
+                'card_bg' => '#F9FAFB',
+                'card_border' => '#E5E7EB',
+                'card_shadow' => 'sm',
+                'footer_border' => '#E5E7EB',
+                'footer_text' => '#9CA3AF',
+                'dark_mode' => false,
             ],
             'minimal' => [
                 'id' => 3,
@@ -56,6 +83,14 @@ class TemplateService
                 'button_style' => 'outline_compact',
                 'features' => [],
                 'default_colors' => ['primary' => '#42B574', 'secondary' => '#2D7A4F'],
+                'body_bg' => '#FFFFFF',
+                'body_text' => '#2C2A27',
+                'card_bg' => '#F9FAFB',
+                'card_border' => '#E5E7EB',
+                'card_shadow' => 'none',
+                'footer_border' => '#E5E7EB',
+                'footer_text' => '#9CA3AF',
+                'dark_mode' => false,
             ],
 
             // ─── PRO+ ───
@@ -73,6 +108,14 @@ class TemplateService
                 'button_style' => 'rounded',
                 'features' => [],
                 'default_colors' => ['primary' => '#3182CE', 'secondary' => '#1A365D'],
+                'body_bg' => '#FFFFFF',
+                'body_text' => '#2C2A27',
+                'card_bg' => '#F9FAFB',
+                'card_border' => '#E5E7EB',
+                'card_shadow' => 'sm',
+                'footer_border' => '#E5E7EB',
+                'footer_text' => '#9CA3AF',
+                'dark_mode' => false,
             ],
             'arch' => [
                 'id' => 5,
@@ -88,6 +131,14 @@ class TemplateService
                 'button_style' => 'rounded',
                 'features' => [],
                 'default_colors' => ['primary' => '#805AD5', 'secondary' => '#322659'],
+                'body_bg' => '#FFFFFF',
+                'body_text' => '#2C2A27',
+                'card_bg' => '#F9FAFB',
+                'card_border' => '#E5E7EB',
+                'card_shadow' => 'sm',
+                'footer_border' => '#E5E7EB',
+                'footer_text' => '#9CA3AF',
+                'dark_mode' => false,
             ],
             'split' => [
                 'id' => 6,
@@ -103,6 +154,14 @@ class TemplateService
                 'button_style' => 'rounded',
                 'features' => [],
                 'default_colors' => ['primary' => '#E53E3E', 'secondary' => '#742A2A'],
+                'body_bg' => '#FFFFFF',
+                'body_text' => '#2C2A27',
+                'card_bg' => '#F9FAFB',
+                'card_border' => '#E5E7EB',
+                'card_shadow' => 'sm',
+                'footer_border' => '#E5E7EB',
+                'footer_text' => '#9CA3AF',
+                'dark_mode' => false,
             ],
             'banner' => [
                 'id' => 7,
@@ -118,6 +177,38 @@ class TemplateService
                 'button_style' => 'rounded',
                 'features' => [],
                 'default_colors' => ['primary' => '#DD6B20', 'secondary' => '#652B19'],
+                'body_bg' => '#FFFFFF',
+                'body_text' => '#2C2A27',
+                'card_bg' => '#F9FAFB',
+                'card_border' => '#E5E7EB',
+                'card_shadow' => 'sm',
+                'footer_border' => '#E5E7EB',
+                'footer_text' => '#9CA3AF',
+                'dark_mode' => false,
+            ],
+            'neon' => [
+                'id' => 14,
+                'slug' => 'neon',
+                'name' => 'Néon',
+                'description' => 'Fond sombre, effet lumineux néon',
+                'category' => 'general',
+                'required_plan' => 'pro',
+                'header_style' => 'neon',
+                'transition' => 'wave',
+                'photo_style' => 'round_center',
+                'social_style' => 'circles',
+                'button_style' => 'rounded',
+                'features' => [],
+                'default_colors' => ['primary' => '#00D4FF', 'secondary' => '#0066FF'],
+                // Dark body theme — the neon magic
+                'body_bg' => '#0F0F1A',
+                'body_text' => '#E0E0E0',
+                'card_bg' => '#1A1A2E',
+                'card_border' => 'PRIMARY20',  // Will be replaced with primary color at 20% opacity
+                'card_shadow' => 'glow',
+                'footer_border' => '#1A1A2E',
+                'footer_text' => '#6B7280',
+                'dark_mode' => true,
             ],
 
             // ─── PREMIUM ───
@@ -135,6 +226,14 @@ class TemplateService
                 'button_style' => 'square',
                 'features' => [],
                 'default_colors' => ['primary' => '#38B2AC', 'secondary' => '#1D4044'],
+                'body_bg' => '#FFFFFF',
+                'body_text' => '#2C2A27',
+                'card_bg' => '#F9FAFB',
+                'card_border' => '#E5E7EB',
+                'card_shadow' => 'sm',
+                'footer_border' => '#E5E7EB',
+                'footer_text' => '#9CA3AF',
+                'dark_mode' => false,
             ],
             'bold' => [
                 'id' => 9,
@@ -150,6 +249,14 @@ class TemplateService
                 'button_style' => 'square',
                 'features' => [],
                 'default_colors' => ['primary' => '#42B574', 'secondary' => '#2D7A4F'],
+                'body_bg' => '#E8E6E3',
+                'body_text' => '#2C2A27',
+                'card_bg' => '#DFDDD9',
+                'card_border' => 'PRIMARY50',
+                'card_shadow' => 'none',
+                'footer_border' => '#D1D5DB',
+                'footer_text' => '#9CA3AF',
+                'dark_mode' => false,
             ],
 
             // ─── SPÉCIALISÉS ───
@@ -171,6 +278,14 @@ class TemplateService
                     'premium' => ['videos' => 2],
                 ],
                 'default_colors' => ['primary' => '#E53E3E', 'secondary' => '#742A2A'],
+                'body_bg' => '#FFFFFF',
+                'body_text' => '#2C2A27',
+                'card_bg' => '#F9FAFB',
+                'card_border' => '#E5E7EB',
+                'card_shadow' => 'sm',
+                'footer_border' => '#E5E7EB',
+                'footer_text' => '#9CA3AF',
+                'dark_mode' => false,
             ],
             'artiste' => [
                 'id' => 11,
@@ -190,10 +305,18 @@ class TemplateService
                     'premium' => ['carousels' => 2, 'images_per_carousel' => 12],
                 ],
                 'band_adjustments' => [
-                    'social_links' => -2,  // 2 réseaux de moins que le plan normal
-                    'text_blocks' => -1,   // 1 text block de moins
+                    'social_links' => -2,
+                    'text_blocks' => -1,
                 ],
                 'default_colors' => ['primary' => '#D69E2E', 'secondary' => '#744210'],
+                'body_bg' => '#FFFFFF',
+                'body_text' => '#2C2A27',
+                'card_bg' => '#F9FAFB',
+                'card_border' => '#E5E7EB',
+                'card_shadow' => 'sm',
+                'footer_border' => '#E5E7EB',
+                'footer_text' => '#9CA3AF',
+                'dark_mode' => false,
             ],
             'entrepreneur' => [
                 'id' => 12,
@@ -213,6 +336,14 @@ class TemplateService
                     'premium' => ['cta_buttons' => 6],
                 ],
                 'default_colors' => ['primary' => '#2C2A27', 'secondary' => '#4B5563'],
+                'body_bg' => '#FFFFFF',
+                'body_text' => '#2C2A27',
+                'card_bg' => '#F9FAFB',
+                'card_border' => '#E5E7EB',
+                'card_shadow' => 'sm',
+                'footer_border' => '#E5E7EB',
+                'footer_text' => '#9CA3AF',
+                'dark_mode' => false,
             ],
 
             // ─── CUSTOM ───
@@ -223,11 +354,11 @@ class TemplateService
                 'description' => '100% personnalisable',
                 'category' => 'custom',
                 'required_plan' => 'premium',
-                'header_style' => 'classic', // user choisit
-                'transition' => 'wave',      // user choisit
-                'photo_style' => 'round_center', // user choisit
-                'social_style' => 'pills',   // user choisit
-                'button_style' => 'rounded', // user choisit
+                'header_style' => 'classic',
+                'transition' => 'wave',
+                'photo_style' => 'round_center',
+                'social_style' => 'pills',
+                'button_style' => 'rounded',
                 'features' => ['video_embed', 'image_carousel', 'cta_buttons'],
                 'feature_limits' => [
                     'premium' => [
@@ -247,6 +378,14 @@ class TemplateService
                     'button_color',
                 ],
                 'default_colors' => ['primary' => '#42B574', 'secondary' => '#2D7A4F'],
+                'body_bg' => '#FFFFFF',
+                'body_text' => '#2C2A27',
+                'card_bg' => '#F9FAFB',
+                'card_border' => '#E5E7EB',
+                'card_shadow' => 'sm',
+                'footer_border' => '#E5E7EB',
+                'footer_text' => '#9CA3AF',
+                'dark_mode' => false,
             ],
         ];
     }

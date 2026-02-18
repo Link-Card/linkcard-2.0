@@ -179,17 +179,33 @@
         $headerTextColor = $luminance > 0.6 ? '#2C2A27' : '#FFFFFF';
         
         // Available header partials
-        $validHeaders = ['classic', 'wave', 'minimal', 'diagonal', 'arch', 'split', 'banner', 'geometric', 'bold', 'videaste', 'artiste', 'entrepreneur'];
+        $validHeaders = ['classic', 'wave', 'minimal', 'diagonal', 'arch', 'split', 'banner', 'geometric', 'bold', 'videaste', 'artiste', 'entrepreneur', 'neon'];
         $headerPartial = in_array($headerStyle, $validHeaders) ? $headerStyle : 'classic';
     @endphp
 
     <style>:root { --share-color: {{ $primaryColor }}; }</style>
 
     @php
+        // Template-driven body theming (V2)
+        $isDarkMode = $templateConfig['dark_mode'] ?? false;
+        $bodyBg = $templateConfig['body_bg'] ?? '#FFFFFF';
+        $bodyText = $templateConfig['body_text'] ?? '#2C2A27';
+        $bodyTextMuted = $isDarkMode ? '#9CA3AF' : '#4B5563';
+        $blockBg = $templateConfig['card_bg'] ?? '#F9FAFB';
+        $blockBorderRaw = $templateConfig['card_border'] ?? '#E5E7EB';
+        // Handle dynamic card_border: PRIMARY20 = primaryColor + hex opacity
+        if (str_starts_with($blockBorderRaw, 'PRIMARY')) {
+            $opacity = substr($blockBorderRaw, 7);
+            $blockBorder = $primaryColor . $opacity;
+        } else {
+            $blockBorder = $blockBorderRaw;
+        }
+        $cardShadow = $templateConfig['card_shadow'] ?? 'sm';
+        $footerBorder = $templateConfig['footer_border'] ?? '#E5E7EB';
+        $footerText = $templateConfig['footer_text'] ?? '#9CA3AF';
+        // Legacy compat
         $isBoldTemplate = ($headerStyle === 'bold');
-        $bodyBg = $isBoldTemplate ? '#E8E6E3' : 'white';
-        $blockBg = $isBoldTemplate ? '#DFDDD9' : '#F9FAFB';
-        $blockBorder = $isBoldTemplate ? ($primaryColor . '50') : '#E5E7EB';
+        $isNeonTemplate = ($templateSlug === 'neon');
     @endphp
 
     <div class="max-w-md mx-auto min-h-screen relative" style="background: {{ $bodyBg }};">
@@ -198,6 +214,7 @@
             // Background that fills any gap between header and transition
             $bridgeColor = match($headerPartial) {
                 'bold' => '#2C2A27',
+                'neon' => '#0F0F1A',
                 'minimal' => $primaryColor . '08',
                 'arch' => $primaryColor . '88',
                 'entrepreneur' => $primaryColor . 'DD',
@@ -232,13 +249,22 @@
                             <div class="text-center">
                                 <button onclick="openContactPopup()"
                                    class="inline-flex items-center justify-center space-x-2 py-2.5 px-8 text-center rounded-full font-semibold text-sm transition-all duration-200"
-                                   style="background: transparent; color: {{ $secondaryColor }}; border: 2px solid {{ $secondaryColor }};"
-                                   onmouseover="this.style.background='{{ $secondaryColor }}'; this.style.color='white'"
-                                   onmouseout="this.style.background='transparent'; this.style.color='{{ $secondaryColor }}'">
+                                   style="background: transparent; color: {{ $isDarkMode ? $primaryColor : $secondaryColor }}; border: 2px solid {{ $isDarkMode ? $primaryColor : $secondaryColor }};{{ $cardShadow === 'glow' ? " box-shadow: 0 0 10px {$primaryColor}30;" : '' }}"
+                                   onmouseover="this.style.background='{{ $isDarkMode ? $primaryColor : $secondaryColor }}'; this.style.color='{{ $isDarkMode ? '#0F0F1A' : 'white' }}'{{ $cardShadow === 'glow' ? "; this.style.boxShadow='0 0 20px {$primaryColor}50'" : '' }}"
+                                   onmouseout="this.style.background='transparent'; this.style.color='{{ $isDarkMode ? $primaryColor : $secondaryColor }}'{{ $cardShadow === 'glow' ? "; this.style.boxShadow='0 0 10px {$primaryColor}30'" : '' }}">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25s-1.01 2.25-2.25 2.25S9.75 10.24 9.75 9s1.01-2.25 2.25-2.25zM17 17H7v-1.5c0-1.67 3.33-2.5 5-2.5s5 .83 5 2.5V17z"/></svg>
                                     <span>Ajouter aux contacts</span>
                                 </button>
                             </div>
+                        @elseif($isDarkMode)
+                            <button onclick="openContactPopup()"
+                               class="flex items-center justify-center space-x-2 w-full py-3 px-5 text-center {{ $btnRadius }} font-semibold text-sm transition-all duration-200"
+                               style="background: transparent; color: {{ $primaryColor }}; border: 1px solid {{ $primaryColor }}50; box-shadow: 0 0 10px {{ $primaryColor }}20;"
+                               onmouseover="this.style.borderColor='{{ $primaryColor }}'; this.style.boxShadow='0 0 20px {{ $primaryColor }}40'; this.style.background='{{ $primaryColor }}15'"
+                               onmouseout="this.style.borderColor='{{ $primaryColor }}50'; this.style.boxShadow='0 0 10px {{ $primaryColor }}20'; this.style.background='transparent'">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 2.75c1.24 0 2.25 1.01 2.25 2.25s-1.01 2.25-2.25 2.25S9.75 10.24 9.75 9s1.01-2.25 2.25-2.25zM17 17H7v-1.5c0-1.67 3.33-2.5 5-2.5s5 .83 5 2.5V17z"/></svg>
+                                <span>Ajouter aux contacts</span>
+                            </button>
                         @else
                             <button onclick="openContactPopup()"
                                class="flex items-center justify-center space-x-2 w-full {{ $buttonStyle === 'square_wide' ? 'py-3.5 px-5' : 'py-3 px-5' }} text-white text-center {{ $btnRadius }} font-semibold {{ $buttonStyle === 'square_wide' ? 'text-base tracking-wide' : 'text-sm' }} shadow-sm transition-all duration-200"
@@ -277,8 +303,8 @@
                                     @foreach($consecutiveSocials as $sBand)
                                         <a href="{{ $sBand->data['url'] }}" target="_blank" rel="noopener"
                                            data-band-id="{{ $sBand->id }}" data-band-url="{{ $sBand->data['url'] }}"
-                                           class="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 trackable-link hover:scale-110 shadow-sm"
-                                           style="background: {{ $blockBg }}; border: 1px solid {{ $blockBorder }};">
+                                           class="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 trackable-link hover:scale-110"
+                                           style="background: {{ $blockBg }}; border: 1px solid {{ $blockBorder }};{{ $cardShadow === 'glow' ? " box-shadow: 0 0 8px {$primaryColor}20;" : ' box-shadow: 0 1px 2px rgba(0,0,0,0.05);' }}">
                                             <x-social-icon :platform="$sBand->data['platform'] ?? ''" size="w-5 h-5" />
                                         </a>
                                     @endforeach
@@ -291,11 +317,11 @@
                                         <a href="{{ $sBand->data['url'] }}" target="_blank" rel="noopener"
                                            data-band-id="{{ $sBand->id }}" data-band-url="{{ $sBand->data['url'] }}"
                                            class="inline-flex items-center gap-2 px-4 py-2.5 {{ $btnRadius }} transition-all duration-200 trackable-link hover:shadow-md"
-                                           style="background: {{ $blockBg }}; border: 1px solid {{ $blockBorder }};"
-                                           onmouseover="this.style.borderColor='{{ $primaryColor }}50'"
-                                           onmouseout="this.style.borderColor='{{ $blockBorder }}'">
+                                           style="background: {{ $blockBg }}; border: 1px solid {{ $blockBorder }};{{ $cardShadow === 'glow' ? " box-shadow: 0 0 8px {$primaryColor}15;" : '' }}"
+                                           onmouseover="this.style.borderColor='{{ $primaryColor }}50'{{ $cardShadow === 'glow' ? "; this.style.boxShadow='0 0 12px {$primaryColor}30'" : '' }}"
+                                           onmouseout="this.style.borderColor='{{ $blockBorder }}'{{ $cardShadow === 'glow' ? "; this.style.boxShadow='0 0 8px {$primaryColor}15'" : '' }}">
                                             <x-social-icon :platform="$sBand->data['platform'] ?? ''" size="w-4 h-4" />
-                                            <span class="font-medium text-xs" style="color: #2C2A27;">{{ ucfirst($sBand->data['platform'] ?? '') }}</span>
+                                            <span class="font-medium text-xs" style="color: {{ $bodyText }};">{{ ucfirst($sBand->data['platform'] ?? '') }}</span>
                                         </a>
                                     @endforeach
                                 </div>
@@ -306,15 +332,15 @@
                                     <a href="{{ $sBand->data['url'] }}" target="_blank" rel="noopener"
                                        data-band-id="{{ $sBand->id }}" data-band-url="{{ $sBand->data['url'] }}"
                                        class="block p-3.5 {{ $btnRadius }} transition-all duration-200 trackable-link"
-                                       style="background: {{ $blockBg }}; border: 1px solid {{ $blockBorder }};"
-                                       onmouseover="this.style.background='{{ $isBoldTemplate ? '#DBD9D6' : '#F3F4F6' }}'; this.style.borderColor='{{ $isBoldTemplate ? $primaryColor . '60' : '#D1D5DB' }}'"
-                                       onmouseout="this.style.background='{{ $blockBg }}'; this.style.borderColor='{{ $blockBorder }}'">
+                                       style="background: {{ $blockBg }}; border: 1px solid {{ $blockBorder }};{{ $cardShadow === 'glow' ? " box-shadow: 0 0 8px {$primaryColor}15;" : '' }}"
+                                       onmouseover="this.style.borderColor='{{ $primaryColor }}50'{{ $cardShadow === 'glow' ? "; this.style.boxShadow='0 0 12px {$primaryColor}30'" : '' }}"
+                                       onmouseout="this.style.borderColor='{{ $blockBorder }}'{{ $cardShadow === 'glow' ? "; this.style.boxShadow='0 0 8px {$primaryColor}15'" : '' }}">
                                         <div class="flex items-center space-x-3">
                                             <div class="w-8 h-8 flex items-center justify-center">
                                                 <x-social-icon :platform="$sBand->data['platform'] ?? ''" size="w-6 h-6" />
                                             </div>
-                                            <span class="font-medium text-sm" style="color: {{ $isBoldTemplate ? '#4B5563' : '#2C2A27' }};">{{ ucfirst($sBand->data['platform'] ?? '') }}</span>
-                                            <svg class="w-4 h-4 ml-auto" fill="#9CA3AF" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                                            <span class="font-medium text-sm" style="color: {{ $bodyText }};">{{ ucfirst($sBand->data['platform'] ?? '') }}</span>
+                                            <svg class="w-4 h-4 ml-auto" fill="{{ $isDarkMode ? '#6B7280' : '#9CA3AF' }}" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
                                         </div>
                                     </a>
                                 @endforeach
@@ -331,7 +357,7 @@
                         @endphp
                         
                         @if(count($images) === 1)
-                            <div class="{{ $btnRadius }} overflow-hidden" style="border: 1px solid {{ $blockBorder }};">
+                            <div class="{{ $btnRadius }} overflow-hidden" style="border: 1px solid {{ $blockBorder }};{{ $cardShadow === 'glow' ? " box-shadow: 0 0 10px {$primaryColor}20;" : '' }}">
                                 @if(!empty($images[0]['link']))
                                     <a href="{{ $images[0]['link'] }}" target="_blank" rel="noopener"
                                        data-band-id="{{ $band->id }}" data-band-url="{{ $images[0]['link'] }}"
@@ -370,8 +396,8 @@
 
                     @elseif($band->type === 'text_block')
                         <!-- Bloc de texte -->
-                        <div class="p-4 {{ $btnRadius }}" style="background: {{ $blockBg }}; border: 1px solid {{ $blockBorder }};">
-                            <p class="whitespace-pre-line text-sm leading-relaxed" style="color: #4B5563;">{{ $band->data['text'] }}</p>
+                        <div class="p-4 {{ $btnRadius }}" style="background: {{ $blockBg }}; border: 1px solid {{ $blockBorder }};{{ $cardShadow === 'glow' ? " box-shadow: 0 0 8px {$primaryColor}15;" : '' }}">
+                            <p class="whitespace-pre-line text-sm leading-relaxed" style="color: {{ $bodyTextMuted }};">{{ $band->data['text'] }}</p>
                         </div>
 
                     @elseif($band->type === 'video_embed')
@@ -428,12 +454,12 @@
                             {{-- Fallback: lien cliquable --}}
                             <a href="{{ $videoUrl }}" target="_blank" rel="noopener"
                                class="flex items-center gap-3 p-3.5 {{ $btnRadius }} transition-all duration-200"
-                               style="background: {{ $blockBg }}; border: 1px solid {{ $blockBorder }};">
-                                <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: #FEE2E2;">
+                               style="background: {{ $blockBg }}; border: 1px solid {{ $blockBorder }};{{ $cardShadow === 'glow' ? " box-shadow: 0 0 8px {$primaryColor}15;" : '' }}">
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background: {{ $isDarkMode ? '#2A1A1A' : '#FEE2E2' }};">
                                     <svg class="w-5 h-5" fill="#EF4444" viewBox="0 0 24 24"><polygon points="9,6 19,12 9,18" /></svg>
                                 </div>
-                                <span class="font-medium text-sm" style="color: #2C2A27;">Voir la vidéo</span>
-                                <svg class="w-4 h-4 ml-auto" fill="#9CA3AF" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                                <span class="font-medium text-sm" style="color: {{ $bodyText }};">Voir la vidéo</span>
+                                <svg class="w-4 h-4 ml-auto" fill="{{ $isDarkMode ? '#6B7280' : '#9CA3AF' }}" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
                             </a>
                         @endif
 
@@ -471,11 +497,11 @@
                                 
                                 {{-- Navigation arrows --}}
                                 @if(count($carouselImages) > 1)
-                                    <button onclick="carouselPrev('{{ $carouselId }}')" class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-opacity" style="background: rgba(255,255,255,0.85); box-shadow: 0 1px 4px rgba(0,0,0,0.15);">
-                                        <svg class="w-4 h-4" fill="#2C2A27" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                                    <button onclick="carouselPrev('{{ $carouselId }}')" class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-opacity" style="background: {{ $isDarkMode ? 'rgba(30,30,50,0.85)' : 'rgba(255,255,255,0.85)' }}; box-shadow: {{ $isDarkMode ? "0 0 8px {$primaryColor}20" : '0 1px 4px rgba(0,0,0,0.15)' }};">
+                                        <svg class="w-4 h-4" fill="{{ $isDarkMode ? '#E0E0E0' : '#2C2A27' }}" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
                                     </button>
-                                    <button onclick="carouselNext('{{ $carouselId }}')" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-opacity" style="background: rgba(255,255,255,0.85); box-shadow: 0 1px 4px rgba(0,0,0,0.15);">
-                                        <svg class="w-4 h-4" fill="#2C2A27" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                                    <button onclick="carouselNext('{{ $carouselId }}')" class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-opacity" style="background: {{ $isDarkMode ? 'rgba(30,30,50,0.85)' : 'rgba(255,255,255,0.85)' }}; box-shadow: {{ $isDarkMode ? "0 0 8px {$primaryColor}20" : '0 1px 4px rgba(0,0,0,0.15)' }};">
+                                        <svg class="w-4 h-4" fill="{{ $isDarkMode ? '#E0E0E0' : '#2C2A27' }}" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
                                     </button>
                                     
                                     {{-- Dots --}}
@@ -483,7 +509,7 @@
                                         @foreach($carouselImages as $idx => $img)
                                             <button onclick="carouselGoTo('{{ $carouselId }}', {{ $idx }})" 
                                                     class="carousel-dot w-2 h-2 rounded-full transition-all duration-200"
-                                                    style="background: {{ $idx === 0 ? '#2C2A27' : '#D1D5DB' }};"></button>
+                                                    style="background: {{ $idx === 0 ? ($isDarkMode ? $primaryColor : '#2C2A27') : ($isDarkMode ? '#4B5563' : '#D1D5DB') }};"></button>
                                         @endforeach
                                     </div>
                                 @endif
@@ -518,28 +544,28 @@
 
                 @if($profile->contentBands->isEmpty())
                     <div class="py-12 text-center">
-                        <p class="text-sm" style="color: #9CA3AF;">Ce profil n'a pas encore de contenu</p>
+                        <p class="text-sm" style="color: {{ $isDarkMode ? '#4B5563' : '#9CA3AF' }};">Ce profil n'a pas encore de contenu</p>
                     </div>
                 @endif
             </div>
 
             <!-- Footer -->
-            <div class="px-5 pb-8 pt-4 text-center" style="border-top: 1px solid #E5E7EB;">
+            <div class="px-5 pb-8 pt-4 text-center" style="border-top: 1px solid {{ $footerBorder }};">
                 <a href="https://linkcard.ca" target="_blank" class="inline-flex items-center space-x-1 group">
-                    <span class="text-xs" style="color: #9CA3AF;">Propulsé par</span>
-                    <span class="text-xs font-semibold transition-colors" style="color: #6B7280;" 
+                    <span class="text-xs" style="color: {{ $footerText }};">Propulsé par</span>
+                    <span class="text-xs font-semibold transition-colors" style="color: {{ $isDarkMode ? '#6B7280' : '#6B7280' }};" 
                           onmouseover="this.style.color='#42B574'" 
                           onmouseout="this.style.color='#6B7280'">Link-Card</span>
                 </a>
-                <p class="text-xs mt-2" style="color: #D1D5DB;">
+                <p class="text-xs mt-2" style="color: {{ $isDarkMode ? '#4B5563' : '#D1D5DB' }};">
                     {{ number_format($profile->view_count) }} vue{{ $profile->view_count > 1 ? 's' : '' }}
                 </p>
                 <div class="flex items-center justify-center gap-3 mt-3">
-                    <a href="{{ route('legal.terms') }}" class="text-xs" style="color: #D1D5DB;">Conditions</a>
-                    <span class="text-xs" style="color: #E5E7EB;">·</span>
-                    <a href="{{ route('legal.privacy') }}" class="text-xs" style="color: #D1D5DB;">Confidentialité</a>
-                    <span class="text-xs" style="color: #E5E7EB;">·</span>
-                    <a href="{{ route('legal.refund') }}" class="text-xs" style="color: #D1D5DB;">Remboursement</a>
+                    <a href="{{ route('legal.terms') }}" class="text-xs" style="color: {{ $isDarkMode ? '#4B5563' : '#D1D5DB' }};">Conditions</a>
+                    <span class="text-xs" style="color: {{ $isDarkMode ? '#374151' : '#E5E7EB' }};">·</span>
+                    <a href="{{ route('legal.privacy') }}" class="text-xs" style="color: {{ $isDarkMode ? '#4B5563' : '#D1D5DB' }};">Confidentialité</a>
+                    <span class="text-xs" style="color: {{ $isDarkMode ? '#374151' : '#E5E7EB' }};">·</span>
+                    <a href="{{ route('legal.refund') }}" class="text-xs" style="color: {{ $isDarkMode ? '#4B5563' : '#D1D5DB' }};">Remboursement</a>
                 </div>
             </div>
         </div>

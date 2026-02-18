@@ -314,26 +314,32 @@
                                         <div style="position: absolute; top: -5px; right: 10px; width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.08);"></div>
                                         <div style="position: absolute; bottom: 5px; left: -5px; width: 20px; height: 20px; background: rgba(255,255,255,0.05); transform: rotate(45deg);"></div>
                                     </div>
+                                @elseif($tpl['header_style'] === 'neon')
+                                    <div style="height: 48px; background: linear-gradient(160deg, #0A0A18 0%, {{ $primary_color }}30 40%, {{ $secondary_color }}50 70%, #0F0F1A 100%); position: relative; overflow: hidden;">
+                                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; background: radial-gradient(circle, {{ $primary_color }}20 0%, transparent 70%); filter: blur(10px);"></div>
+                                        <div style="position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, {{ $primary_color }}40, transparent);"></div>
+                                    </div>
                                 @else
                                     <div style="height: 48px; background: linear-gradient({{ $tpl['header_style'] === 'diagonal' ? '135deg' : '180deg' }}, {{ $primary_color }}, {{ $secondary_color }});"></div>
                                 @endif
                                 
                                 {{-- Transition preview --}}
+                                @php $tplBodyBg = $tpl['body_bg'] ?? '#FFFFFF'; @endphp
                                 @if($tpl['transition'] === 'wave' || $tpl['transition'] === 'double_wave')
                                     <svg viewBox="0 0 200 12" style="display: block; width: 100%; margin-top: -1px; height: 10px;" preserveAspectRatio="none">
-                                        <path d="M0,6 C40,12 80,0 120,8 C160,14 180,4 200,6 L200,12 L0,12 Z" fill="white" />
+                                        <path d="M0,6 C40,12 80,0 120,8 C160,14 180,4 200,6 L200,12 L0,12 Z" fill="{{ $tplBodyBg }}" />
                                     </svg>
                                 @elseif($tpl['transition'] === 'arch')
                                     <svg viewBox="0 0 200 12" style="display: block; width: 100%; margin-top: -1px; height: 10px;" preserveAspectRatio="none">
-                                        <path d="M0,0 Q100,24 200,0 L200,12 L0,12 Z" fill="white" />
+                                        <path d="M0,0 Q100,24 200,0 L200,12 L0,12 Z" fill="{{ $tplBodyBg }}" />
                                     </svg>
                                 @elseif($tpl['transition'] === 'diagonal')
                                     <svg viewBox="0 0 200 10" style="display: block; width: 100%; margin-top: -1px; height: 8px;" preserveAspectRatio="none">
-                                        <polygon points="0,0 200,8 200,10 0,10" fill="white" />
+                                        <polygon points="0,0 200,8 200,10 0,10" fill="{{ $tplBodyBg }}" />
                                     </svg>
                                 @elseif($tpl['transition'] === 'chevron')
                                     <svg viewBox="0 0 200 10" style="display: block; width: 100%; margin-top: -1px; height: 8px;" preserveAspectRatio="none">
-                                        <polygon points="0,0 100,10 200,0 200,10 0,10" fill="white" />
+                                        <polygon points="0,0 100,10 200,0 200,10 0,10" fill="{{ $tplBodyBg }}" />
                                     </svg>
                                 @endif
 
@@ -348,38 +354,39 @@
                                     </div>
                                 @elseif($tpl['header_style'] !== 'minimal')
                                     <div class="absolute" style="left: 50%; top: 14px; transform: translateX(-50%);">
-                                        <div class="w-5 h-5 {{ $tpl['photo_style'] === 'square_center' ? 'rounded-md' : 'rounded-full' }} bg-white/30" style="border: 1.5px solid white;"></div>
+                                        <div class="w-5 h-5 {{ $tpl['photo_style'] === 'square_center' ? 'rounded-md' : 'rounded-full' }}" style="background: {{ $tplDark ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.3)' }}; border: 1.5px solid {{ $tplDark ? $primary_color : 'white' }};{{ $tplDark ? ' box-shadow: 0 0 6px '.$primary_color.'40;' : '' }}"></div>
                                     </div>
                                 @endif
                             </div>
 
                             {{-- Content preview --}}
-                            <div class="bg-white px-3 py-2.5">
+                            @php $tplDark = $tpl['dark_mode'] ?? false; @endphp
+                            <div class="px-3 py-2.5" style="background: {{ $tplBodyBg }};">
                                 {{-- Fake social indicators --}}
                                 <div class="flex gap-1 justify-center mb-1.5">
                                     @if($tpl['social_style'] === 'circles')
                                         @for($i = 0; $i < 3; $i++)
-                                            <div class="w-3 h-3 rounded-full" style="background: {{ $primary_color }}15; border: 0.5px solid {{ $primary_color }}30;"></div>
+                                            <div class="w-3 h-3 rounded-full" style="background: {{ $tplDark ? $primary_color.'15' : $primary_color.'15' }}; border: 0.5px solid {{ $tplDark ? $primary_color.'30' : $primary_color.'30' }};{{ $tplDark ? ' box-shadow: 0 0 4px '.$primary_color.'15;' : '' }}"></div>
                                         @endfor
                                     @elseif($tpl['social_style'] === 'list')
                                         <div class="w-full space-y-1">
                                             @for($i = 0; $i < 2; $i++)
-                                                <div class="h-2 rounded" style="background: #F3F4F6; border: 0.5px solid #E5E7EB;"></div>
+                                                <div class="h-2 rounded" style="background: {{ $tplDark ? '#1A1A2E' : '#F3F4F6' }}; border: 0.5px solid {{ $tplDark ? $primary_color.'20' : '#E5E7EB' }};"></div>
                                             @endfor
                                         </div>
                                     @else {{-- pills --}}
                                         @for($i = 0; $i < 3; $i++)
-                                            <div class="h-2.5 rounded-full" style="width: 24px; background: #F3F4F6;"></div>
+                                            <div class="h-2.5 rounded-full" style="width: 24px; background: {{ $tplDark ? '#1A1A2E' : '#F3F4F6' }};"></div>
                                         @endfor
                                     @endif
                                 </div>
 
                                 {{-- Feature indicators --}}
                                 @if(in_array('video_embed', $tpl['features'] ?? []))
-                                    <div class="h-2 rounded mt-1" style="background: #FEE2E2;"></div>
+                                    <div class="h-2 rounded mt-1" style="background: {{ $tplDark ? '#2A1A1A' : '#FEE2E2' }};"></div>
                                 @endif
                                 @if(in_array('image_carousel', $tpl['features'] ?? []))
-                                    <div class="h-2 rounded mt-1" style="background: #FEF3C7;"></div>
+                                    <div class="h-2 rounded mt-1" style="background: {{ $tplDark ? '#2A2A1A' : '#FEF3C7' }};"></div>
                                 @endif
                                 @if(in_array('cta_buttons', $tpl['features'] ?? []))
                                     <div class="h-2 rounded mt-1" style="background: {{ $primary_color }}20;"></div>
