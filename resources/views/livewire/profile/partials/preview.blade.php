@@ -1,4 +1,5 @@
 <div class="sticky top-6">
+    <style>.dark-social-icon svg { filter: brightness(0) invert(1); }</style>
     <p class="text-xs text-center mb-3 font-medium uppercase tracking-wider"
        style="font-family: 'Manrope', sans-serif; color: #9CA3AF; letter-spacing: 0.08em;">
         Aperçu en direct
@@ -35,7 +36,7 @@
                     default => $secondary_color,
                 };
             @endphp
-            <div style="background: {{ $previewBridgeColor }}; margin-bottom: -2px; position: relative; z-index: 1;">
+            <div style="background: {{ $previewBridgeColor }}; position: relative; z-index: 1;">
             @if($headerStyle === 'bold')
                 <div style="background: #2C2A27; position: relative;">
                     @if($transition === 'none')
@@ -190,7 +191,7 @@
                     default => 'rounded-xl',
                 };
             @endphp
-            <div style="background: {{ $previewBodyBg }};">
+            <div style="background: {{ $previewBodyBg }}; position: relative; z-index: 2; margin-top: -5px; padding-top: 5px;">
                 <div class="px-5 py-6 space-y-3">
                     @php
                         $visibleBands = collect($contentBands)->filter(fn($b) => !($b['is_hidden'] ?? false));
@@ -245,7 +246,7 @@
                                 @if($previewSocialStyle === 'circles')
                                     <div class="flex flex-wrap justify-center gap-3 py-2">
                                         @foreach($consecutivePreviewSocials as $sBand)
-                                            <div class="w-11 h-11 rounded-full flex items-center justify-center shadow-sm"
+                                            <div class="w-11 h-11 rounded-full flex items-center justify-center shadow-sm{{ $previewIsDarkMode ? ' dark-social-icon' : '' }}"
                                                  style="background: {{ $previewBlockBg }}; border: 1px solid {{ $previewBlockBorder }};">
                                                 <x-social-icon :platform="$sBand['data']['platform'] ?? ''" size="w-5 h-5" />
                                             </div>
@@ -254,7 +255,7 @@
                                 @elseif($previewSocialStyle === 'pills')
                                     <div class="flex flex-wrap justify-center gap-2 py-1">
                                         @foreach($consecutivePreviewSocials as $sBand)
-                                            <div class="inline-flex items-center gap-2 px-4 py-2.5 {{ $previewBtnRadius }}"
+                                            <div class="inline-flex items-center gap-2 px-4 py-2.5 {{ $previewBtnRadius }}{{ $previewIsDarkMode ? ' dark-social-icon' : '' }}"
                                                  style="background: {{ $previewBlockBg }}; border: 1px solid {{ $previewBlockBorder }};">
                                                 <x-social-icon :platform="$sBand['data']['platform'] ?? ''" size="w-4 h-4" />
                                                 <span class="font-medium text-xs" style="color: {{ $previewBodyText }};">{{ ucfirst($sBand['data']['platform'] ?? '') }}</span>
@@ -263,7 +264,7 @@
                                     </div>
                                 @else
                                     @foreach($consecutivePreviewSocials as $sBand)
-                                        <div class="p-3.5 {{ $previewBtnRadius }}" style="background: {{ $previewBlockBg }}; border: 1px solid {{ $previewBlockBorder }};">
+                                        <div class="p-3.5 {{ $previewBtnRadius }}{{ $previewIsDarkMode ? ' dark-social-icon' : '' }}" style="background: {{ $previewBlockBg }}; border: 1px solid {{ $previewBlockBorder }};">
                                             <div class="flex items-center space-x-3">
                                                 <div class="w-8 h-8 flex items-center justify-center">
                                                     <x-social-icon :platform="$sBand['data']['platform'] ?? ''" size="w-6 h-6" />

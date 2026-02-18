@@ -128,6 +128,9 @@
             0% { transform: translate3d(-90px,0,0); }
             100% { transform: translate3d(85px,0,0); }
         }
+        /* Dark mode: force social icons to white */
+        .dark-social-icon svg { filter: brightness(0) invert(1); }
+        .dark-social-icon:hover svg { filter: brightness(0) invert(1); }
     </style>
     @livewireStyles
 </head>
@@ -222,7 +225,7 @@
                 default => $secondaryColor,
             };
         @endphp
-        <div style="background: {{ $bridgeColor }}; margin-bottom: -2px; position: relative; z-index: 1;">
+        <div style="background: {{ $bridgeColor }}; position: relative; z-index: 1;">
             <!-- HEADER (Template: {{ $headerPartial }}) -->
             @include('profiles.partials.headers.' . $headerPartial)
 
@@ -233,7 +236,7 @@
         </div>
 
         <!-- CONTENT BANDS -->
-        <div class="min-h-[200px]" style="position: relative; z-index: 0; background: {{ $bodyBg }};">
+        <div class="min-h-[200px]" style="position: relative; z-index: 2; margin-top: -5px; padding-top: 5px; background: {{ $bodyBg }};">
             <div class="px-5 py-6 space-y-3">
 
                 @php
@@ -303,7 +306,7 @@
                                     @foreach($consecutiveSocials as $sBand)
                                         <a href="{{ $sBand->data['url'] }}" target="_blank" rel="noopener"
                                            data-band-id="{{ $sBand->id }}" data-band-url="{{ $sBand->data['url'] }}"
-                                           class="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 trackable-link hover:scale-110"
+                                           class="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 trackable-link hover:scale-110{{ $isDarkMode ? ' dark-social-icon' : '' }}"
                                            style="background: {{ $blockBg }}; border: 1px solid {{ $blockBorder }};{{ $cardShadow === 'glow' ? " box-shadow: 0 0 8px {$primaryColor}20;" : ' box-shadow: 0 1px 2px rgba(0,0,0,0.05);' }}">
                                             <x-social-icon :platform="$sBand->data['platform'] ?? ''" size="w-5 h-5" />
                                         </a>
@@ -316,7 +319,7 @@
                                     @foreach($consecutiveSocials as $sBand)
                                         <a href="{{ $sBand->data['url'] }}" target="_blank" rel="noopener"
                                            data-band-id="{{ $sBand->id }}" data-band-url="{{ $sBand->data['url'] }}"
-                                           class="inline-flex items-center gap-2 px-4 py-2.5 {{ $btnRadius }} transition-all duration-200 trackable-link hover:shadow-md"
+                                           class="inline-flex items-center gap-2 px-4 py-2.5 {{ $btnRadius }} transition-all duration-200 trackable-link hover:shadow-md{{ $isDarkMode ? ' dark-social-icon' : '' }}"
                                            style="background: {{ $blockBg }}; border: 1px solid {{ $blockBorder }};{{ $cardShadow === 'glow' ? " box-shadow: 0 0 8px {$primaryColor}15;" : '' }}"
                                            onmouseover="this.style.borderColor='{{ $primaryColor }}50'{{ $cardShadow === 'glow' ? "; this.style.boxShadow='0 0 12px {$primaryColor}30'" : '' }}"
                                            onmouseout="this.style.borderColor='{{ $blockBorder }}'{{ $cardShadow === 'glow' ? "; this.style.boxShadow='0 0 8px {$primaryColor}15'" : '' }}">
@@ -331,7 +334,7 @@
                                 @foreach($consecutiveSocials as $sBand)
                                     <a href="{{ $sBand->data['url'] }}" target="_blank" rel="noopener"
                                        data-band-id="{{ $sBand->id }}" data-band-url="{{ $sBand->data['url'] }}"
-                                       class="block p-3.5 {{ $btnRadius }} transition-all duration-200 trackable-link"
+                                       class="block p-3.5 {{ $btnRadius }} transition-all duration-200 trackable-link{{ $isDarkMode ? ' dark-social-icon' : '' }}"
                                        style="background: {{ $blockBg }}; border: 1px solid {{ $blockBorder }};{{ $cardShadow === 'glow' ? " box-shadow: 0 0 8px {$primaryColor}15;" : '' }}"
                                        onmouseover="this.style.borderColor='{{ $primaryColor }}50'{{ $cardShadow === 'glow' ? "; this.style.boxShadow='0 0 12px {$primaryColor}30'" : '' }}"
                                        onmouseout="this.style.borderColor='{{ $blockBorder }}'{{ $cardShadow === 'glow' ? "; this.style.boxShadow='0 0 8px {$primaryColor}15'" : '' }}">
