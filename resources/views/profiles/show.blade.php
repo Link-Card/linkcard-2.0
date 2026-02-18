@@ -222,7 +222,7 @@
                 default => $secondaryColor,
             };
         @endphp
-        <div style="background: {{ $bridgeColor }};">
+        <div style="background: {{ $bridgeColor }}; margin-bottom: -2px; position: relative; z-index: 1;">
             <!-- HEADER (Template: {{ $headerPartial }}) -->
             @include('profiles.partials.headers.' . $headerPartial)
 
@@ -233,7 +233,7 @@
         </div>
 
         <!-- CONTENT BANDS -->
-        <div class="min-h-[200px]">
+        <div class="min-h-[200px]" style="position: relative; z-index: 0; background: {{ $bodyBg }};">
             <div class="px-5 py-6 space-y-3">
 
                 @php

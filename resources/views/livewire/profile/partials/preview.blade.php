@@ -35,8 +35,7 @@
                     default => $secondary_color,
                 };
             @endphp
-            <div style="background: {{ $previewBridgeColor }};">
-            {{-- HEADER based on template --}}
+            <div style="background: {{ $previewBridgeColor }}; margin-bottom: -2px; position: relative; z-index: 1;">
             @if($headerStyle === 'bold')
                 <div style="background: #2C2A27; position: relative;">
                     @if($transition === 'none')
@@ -184,7 +183,7 @@
                     default => 'rounded-xl',
                 };
             @endphp
-            <div>
+            <div style="background: {{ $previewBodyBg }};">
                 <div class="px-5 py-6 space-y-3">
                     @php
                         $visibleBands = collect($contentBands)->filter(fn($b) => !($b['is_hidden'] ?? false));
