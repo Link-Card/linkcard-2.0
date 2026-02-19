@@ -105,7 +105,7 @@
                     @endif
                 </div>
             @elseif($headerStyle === 'videaste')
-                <div style="background: linear-gradient(135deg, #1a1a2e 0%, {{ $primary_color }}CC 50%, {{ $secondary_color }} 100%);">
+                <div style="background: linear-gradient(160deg, #1a1a2e 0%, {{ $primary_color }}CC 40%, {{ $secondary_color }} 100%);">
                     <div class="relative overflow-hidden">
                         <div class="absolute" style="width: 6px; height: 6px; border-radius: 50%; background: {{ $primary_color }}; top: 15%; left: 15%; opacity: 0.5;"></div>
                         <div class="absolute" style="width: 4px; height: 4px; border-radius: 50%; background: white; top: 30%; right: 20%; opacity: 0.3;"></div>

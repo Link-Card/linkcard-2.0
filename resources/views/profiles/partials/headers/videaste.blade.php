@@ -11,7 +11,7 @@
     }
     .particle { position: absolute; border-radius: 50%; pointer-events: none; }
 </style>
-<div style="background: linear-gradient(135deg, #1a1a2e 0%, {{ $primaryColor }}CC 50%, {{ $secondaryColor }} 100%);">
+<div style="background: linear-gradient(160deg, #1a1a2e 0%, {{ $primaryColor }}CC 40%, {{ $secondaryColor }} 100%);">
     <div class="relative overflow-hidden">
         {{-- Particules --}}
         <div class="particle" style="width: 6px; height: 6px; background: {{ $primaryColor }}; top: 15%; left: 10%; animation: float-particle 4s ease-in-out infinite;"></div>

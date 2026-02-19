@@ -58,8 +58,8 @@
 
 @elseif($transition === 'arch')
     <div style="margin-bottom: -2px; line-height: 0;">
-        <svg viewBox="0 0 400 60" style="display: block; width: 100%;" preserveAspectRatio="none">
-            <path d="M0,0 Q200,120 400,0 L400,60 L0,60 Z" fill="{{ $fillColor }}" />
+        <svg viewBox="0 0 400 50" style="display: block; width: 100%;" preserveAspectRatio="none">
+            <path d="M0,0 Q200,90 400,0 L400,50 L0,50 Z" fill="{{ $fillColor }}" />
         </svg>
     </div>
 
