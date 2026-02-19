@@ -101,10 +101,16 @@
                     @endif
                 </div>
             @elseif($headerStyle === 'videaste')
+                <style>
+                    @keyframes pv-float { 0%, 100% { transform: translateY(0); opacity: 0.3; } 50% { transform: translateY(-12px); opacity: 0.7; } }
+                    @keyframes pv-drift { 0% { transform: translateX(-6px); opacity: 0.2; } 50% { transform: translateX(6px); opacity: 0.5; } 100% { transform: translateX(-6px); opacity: 0.2; } }
+                </style>
                 <div class="relative" style="background: linear-gradient(160deg, #1a1a2e 0%, {{ $primary_color }}CC 40%, {{ $secondary_color }} 100%); overflow: hidden;">
-                    <div class="absolute" style="width: 6px; height: 6px; border-radius: 50%; background: {{ $primary_color }}; top: 15%; left: 15%; opacity: 0.5;"></div>
-                    <div class="absolute" style="width: 4px; height: 4px; border-radius: 50%; background: white; top: 30%; right: 20%; opacity: 0.3;"></div>
-                    <div class="absolute" style="width: 8px; height: 8px; border-radius: 50%; background: {{ $primary_color }}60; bottom: 30%; left: 30%; opacity: 0.4;"></div>
+                    <div class="absolute" style="width: 6px; height: 6px; border-radius: 50%; background: {{ $primary_color }}; top: 15%; left: 10%; animation: pv-float 4s ease-in-out infinite;"></div>
+                    <div class="absolute" style="width: 4px; height: 4px; border-radius: 50%; background: white; top: 30%; right: 15%; animation: pv-float 5s ease-in-out infinite 1s;"></div>
+                    <div class="absolute" style="width: 8px; height: 8px; border-radius: 50%; background: {{ $primary_color }}80; top: 60%; left: 25%; animation: pv-float 6s ease-in-out infinite 0.5s;"></div>
+                    <div class="absolute" style="width: 5px; height: 5px; border-radius: 50%; background: white; top: 20%; right: 30%; animation: pv-drift 7s ease-in-out infinite;"></div>
+                    <div class="absolute" style="width: 3px; height: 3px; border-radius: 50%; background: {{ $secondary_color }}; top: 70%; right: 20%; animation: pv-float 4.5s ease-in-out infinite 2s;"></div>
                     <div class="absolute inset-0" style="background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.3) 100%); pointer-events: none;"></div>
                     <div class="relative z-10 px-6 pt-10 pb-2 text-center" style="color: #FFFFFF;">
                         @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
@@ -115,9 +121,14 @@
                     @endif
                 </div>
             @elseif($headerStyle === 'artiste')
+                <style>
+                    @keyframes pv-morph { 0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; } 50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; } }
+                    @keyframes pv-rotate { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+                </style>
                 <div class="relative" style="background: linear-gradient(160deg, {{ $primary_color }}, {{ $secondary_color }}); overflow: hidden;">
-                    <div class="absolute" style="top: -20px; right: -15px; width: 80px; height: 80px; border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; background: rgba(255,255,255,0.06);"></div>
-                    <div class="absolute" style="bottom: 10px; left: -20px; width: 60px; height: 60px; border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; background: rgba(255,255,255,0.04);"></div>
+                    <div style="position: absolute; top: -20px; right: -15px; width: 80px; height: 80px; background: rgba(255,255,255,0.08); animation: pv-morph 8s ease-in-out infinite;"></div>
+                    <div style="position: absolute; bottom: 10px; left: -20px; width: 60px; height: 60px; background: rgba(255,255,255,0.06); animation: pv-morph 10s ease-in-out infinite 2s;"></div>
+                    <div style="position: absolute; top: 50%; left: 50%; width: 120px; height: 120px; border: 1px solid rgba(255,255,255,0.05); border-radius: 50%; animation: pv-rotate 30s linear infinite;"></div>
                     <div class="relative z-10 px-6 pt-10 pb-2 text-center" style="color: {{ $headerTextColor }};">
                         @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
                         @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
@@ -145,19 +156,26 @@
                     @endif
                 </div>
             @elseif($headerStyle === 'neon')
+                <style>
+                    @keyframes pv-neon-pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.9; } }
+                    @keyframes pv-neon-float { 0%, 100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(-8px); opacity: 1; } }
+                    @keyframes pv-neon-breathe { 0%, 100% { opacity: 0.15; transform: translateX(-50%) scale(1); } 50% { opacity: 0.3; transform: translateX(-50%) scale(1.1); } }
+                </style>
                 <div class="relative" style="background: linear-gradient(160deg, #0A0A18 0%, {{ $primary_color }}25 35%, {{ $secondary_color }}40 65%, #0F0F1A 100%); overflow: hidden;">
                     {{-- Main glow --}}
-                    <div class="absolute" style="width: 160px; height: 160px; top: 20%; left: 50%; transform: translateX(-50%); background: radial-gradient(circle, {{ $primary_color }}30 0%, transparent 70%); filter: blur(35px);"></div>
+                    <div class="absolute" style="width: 160px; height: 160px; top: 15%; left: 50%; transform: translateX(-50%); background: radial-gradient(circle, {{ $primary_color }}35 0%, {{ $primary_color }}15 40%, transparent 70%); filter: blur(35px); animation: pv-neon-breathe 4s ease-in-out infinite;"></div>
                     {{-- Secondary glows --}}
-                    <div class="absolute" style="width: 80px; height: 80px; top: 55%; left: 15%; background: radial-gradient(circle, {{ $secondary_color }}15 0%, transparent 70%); filter: blur(20px);"></div>
+                    <div class="absolute" style="width: 80px; height: 80px; top: 60%; left: 15%; background: radial-gradient(circle, {{ $secondary_color }}20 0%, transparent 70%); filter: blur(20px);"></div>
+                    <div class="absolute" style="width: 60px; height: 60px; top: 30%; right: 10%; background: radial-gradient(circle, {{ $primary_color }}15 0%, transparent 70%); filter: blur(20px);"></div>
                     {{-- Particles --}}
-                    <div class="absolute" style="width: 5px; height: 5px; border-radius: 50%; background: {{ $primary_color }}; top: 12%; left: 10%; opacity: 0.6;"></div>
-                    <div class="absolute" style="width: 3px; height: 3px; border-radius: 50%; background: {{ $primary_color }}; top: 28%; right: 14%; opacity: 0.5;"></div>
-                    <div class="absolute" style="width: 7px; height: 7px; border-radius: 50%; background: {{ $primary_color }}40; top: 55%; left: 22%; opacity: 0.4;"></div>
-                    <div class="absolute" style="width: 3px; height: 3px; border-radius: 50%; background: white; top: 18%; left: 38%; opacity: 0.4;"></div>
-                    <div class="absolute" style="width: 4px; height: 4px; border-radius: 50%; background: {{ $secondary_color }}; top: 35%; right: 20%; opacity: 0.4;"></div>
+                    <div class="absolute" style="width: 5px; height: 5px; border-radius: 50%; background: {{ $primary_color }}; top: 10%; left: 8%; animation: pv-neon-pulse 3s ease-in-out infinite;"></div>
+                    <div class="absolute" style="width: 3px; height: 3px; border-radius: 50%; background: {{ $primary_color }}; top: 22%; right: 12%; animation: pv-neon-float 4.5s ease-in-out infinite 0.5s;"></div>
+                    <div class="absolute" style="width: 7px; height: 7px; border-radius: 50%; background: {{ $primary_color }}50; top: 50%; left: 15%; animation: pv-neon-pulse 5s ease-in-out infinite 1s;"></div>
+                    <div class="absolute" style="width: 4px; height: 4px; border-radius: 50%; background: {{ $secondary_color }}; top: 32%; right: 22%; animation: pv-neon-pulse 3.5s ease-in-out infinite 0.8s;"></div>
+                    <div class="absolute" style="width: 3px; height: 3px; border-radius: 50%; background: white; top: 15%; left: 32%; animation: pv-neon-float 3.5s ease-in-out infinite 1.2s;"></div>
+                    <div class="absolute" style="width: 4px; height: 4px; border-radius: 50%; background: {{ $primary_color }}60; top: 78%; left: 60%; animation: pv-neon-pulse 4s ease-in-out infinite 1.8s;"></div>
                     {{-- Top glow line --}}
-                    <div class="absolute top-0 left-0 right-0 h-px" style="background: linear-gradient(90deg, transparent 10%, {{ $primary_color }}60, transparent 90%);"></div>
+                    <div class="absolute top-0 left-0 right-0 h-px" style="background: linear-gradient(90deg, transparent 10%, {{ $primary_color }}80, transparent 90%);"></div>
                     <div class="relative z-10 px-6 pt-10 pb-2 text-center" style="color: #FFFFFF;">
                         @include('livewire.profile.partials.preview-photo', [
                             'photoStyle' => $photoStyle,
@@ -171,7 +189,7 @@
                 </div>
             @else
                 {{-- classic, wave, diagonal, arch --}}
-                <div style="background: linear-gradient({{ $headerStyle === 'diagonal' ? '135deg' : '180deg' }}, {{ $primary_color }} 0%, {{ $secondary_color }} 100%);">
+                <div style="background: linear-gradient({{ in_array($headerStyle, ['diagonal', 'wave']) ? '135deg' : '180deg' }}, {{ $primary_color }} 0%, {{ $secondary_color }} 100%);">
                     <div class="px-6 pt-10 pb-2 text-center" style="color: {{ $headerTextColor }};">
                         @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
                         @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])

@@ -20,36 +20,49 @@
 @endphp
 
 @if($transition === 'wave')
-    <div style="position: relative; z-index: 5; margin-top: -1px; margin-bottom: -2px; line-height: 0; height: 30px;">
-        <svg viewBox="0 0 400 30" style="display: block; width: 100%; height: 100%;" preserveAspectRatio="none">
-            <path d="M0,15 C50,0 100,25 200,12 C300,0 350,20 400,10 L400,30 L0,30 Z" fill="{{ $fillAlpha['50'] }}" />
-            <path d="M0,18 C80,8 150,28 250,14 C350,2 380,22 400,16 L400,30 L0,30 Z" fill="{{ $fillColor }}" />
+    <div style="position: relative; z-index: 5; margin-top: -1px; margin-bottom: -2px; line-height: 0; height: 30px; overflow: hidden;">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+             viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"
+             style="display: block; width: 100%; height: 100%;">
+            <defs>
+                <path id="pw" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <use xlink:href="#pw" x="48" y="0" fill="{{ $fillAlpha['70'] }}" />
+            <use xlink:href="#pw" x="48" y="3" fill="{{ $fillAlpha['50'] }}" />
+            <use xlink:href="#pw" x="60" y="5" fill="{{ $fillAlpha['50'] }}" />
+            <use xlink:href="#pw" x="48" y="7" fill="{{ $fillColor }}" />
         </svg>
     </div>
 @elseif($transition === 'double_wave')
-    <div style="position: relative; z-index: 5; margin-top: -1px; margin-bottom: -2px; line-height: 0; height: 40px;">
-        <svg viewBox="0 0 400 40" style="display: block; width: 100%; height: 100%;" preserveAspectRatio="none">
-            <path d="M0,20 C50,5 100,30 200,15 C300,2 350,25 400,12 L400,40 L0,40 Z" fill="{{ $fillAlpha['50'] }}" />
-            <path d="M0,25 C60,10 130,32 220,18 C310,5 370,28 400,20 L400,40 L0,40 Z" fill="{{ $fillAlpha['90'] }}" />
-            <path d="M0,30 C80,18 150,35 250,22 C350,10 380,30 400,25 L400,40 L0,40 Z" fill="{{ $fillColor }}" />
+    <div style="position: relative; z-index: 5; margin-top: -1px; margin-bottom: -2px; line-height: 0; height: 35px; overflow: hidden;">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+             viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"
+             style="display: block; width: 100%; height: 100%;">
+            <defs>
+                <path id="pdw" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <use xlink:href="#pdw" x="48" y="0" fill="{{ $fillAlpha['70'] }}" />
+            <use xlink:href="#pdw" x="48" y="2" fill="{{ $fillAlpha['50'] }}" />
+            <use xlink:href="#pdw" x="60" y="4" fill="{{ $fillAlpha['50'] }}" />
+            <use xlink:href="#pdw" x="48" y="6" fill="{{ $fillColor }}" />
         </svg>
     </div>
 @elseif($transition === 'arch')
     <div style="position: relative; z-index: 5; margin-top: -1px; margin-bottom: -2px; line-height: 0; height: 35px;">
-        <svg viewBox="0 0 400 35" style="display: block; width: 100%; height: 100%;" preserveAspectRatio="none">
-            <path d="M0,0 Q200,60 400,0 L400,35 L0,35 Z" fill="{{ $fillColor }}" />
+        <svg viewBox="0 0 400 50" style="display: block; width: 100%; height: 100%;" preserveAspectRatio="none">
+            <path d="M0,0 Q200,90 400,0 L400,50 L0,50 Z" fill="{{ $fillColor }}" />
         </svg>
     </div>
 @elseif($transition === 'diagonal')
     <div style="position: relative; z-index: 5; margin-top: -1px; margin-bottom: -2px; line-height: 0; height: 25px;">
-        <svg viewBox="0 0 400 25" style="display: block; width: 100%; height: 100%;" preserveAspectRatio="none">
-            <polygon points="0,0 400,18 400,25 0,25" fill="{{ $fillColor }}" />
+        <svg viewBox="0 0 400 40" style="display: block; width: 100%; height: 100%;" preserveAspectRatio="none">
+            <polygon points="0,0 400,30 400,40 0,40" fill="{{ $fillColor }}" />
         </svg>
     </div>
 @elseif($transition === 'chevron')
     <div style="position: relative; z-index: 5; margin-top: -1px; margin-bottom: -2px; line-height: 0; height: 20px;">
-        <svg viewBox="0 0 400 20" style="display: block; width: 100%; height: 100%;" preserveAspectRatio="none">
-            <polygon points="0,0 200,20 400,0 400,20 0,20" fill="{{ $fillColor }}" />
+        <svg viewBox="0 0 400 30" style="display: block; width: 100%; height: 100%;" preserveAspectRatio="none">
+            <polygon points="0,0 200,30 400,0 400,30 0,30" fill="{{ $fillColor }}" />
         </svg>
     </div>
 @endif
