@@ -99,6 +99,7 @@
         /* Animated waves v1 */
         .lc-waves {
             position: relative;
+            z-index: 5;
             width: 100%;
             height: 60px;
             margin-top: -1px;

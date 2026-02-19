@@ -20,14 +20,14 @@
 @endphp
 
 @if($transition === 'wave')
-    <div style="margin-top: -1px; margin-bottom: -2px; line-height: 0; height: 30px;">
+    <div style="position: relative; z-index: 5; margin-top: -1px; margin-bottom: -2px; line-height: 0; height: 30px;">
         <svg viewBox="0 0 400 30" style="display: block; width: 100%; height: 100%;" preserveAspectRatio="none">
             <path d="M0,15 C50,0 100,25 200,12 C300,0 350,20 400,10 L400,30 L0,30 Z" fill="{{ $fillAlpha['50'] }}" />
             <path d="M0,18 C80,8 150,28 250,14 C350,2 380,22 400,16 L400,30 L0,30 Z" fill="{{ $fillColor }}" />
         </svg>
     </div>
 @elseif($transition === 'double_wave')
-    <div style="margin-top: -1px; margin-bottom: -2px; line-height: 0; height: 40px;">
+    <div style="position: relative; z-index: 5; margin-top: -1px; margin-bottom: -2px; line-height: 0; height: 40px;">
         <svg viewBox="0 0 400 40" style="display: block; width: 100%; height: 100%;" preserveAspectRatio="none">
             <path d="M0,20 C50,5 100,30 200,15 C300,2 350,25 400,12 L400,40 L0,40 Z" fill="{{ $fillAlpha['50'] }}" />
             <path d="M0,25 C60,10 130,32 220,18 C310,5 370,28 400,20 L400,40 L0,40 Z" fill="{{ $fillAlpha['90'] }}" />
@@ -35,19 +35,19 @@
         </svg>
     </div>
 @elseif($transition === 'arch')
-    <div style="margin-top: -1px; margin-bottom: -2px; line-height: 0; height: 35px;">
+    <div style="position: relative; z-index: 5; margin-top: -1px; margin-bottom: -2px; line-height: 0; height: 35px;">
         <svg viewBox="0 0 400 35" style="display: block; width: 100%; height: 100%;" preserveAspectRatio="none">
             <path d="M0,0 Q200,60 400,0 L400,35 L0,35 Z" fill="{{ $fillColor }}" />
         </svg>
     </div>
 @elseif($transition === 'diagonal')
-    <div style="margin-top: -1px; margin-bottom: -2px; line-height: 0; height: 25px;">
+    <div style="position: relative; z-index: 5; margin-top: -1px; margin-bottom: -2px; line-height: 0; height: 25px;">
         <svg viewBox="0 0 400 25" style="display: block; width: 100%; height: 100%;" preserveAspectRatio="none">
             <polygon points="0,0 400,18 400,25 0,25" fill="{{ $fillColor }}" />
         </svg>
     </div>
 @elseif($transition === 'chevron')
-    <div style="margin-top: -1px; margin-bottom: -2px; line-height: 0; height: 20px;">
+    <div style="position: relative; z-index: 5; margin-top: -1px; margin-bottom: -2px; line-height: 0; height: 20px;">
         <svg viewBox="0 0 400 20" style="display: block; width: 100%; height: 100%;" preserveAspectRatio="none">
             <polygon points="0,0 200,20 400,0 400,20 0,20" fill="{{ $fillColor }}" />
         </svg>
