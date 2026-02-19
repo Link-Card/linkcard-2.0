@@ -40,6 +40,9 @@
                         @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle, 'borderStyle' => "border: 3px solid {$primary_color};"])
                         @include('livewire.profile.partials.preview-info', ['textColor' => '#FFFFFF'])
                     </div>
+                    @if($transition !== 'none')
+                        @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => $previewBodyBg])
+                    @endif
                 </div>
             @elseif($headerStyle === 'minimal')
                 <div style="height: 7px; background: linear-gradient(90deg, {{ $primary_color }}, {{ $secondary_color }});"></div>
@@ -48,6 +51,9 @@
                         @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle, 'shadowColor' => $primary_color])
                         @include('livewire.profile.partials.preview-info', ['textColor' => '#2C2A27'])
                     </div>
+                    @if($transition !== 'none')
+                        @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => $previewBodyBg])
+                    @endif
                 </div>
             @elseif($headerStyle === 'banner')
                 <div style="background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});">
@@ -80,6 +86,9 @@
                             </div>
                         </div>
                     </div>
+                    @if($transition !== 'none')
+                        @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => $previewBodyBg])
+                    @endif
                 </div>
             @elseif($headerStyle === 'geometric')
                 <div style="background: linear-gradient(135deg, {{ $primary_color }}, {{ $secondary_color }});">
@@ -91,6 +100,9 @@
                             @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
                         </div>
                     </div>
+                    @if($transition !== 'none')
+                        @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => $previewBodyBg])
+                    @endif
                 </div>
             @elseif($headerStyle === 'videaste')
                 <div style="background: linear-gradient(135deg, #1a1a2e 0%, {{ $primary_color }}CC 50%, {{ $secondary_color }} 100%);">
@@ -104,6 +116,9 @@
                             @include('livewire.profile.partials.preview-info', ['textColor' => '#FFFFFF'])
                         </div>
                     </div>
+                    @if($transition !== 'none')
+                        @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => $previewBodyBg])
+                    @endif
                 </div>
             @elseif($headerStyle === 'artiste')
                 <div style="background: linear-gradient(160deg, {{ $primary_color }}, {{ $secondary_color }});">
@@ -115,6 +130,9 @@
                             @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
                         </div>
                     </div>
+                    @if($transition !== 'none')
+                        @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => $previewBodyBg])
+                    @endif
                 </div>
             @elseif($headerStyle === 'entrepreneur')
                 @php $previewLogoPath = $profile->template_config['logo_path'] ?? null; @endphp
@@ -132,6 +150,9 @@
                             @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
                         </div>
                     </div>
+                    @if($transition !== 'none')
+                        @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => $previewBodyBg])
+                    @endif
                 </div>
             @elseif($headerStyle === 'neon')
                 <div style="background: linear-gradient(160deg, #0A0A18 0%, {{ $primary_color }}25 35%, {{ $secondary_color }}40 65%, #0F0F1A 100%);">
@@ -156,6 +177,9 @@
                             @include('livewire.profile.partials.preview-info', ['textColor' => '#FFFFFF'])
                         </div>
                     </div>
+                    @if($transition !== 'none')
+                        @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => $previewBodyBg])
+                    @endif
                 </div>
             @else
                 {{-- classic, wave, diagonal, arch --}}
@@ -164,16 +188,10 @@
                         @include('livewire.profile.partials.preview-photo', ['photoStyle' => $photoStyle])
                         @include('livewire.profile.partials.preview-info', ['textColor' => $headerTextColor])
                     </div>
+                    @if($transition !== 'none')
+                        @include('livewire.profile.partials.preview-transition', ['transition' => $transition, 'fillColor' => $previewBodyBg])
+                    @endif
                 </div>
-            @endif
-
-            {{-- Transition inside same gradient div as header = zero seam --}}
-            @if($headerStyle !== 'banner' && $transition !== 'none')
-                @include('livewire.profile.partials.preview-transition', [
-                    'transition' => $transition,
-                    'fillColor' => $previewBodyBg,
-                    'gradientColor' => $secondary_color,
-                ])
             @endif
 
             </div>{{-- fin wrapper bridge --}}

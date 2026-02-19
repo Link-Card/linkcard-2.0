@@ -1,9 +1,8 @@
 {{-- SVG Transitions between header and content --}}
-{{-- Expects: $transition, $fillColor (body bg), optional $gradientColor (header bottom color) --}}
+{{-- Now rendered INSIDE the header's gradient div = transparent areas show the gradient --}}
 @php
     $transition = $transition ?? 'wave';
     $fillColor = $fillColor ?? 'white';
-    $gradientColor = $gradientColor ?? null;
 
     // Compute rgba variants of fillColor for semi-transparent wave layers
     if ($fillColor !== 'white' && $fillColor !== '#FFFFFF') {
@@ -23,14 +22,10 @@
             '30' => 'rgba(255,255,255,0.3)',
         ];
     }
-
-    // Background for the transition container = header's bottom color
-    // This ensures transparent wave areas show the gradient color, not white
-    $containerBg = $gradientColor ?? ($fillColor === 'white' ? '#FFFFFF' : $fillColor);
 @endphp
 
 @if($transition === 'wave')
-    <div class="waves-container" style="margin-bottom: -2px; background: {{ $containerBg }};">
+    <div class="waves-container" style="margin-bottom: -2px;">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
              viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
             <defs>
@@ -46,7 +41,7 @@
     </div>
 
 @elseif($transition === 'double_wave')
-    <div class="waves-container" style="height: 70px; margin-bottom: -2px; background: {{ $containerBg }};">
+    <div class="waves-container" style="height: 70px; margin-bottom: -2px;">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
              viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
             <defs>
@@ -62,25 +57,24 @@
     </div>
 
 @elseif($transition === 'arch')
-    <div style="margin-bottom: -2px; line-height: 0; background: {{ $containerBg }};">
+    <div style="margin-bottom: -2px; line-height: 0;">
         <svg viewBox="0 0 400 60" style="display: block; width: 100%;" preserveAspectRatio="none">
             <path d="M0,0 Q200,120 400,0 L400,60 L0,60 Z" fill="{{ $fillColor }}" />
         </svg>
     </div>
 
 @elseif($transition === 'diagonal')
-    <div style="margin-bottom: -2px; line-height: 0; background: {{ $containerBg }};">
+    <div style="margin-bottom: -2px; line-height: 0;">
         <svg viewBox="0 0 400 40" style="display: block; width: 100%;" preserveAspectRatio="none">
             <polygon points="0,0 400,30 400,40 0,40" fill="{{ $fillColor }}" />
         </svg>
     </div>
 
 @elseif($transition === 'chevron')
-    <div style="margin-bottom: -2px; line-height: 0; background: {{ $containerBg }};">
+    <div style="margin-bottom: -2px; line-height: 0;">
         <svg viewBox="0 0 400 30" style="display: block; width: 100%;" preserveAspectRatio="none">
             <polygon points="0,0 200,30 400,0 400,30 0,30" fill="{{ $fillColor }}" />
         </svg>
     </div>
 
 @endif
-{{-- 'none' = rien affiché --}}

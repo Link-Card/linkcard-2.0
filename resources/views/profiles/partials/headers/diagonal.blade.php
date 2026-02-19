@@ -5,4 +5,8 @@
         @include('profiles.partials.photo', ['photoStyle' => $templateConfig['photo_style'] ?? 'round_center'])
         @include('profiles.partials.info')
     </div>
+
+    @if(isset($templateTransition) && $templateTransition !== 'none')
+        @include('profiles.partials.transition', ['transition' => $templateTransition, 'fillColor' => $bodyBg ?? '#FFFFFF'])
+    @endif
 </div>

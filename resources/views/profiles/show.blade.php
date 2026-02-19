@@ -212,17 +212,8 @@
 
     <div class="max-w-md mx-auto min-h-screen relative" style="background: {{ $bodyBg }};">
 
-        {{-- Header --}}
+        {{-- Header (transition is rendered INSIDE the header's gradient div) --}}
         @include('profiles.partials.headers.' . $headerPartial)
-
-        {{-- Transition: fades from header gradient to body background --}}
-        @if($headerPartial !== 'banner' && $templateTransition !== 'none')
-            @include('profiles.partials.transition', [
-                'transition' => $templateTransition,
-                'fillColor' => $bodyBg,
-                'gradientColor' => $secondaryColor,
-            ])
-        @endif
 
         <!-- CONTENT BANDS -->
         <div class="min-h-[200px]" style="background: {{ $bodyBg }}; margin-top: -2px;">

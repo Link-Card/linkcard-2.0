@@ -9,4 +9,8 @@
         ])
         @include('profiles.partials.info', ['headerTextColor' => '#2C2A27'])
     </div>
+
+    @if(isset($templateTransition) && $templateTransition !== 'none')
+        @include('profiles.partials.transition', ['transition' => $templateTransition, 'fillColor' => $bodyBg ?? '#FFFFFF'])
+    @endif
 </div>
