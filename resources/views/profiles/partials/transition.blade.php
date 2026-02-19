@@ -25,33 +25,51 @@
 @endphp
 
 @if($transition === 'wave')
-    <div class="waves-container" style="margin-bottom: -2px;">
+    <div style="position: relative; width: 100%; height: 60px; overflow: hidden; margin-bottom: -2px;">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-             viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+             viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"
+             style="display: block; width: 100%; height: 100%;">
             <defs>
                 <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
             </defs>
-            <g class="parallax">
-                <use xlink:href="#gentle-wave" x="48" y="0" fill="{{ $fillAlpha['70'] }}" />
-                <use xlink:href="#gentle-wave" x="48" y="3" fill="{{ $fillAlpha['50'] }}" />
-                <use xlink:href="#gentle-wave" x="48" y="5" fill="{{ $fillAlpha['30'] }}" />
-                <use xlink:href="#gentle-wave" x="48" y="7" fill="{{ $fillColor }}" />
+            <g>
+                <use xlink:href="#gentle-wave" x="48" y="0" fill="{{ $fillAlpha['70'] }}">
+                    <animateTransform attributeName="transform" type="translate" from="-90,0" to="85,0" dur="7s" repeatCount="indefinite" />
+                </use>
+                <use xlink:href="#gentle-wave" x="48" y="3" fill="{{ $fillAlpha['50'] }}">
+                    <animateTransform attributeName="transform" type="translate" from="-90,0" to="85,0" dur="10s" repeatCount="indefinite" />
+                </use>
+                <use xlink:href="#gentle-wave" x="48" y="5" fill="{{ $fillAlpha['30'] }}">
+                    <animateTransform attributeName="transform" type="translate" from="-90,0" to="85,0" dur="13s" repeatCount="indefinite" />
+                </use>
+                <use xlink:href="#gentle-wave" x="48" y="7" fill="{{ $fillColor }}">
+                    <animateTransform attributeName="transform" type="translate" from="-90,0" to="85,0" dur="20s" repeatCount="indefinite" />
+                </use>
             </g>
         </svg>
     </div>
 
 @elseif($transition === 'double_wave')
-    <div class="waves-container" style="height: 70px; margin-bottom: -2px;">
+    <div style="position: relative; width: 100%; height: 70px; overflow: hidden; margin-bottom: -2px;">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-             viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+             viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"
+             style="display: block; width: 100%; height: 100%;">
             <defs>
                 <path id="gentle-wave-dbl" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
             </defs>
-            <g class="parallax">
-                <use xlink:href="#gentle-wave-dbl" x="48" y="0" fill="{{ $fillAlpha['70'] }}" />
-                <use xlink:href="#gentle-wave-dbl" x="48" y="2" fill="{{ $fillAlpha['50'] }}" />
-                <use xlink:href="#gentle-wave-dbl" x="48" y="4" fill="{{ $fillAlpha['30'] }}" />
-                <use xlink:href="#gentle-wave-dbl" x="48" y="6" fill="{{ $fillColor }}" />
+            <g>
+                <use xlink:href="#gentle-wave-dbl" x="48" y="0" fill="{{ $fillAlpha['70'] }}">
+                    <animateTransform attributeName="transform" type="translate" from="-90,0" to="85,0" dur="5s" repeatCount="indefinite" />
+                </use>
+                <use xlink:href="#gentle-wave-dbl" x="48" y="2" fill="{{ $fillAlpha['50'] }}">
+                    <animateTransform attributeName="transform" type="translate" from="-90,0" to="85,0" dur="8s" repeatCount="indefinite" />
+                </use>
+                <use xlink:href="#gentle-wave-dbl" x="48" y="4" fill="{{ $fillAlpha['30'] }}">
+                    <animateTransform attributeName="transform" type="translate" from="-90,0" to="85,0" dur="11s" repeatCount="indefinite" />
+                </use>
+                <use xlink:href="#gentle-wave-dbl" x="48" y="6" fill="{{ $fillColor }}">
+                    <animateTransform attributeName="transform" type="translate" from="-90,0" to="85,0" dur="15s" repeatCount="indefinite" />
+                </use>
             </g>
         </svg>
     </div>

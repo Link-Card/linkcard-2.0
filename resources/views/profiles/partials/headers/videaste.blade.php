@@ -11,7 +11,9 @@
     }
     .particle { position: absolute; border-radius: 50%; pointer-events: none; }
 </style>
-<div style="background: linear-gradient(160deg, #1a1a2e 0%, {{ $primaryColor }}CC 40%, {{ $secondaryColor }} 100%);">
+<div class="relative" style="background: {{ $secondaryColor }};">
+    {{-- Main cinematic gradient --}}
+    <div class="absolute inset-0" style="background: linear-gradient(160deg, #1a1a2e 0%, {{ $primaryColor }}CC 40%, {{ $secondaryColor }} 80%);"></div>
     <div class="relative overflow-hidden">
         {{-- Particules --}}
         <div class="particle" style="width: 6px; height: 6px; background: {{ $primaryColor }}; top: 15%; left: 10%; animation: float-particle 4s ease-in-out infinite;"></div>
@@ -32,6 +34,8 @@
     </div>
 
     @if(isset($templateTransition) && $templateTransition !== 'none')
-        @include('profiles.partials.transition', ['transition' => $templateTransition, 'fillColor' => $bodyBg ?? '#FFFFFF'])
+        <div class="relative">
+            @include('profiles.partials.transition', ['transition' => $templateTransition, 'fillColor' => $bodyBg ?? '#FFFFFF'])
+        </div>
     @endif
 </div>

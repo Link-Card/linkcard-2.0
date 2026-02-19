@@ -92,42 +92,6 @@
         .toast.show { transform: translateX(-50%) translateY(0); }
         .toast svg { width: 18px; height: 18px; fill: #7EE081; }
         
-        /* Animated waves (from v1) */
-        .waves-container {
-            position: relative;
-            width: 100%;
-            height: 60px;
-            overflow: hidden;
-        }
-        .waves-container svg {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-        .waves-container .parallax > use {
-            animation: wave-move 25s cubic-bezier(.55,.5,.45,.5) infinite !important;
-            will-change: transform;
-        }
-        .waves-container .parallax > use:nth-child(1) {
-            animation-delay: -2s !important;
-            animation-duration: 7s !important;
-        }
-        .waves-container .parallax > use:nth-child(2) {
-            animation-delay: -3s !important;
-            animation-duration: 10s !important;
-        }
-        .waves-container .parallax > use:nth-child(3) {
-            animation-delay: -4s !important;
-            animation-duration: 13s !important;
-        }
-        .waves-container .parallax > use:nth-child(4) {
-            animation-delay: -5s !important;
-            animation-duration: 20s !important;
-        }
-        @keyframes wave-move {
-            0% { transform: translate3d(-90px,0,0); }
-            100% { transform: translate3d(85px,0,0); }
-        }
         /* Dark mode: force social icons to white */
         .dark-social-icon svg { filter: brightness(0) invert(1); }
         .dark-social-icon:hover svg { filter: brightness(0) invert(1); }
