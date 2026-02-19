@@ -95,6 +95,43 @@
         /* Dark mode: force social icons to white */
         .dark-social-icon svg { filter: brightness(0) invert(1); }
         .dark-social-icon:hover svg { filter: brightness(0) invert(1); }
+
+        /* Animated waves v1 */
+        .lc-waves {
+            position: relative;
+            width: 100%;
+            height: 60px;
+            margin-bottom: -2px;
+            overflow: hidden;
+        }
+        .lc-waves svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .lc-waves .parallax > use {
+            animation: lc-wave-move 25s cubic-bezier(.55,.5,.45,.5) infinite;
+        }
+        .lc-waves .parallax > use:nth-child(1) {
+            animation-delay: -2s;
+            animation-duration: 7s;
+        }
+        .lc-waves .parallax > use:nth-child(2) {
+            animation-delay: -3s;
+            animation-duration: 10s;
+        }
+        .lc-waves .parallax > use:nth-child(3) {
+            animation-delay: -4s;
+            animation-duration: 13s;
+        }
+        .lc-waves .parallax > use:nth-child(4) {
+            animation-delay: -5s;
+            animation-duration: 20s;
+        }
+        @keyframes lc-wave-move {
+            0% { transform: translate3d(-90px,0,0); }
+            100% { transform: translate3d(85px,0,0); }
+        }
     </style>
     @livewireStyles
 </head>
