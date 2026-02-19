@@ -101,6 +101,7 @@
             position: relative;
             width: 100%;
             height: 60px;
+            margin-top: -1px;
             margin-bottom: -2px;
             overflow: hidden;
         }

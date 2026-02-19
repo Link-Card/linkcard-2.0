@@ -34,8 +34,6 @@
     </div>
 
     @if(isset($templateTransition) && $templateTransition !== 'none')
-        <div class="relative">
-            @include('profiles.partials.transition', ['transition' => $templateTransition, 'fillColor' => $bodyBg ?? '#FFFFFF'])
-        </div>
+        @include('profiles.partials.transition', ['transition' => $templateTransition, 'fillColor' => $bodyBg ?? '#FFFFFF'])
     @endif
 </div>

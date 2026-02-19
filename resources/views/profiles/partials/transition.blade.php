@@ -31,6 +31,7 @@
             position: relative;
             width: 100%;
             height: 60px;
+            margin-top: -1px;
             margin-bottom: -2px;
             overflow: hidden;
         }
@@ -98,21 +99,21 @@
     </div>
 
 @elseif($transition === 'arch')
-    <div style="margin-bottom: -2px; line-height: 0;">
+    <div style="margin-top: -1px; margin-bottom: -2px; line-height: 0;">
         <svg viewBox="0 0 400 50" style="display: block; width: 100%;" preserveAspectRatio="none">
             <path d="M0,0 Q200,90 400,0 L400,50 L0,50 Z" fill="{{ $fillColor }}" />
         </svg>
     </div>
 
 @elseif($transition === 'diagonal')
-    <div style="margin-bottom: -2px; line-height: 0;">
+    <div style="margin-top: -1px; margin-bottom: -2px; line-height: 0;">
         <svg viewBox="0 0 400 40" style="display: block; width: 100%;" preserveAspectRatio="none">
             <polygon points="0,0 400,30 400,40 0,40" fill="{{ $fillColor }}" />
         </svg>
     </div>
 
 @elseif($transition === 'chevron')
-    <div style="margin-bottom: -2px; line-height: 0;">
+    <div style="margin-top: -1px; margin-bottom: -2px; line-height: 0;">
         <svg viewBox="0 0 400 30" style="display: block; width: 100%;" preserveAspectRatio="none">
             <polygon points="0,0 200,30 400,0 400,30 0,30" fill="{{ $fillColor }}" />
         </svg>
