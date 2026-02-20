@@ -56,7 +56,7 @@
 <ul>
     <li><strong>Stripe Inc.</strong> — traitement des paiements</li>
     <li><strong>Mailgun (Sinch)</strong> — envoi de courriels transactionnels</li>
-    <li><strong>WHC (Web Hosting Canada)</strong> — hébergement des données au Canada</li>
+    <li><strong>DigitalOcean</strong> — hébergement des données au Canada (Toronto)</li>
 </ul>
 <p>Nous pouvons également divulguer vos renseignements si la loi l'exige ou pour protéger nos droits, notre sécurité ou celle d'autrui.</p>
 

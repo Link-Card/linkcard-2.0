@@ -37,18 +37,18 @@ git push origin main
 
 ### 2. User déploie sur le serveur
 ```bash
-cd ~/public_html/app
+cd /var/www/app.linkcard.ca
 git pull origin main
 ```
 
 ### 3. Si migration nécessaire
 ```bash
-php artisan migrate
+php artisan migrate --force
 ```
 
 ### 4. Vider les caches
 ```bash
-php artisan cache:clear && php artisan config:clear && php artisan view:clear && php artisan route:clear
+php artisan config:cache && php artisan route:cache && php artisan view:cache
 ```
 
 ### 5. Si vim s'ouvre (message de merge)
@@ -75,17 +75,18 @@ git push origin main --force
 
 ## 🔄 EN CAS DE PROBLÈME GRAVE
 
-### Restaurer via JetBackup:
-1. cPanel → JetBackup → Répertoire d'accueil
-2. Choisir date AVANT le problème
-3. Sélectionner public_html → Restaurer (décoché "fusionner")
+### Restaurer via DigitalOcean Snapshot ou Git:
+1. DigitalOcean → Droplet → Snapshots → Restaurer
+2. Ou `git log --oneline -10` pour trouver le dernier commit fonctionnel
+3. `git revert HEAD` ou `git reset --hard <commit>`
 4. Après restauration:
 ```bash
-cd ~/public_html/app
+cd /var/www/app.linkcard.ca
 git add -A
 git commit -m "Restore backup [date]"
 git push origin main --force
-php artisan cache:clear && php artisan config:clear && php artisan view:clear && php artisan route:clear
+php artisan config:cache && php artisan route:cache && php artisan view:cache
+chown -R www-data:www-data /var/www/app.linkcard.ca
 ```
 
 ---

@@ -25,13 +25,13 @@
 ## Stack technique
 - **Backend:** Laravel 11 + Livewire 3 + Alpine.js
 - **Frontend:** Tailwind CSS 3 + SVG inline (pas Font Awesome)
-- **Serveur:** WHC (~/public_html/app) — app.linkcard.ca
+- **Serveur:** DigitalOcean VPS Ubuntu 24.04 (Toronto) — /var/www/app.linkcard.ca/
 - **DB:** MySQL linkcard2_main
 - **Email:** Mailgun (linkcard.ca vérifié)
 - **Paiement:** Stripe (mode test configuré, LIVE pour production)
 - **Git:** GitHub repository linkcard-2.0
 - **QR:** simplesoftwareio/simple-qrcode
-- **Cron:** WHC cPanel (archivage auto 30j, emails différés 24h, email bienvenue hourly)
+- **Cron:** crontab système (`php artisan schedule:run` chaque minute — gère archivage, emails, expirations)
 
 ## Base de données
 **Tables actives:**
