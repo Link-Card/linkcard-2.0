@@ -198,5 +198,8 @@ Route::get('/faq', fn() => view('pages.faq'))->name('pages.faq');
 Route::get('/contact', fn() => view('pages.contact'))->name('pages.contact');
 Route::get('/a-propos', fn() => view('pages.a-propos'))->name('pages.a-propos');
 
+// Page intermédiaire connexion (avant catch-all)
+Route::get('/connect/{username}', [ProfileController::class, 'connectPage'])->name('profile.connect');
+
 // Profile public (DOIT RESTER EN DERNIER)
 Route::get('/{username}', [ProfileController::class, 'show'])->name('profile.public');

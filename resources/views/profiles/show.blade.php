@@ -735,8 +735,8 @@
                         </button>
                     </form>
                 @else
-                    {{-- Pas connecté → redirect login --}}
-                    <a href="{{ route('login', ['ref' => $profile->username, 'action' => 'connect']) }}" class="w-full flex items-center gap-3 p-3.5 rounded-xl transition-all duration-200" style="border: 1px solid #E5E7EB; background: white;" onmouseover="this.style.background='#F0F9F4'; this.style.borderColor='#42B574'" onmouseout="this.style.background='white'; this.style.borderColor='#E5E7EB'">
+                    {{-- Pas connecté → page intermédiaire connect --}}
+                    <a href="{{ route('profile.connect', $profile->username) }}" class="w-full flex items-center gap-3 p-3.5 rounded-xl transition-all duration-200" style="border: 1px solid #E5E7EB; background: white;" onmouseover="this.style.background='#F0F9F4'; this.style.borderColor='#42B574'" onmouseout="this.style.background='white'; this.style.borderColor='#E5E7EB'">
                         <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: #F0F9F4;">
                             <svg class="w-5 h-5" fill="#42B574" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
                         </div>

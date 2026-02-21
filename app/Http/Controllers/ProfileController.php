@@ -79,6 +79,25 @@ class ProfileController extends Controller
         }
     }
 
+    public function connectPage($username)
+    {
+        $profile = Profile::where('username', $username)->first();
+
+        if (!$profile) {
+            abort(404);
+        }
+
+        // Si déjà connecté, rediriger vers le profil directement
+        if (auth()->check()) {
+            return redirect()->route('profile.public', $username);
+        }
+
+        return view('pages.connect', [
+            'profile' => $profile,
+            'username' => $username,
+        ]);
+    }
+
     public function downloadVcard(Profile $profile)
     {
         // Track vCard download as a link click
