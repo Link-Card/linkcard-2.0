@@ -87,9 +87,13 @@ class ProfileController extends Controller
             abort(404);
         }
 
-        // Si déjà connecté, rediriger vers le profil directement
+        // Si déjà connecté → auto-envoi connexion + redirect vers mes connexions
         if (auth()->check()) {
-            return redirect()->route('profile.public', $username);
+            if ($profile->user_id !== auth()->id()) {
+                $result = \App\Services\ConnectionService::sendRequest(auth()->id(), $profile->user_id);
+                session()->flash('message', $result['message']);
+            }
+            return redirect()->route('connections.index');
         }
 
         return view('pages.connect', [
